@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project Reality OS — Turn daily site reports into real-time project truth</title>
+  <title>Project Reality OS | Daily site reports become live schedule truth</title>
   <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml" />
   <link rel="preload" href="assets/circle-loader.svg" as="image" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -48,6 +48,20 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html {
+      scroll-padding-top: 72px;
+    }
+    html.lenis,
+    html.lenis body {
+      height: auto;
+    }
+    html.lenis-smooth {
+      scroll-behavior: auto !important;
+    }
+    html.lenis-stopped {
+      overflow: clip;
+    }
+
     body {
       font-family: 'Inter', Arial, sans-serif;
       background: var(--cream);
@@ -55,6 +69,10 @@
       line-height: 1.45;
       -webkit-font-smoothing: antialiased;
       overflow-x: clip; /* clip keeps sticky intact; hidden breaks it */
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
     }
 
     h1, h2, h3, .serif {
@@ -849,19 +867,20 @@
       top: 0;
       height: 100svh;
       min-height: 560px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 88px var(--page-pad) 48px;
+      display: grid;
+      grid-template-rows: auto 1fr auto auto auto;
+      align-items: center;
+      padding: 88px var(--page-pad) 40px;
       isolation: isolate;
     }
     .gap-head {
       position: relative;
       z-index: 2;
       width: min(920px, 100%);
-      margin: 0 auto 28px;
+      margin: 0 auto 8px;
       max-width: 42rem;
       text-align: center;
+      align-self: end;
     }
     .gap-eyebrow {
       font-family: 'Inter', Arial, sans-serif;
@@ -894,8 +913,10 @@
       z-index: 1;
       width: min(980px, 100%);
       margin: 0 auto;
-      min-height: min(42vh, 320px);
-      height: clamp(280px, 42vh, 360px);
+      min-height: 280px;
+      height: 100%;
+      align-self: stretch;
+      overflow: hidden;
     }
     .gap-spot {
       position: absolute;
@@ -936,21 +957,28 @@
       z-index: 3;
     }
     .gap-spot.is-past {
-      opacity: 0.18;
-      transform: translate3d(0, calc(-50% - 72px), 0) scale(0.94);
-      filter: blur(1.5px);
+      opacity: 0.08;
+      transform: translate3d(0, calc(-50% - 88px), 0) scale(0.92);
+      filter: blur(2px);
       z-index: 1;
     }
     .gap-spot.is-next {
-      opacity: 0.14;
-      transform: translate3d(0, calc(-50% + 64px), 0) scale(0.94);
-      filter: blur(1.5px);
+      opacity: 0.08;
+      transform: translate3d(0, calc(-50% + 80px), 0) scale(0.92);
+      filter: blur(2px);
       z-index: 0;
+    }
+    .gap-head.is-dim .gap-intro {
+      opacity: 0.35;
+      transition: opacity 0.4s ease;
+    }
+    .gap-intro {
+      transition: opacity 0.4s ease;
     }
     .gap-spot-media {
       display: block;
       width: 100%;
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 16 / 10;
       object-fit: cover;
       border-bottom: 1.5px solid var(--border);
       background: #e8e2d4;
@@ -987,10 +1015,12 @@
       position: relative;
       z-index: 2;
       width: min(920px, 100%);
-      margin: 28px auto 0;
+      margin: 12px auto 0;
       display: flex;
       align-items: center;
       gap: 10px;
+      align-self: stretch;
+      justify-self: center;
     }
     .gap-progress-track {
       flex: 1;
@@ -1017,18 +1047,20 @@
     }
     .gap-hint {
       width: min(920px, 100%);
-      margin: 12px auto 0;
+      margin: 8px auto 0;
       font-size: 11px;
       color: var(--muted);
       letter-spacing: 0.04em;
       font-family: 'Inter', Arial, sans-serif;
       text-align: center;
+      justify-self: center;
     }
     .gap-dots {
       display: flex;
       justify-content: center;
       gap: 8px;
-      margin-top: 16px;
+      margin-top: 4px;
+      justify-self: center;
     }
     .gap-dot {
       width: 8px;
@@ -1049,26 +1081,192 @@
     }
 
     @media (max-width: 720px) {
+      .gap-track { height: 260vh; }
+      .gap-pin {
+        min-height: 0;
+        height: 100dvh;
+        height: 100svh;
+        padding:
+          max(64px, calc(12px + env(safe-area-inset-top, 0px)))
+          var(--page-pad)
+          max(12px, env(safe-area-inset-bottom, 0px));
+        grid-template-rows: auto minmax(0, 1fr) auto auto auto;
+        gap: 0;
+      }
+      .gap-head {
+        text-align: left;
+        max-width: none;
+        width: 100%;
+        margin: 0 0 10px;
+        align-self: start;
+      }
+      .gap-eyebrow { margin-bottom: 6px; font-size: 10px; }
+      .gap-head h2 {
+        font-size: clamp(22px, 6.2vw, 28px);
+        margin: 0 0 6px;
+        max-width: 16ch;
+      }
+      .gap-intro {
+        margin: 0;
+        font-size: 12.5px;
+        line-height: 1.45;
+        max-width: none;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        max-height: 4.5em;
+        transition: opacity 0.35s ease, max-height 0.35s ease, margin 0.35s ease;
+      }
+      .gap-head.is-dim .gap-intro {
+        opacity: 0;
+        max-height: 0;
+        margin: 0;
+        pointer-events: none;
+      }
+      .gap-stage {
+        width: 100%;
+        min-height: 0;
+        margin: 0;
+      }
       .gap-spot {
-        width: min(100%, 100%);
-        left: 0 !important;
-        right: 0 !important;
-        margin: 0 auto;
+        width: 92%;
+        max-height: calc(100% - 8px);
+        display: flex;
+        flex-direction: column;
+        margin: 0;
         transform-origin: center center;
+        /* cheaper paint on phones */
+        filter: none !important;
+        transition:
+          opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+          transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 0.35s ease;
+      }
+      /* keep alternate rhythm without full L/R swing */
+      .gap-spot.is-left {
+        left: 0 !important;
+        right: auto !important;
+      }
+      .gap-spot.is-right {
+        left: auto !important;
+        right: 0 !important;
       }
       .gap-spot.is-spot {
+        opacity: 1;
         transform: translate3d(0, -50%, 0) scale(1);
+        box-shadow: 3px 3px 0 rgba(28, 28, 28, 0.14);
       }
       .gap-spot.is-past {
-        transform: translate3d(0, calc(-50% - 56px), 0) scale(0.96);
+        opacity: 0;
+        transform: translate3d(0, calc(-50% - 36px), 0) scale(0.97);
       }
       .gap-spot.is-next {
-        transform: translate3d(0, calc(-50% + 52px), 0) scale(0.96);
+        opacity: 0;
+        transform: translate3d(0, calc(-50% + 36px), 0) scale(0.97);
       }
-      .gap-stage { height: clamp(300px, 48vh, 380px); }
-      .gap-head { text-align: left; max-width: none; }
-      .gap-intro { margin: 0; }
-      .gap-hint { text-align: left; }
+      .gap-spot-media {
+        aspect-ratio: 16 / 9;
+        max-height: 42%;
+        width: 100%;
+        flex: 0 1 auto;
+        object-fit: cover;
+      }
+      .gap-spot-body {
+        padding: 12px 14px 14px;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+      }
+      .gap-spot h3 {
+        font-size: clamp(18px, 5vw, 22px);
+        margin-bottom: 6px;
+      }
+      .gap-spot p {
+        font-size: 12px;
+        line-height: 1.45;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 5;
+        overflow: hidden;
+      }
+      .gap-dots {
+        margin-top: 8px;
+        gap: 10px;
+      }
+      .gap-dot {
+        width: 10px;
+        height: 10px;
+      }
+      .gap-progress {
+        width: 100%;
+        margin-top: 8px;
+      }
+      .gap-hint {
+        text-align: left;
+        width: 100%;
+        margin-top: 6px;
+        font-size: 10px;
+      }
+    }
+
+    /* Short phones / landscape */
+    @media (max-width: 720px) and (max-height: 700px) {
+      .gap-track { height: 240vh; }
+      .gap-head h2 { font-size: 20px; max-width: none; }
+      .gap-intro { -webkit-line-clamp: 2; max-height: 3em; }
+      .gap-spot-media {
+        aspect-ratio: 2 / 1;
+        max-height: 34%;
+      }
+      .gap-spot p { -webkit-line-clamp: 3; }
+      .gap-spot-body { padding: 10px 12px 12px; }
+      .gap-hint { display: none; }
+    }
+
+    @media (max-width: 720px) and (orientation: landscape) {
+      .gap-track { height: 220vh; }
+      .gap-pin {
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        grid-template-rows: minmax(0, 1fr) auto auto;
+        column-gap: 14px;
+        align-items: center;
+        padding-top: max(48px, env(safe-area-inset-top, 0px));
+      }
+      .gap-head {
+        grid-column: 1;
+        grid-row: 1;
+        margin: 0;
+        align-self: center;
+      }
+      .gap-intro { -webkit-line-clamp: 4; max-height: 6em; }
+      .gap-head.is-dim .gap-intro {
+        opacity: 0.4;
+        max-height: 6em;
+      }
+      .gap-stage {
+        grid-column: 2;
+        grid-row: 1 / span 3;
+        height: 100%;
+      }
+      .gap-spot {
+        width: 100%;
+        left: 0 !important;
+        right: 0 !important;
+      }
+      .gap-dots {
+        grid-column: 1;
+        grid-row: 2;
+        justify-content: flex-start;
+        margin: 0;
+      }
+      .gap-progress {
+        grid-column: 1;
+        grid-row: 3;
+        margin: 0;
+      }
+      .gap-hint { display: none; }
+      .gap-spot-media { max-height: 48%; aspect-ratio: 16 / 10; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1078,12 +1276,15 @@
         height: auto;
         min-height: 0;
         padding: 56px var(--page-pad);
+        display: flex;
+        flex-direction: column;
       }
       .gap-stage {
         height: auto;
         min-height: 0;
         display: grid;
         gap: 14px;
+        overflow: visible;
       }
       .gap-spot,
       .gap-spot.is-left,
@@ -1096,12 +1297,26 @@
         left: auto !important;
         right: auto !important;
         width: 100%;
+        max-height: none;
         opacity: 1;
         transform: none;
-        filter: none;
+        filter: none !important;
         pointer-events: auto;
         box-shadow: none;
         transition: none;
+        display: block;
+      }
+      .gap-spot-media { max-height: none; }
+      .gap-spot p {
+        display: block;
+        -webkit-line-clamp: unset;
+        overflow: visible;
+      }
+      .gap-intro {
+        display: block;
+        -webkit-line-clamp: unset;
+        max-height: none;
+        overflow: visible;
       }
       .gap-progress,
       .gap-hint,
@@ -1651,49 +1866,153 @@
       }
     }
 
-    /* Roles */
-    .role-grid {
-      display: grid;
-      gap: 12px;
-      margin-top: 14px;
+    /* Roles — tall image cards, auto-scroll */
+    .role-marquee {
+      margin-top: 18px;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+      width: 100vw;
+      overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+    }
+    .role-track {
+      display: flex;
+      width: max-content;
+      gap: 16px;
+      padding: 4px 20px 10px;
+      will-change: transform;
+    }
+    .role-track.is-auto {
+      animation: role-scroll 32s linear 3;
+      animation-fill-mode: forwards;
+    }
+    .role-marquee:hover .role-track.is-auto,
+    .role-marquee:focus-within .role-track.is-auto {
+      animation-play-state: paused;
+    }
+    @keyframes role-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
     }
     .role-card {
+      position: relative;
+      flex: 0 0 auto;
+      width: min(300px, 78vw);
+      height: 440px;
       border: 1.5px solid var(--border);
-      border-radius: 7px;
-      padding: 18px 16px;
-      background: var(--white);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 3px 4px 0 #111;
+      color: #F4F1EA;
+      isolation: isolate;
+    }
+    .role-card-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transform: scale(1.02);
+      z-index: 0;
+    }
+    .role-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(180deg, rgba(10, 12, 14, 0.18) 0%, rgba(10, 12, 14, 0.35) 38%, rgba(10, 12, 14, 0.88) 100%);
+      pointer-events: none;
+    }
+    .role-card-glyph {
+      position: absolute;
+      right: -8%;
+      top: 8%;
+      width: 58%;
+      aspect-ratio: 1;
+      z-index: 2;
+      background-color: rgba(255, 138, 0, 0.55);
+      -webkit-mask: var(--role-icon) center / contain no-repeat;
+      mask: var(--role-icon) center / contain no-repeat;
+      opacity: 0.55;
+      pointer-events: none;
+      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
+    }
+    .role-card-body {
+      position: relative;
+      z-index: 3;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 22px 18px 20px;
+      gap: 10px;
+    }
+    .role-card-tag {
+      align-self: flex-start;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--orange);
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 8px;
     }
     .role-card h3 {
-      font-size: 18px;
-      margin-bottom: 8px;
+      font-size: clamp(22px, 3vw, 28px);
+      line-height: 1.1;
+      color: #F4F1EA;
+      margin: 0;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
     }
     .role-card p {
       font-size: 12.5px;
       line-height: 1.5;
-      margin-bottom: 12px;
+      color: rgba(244, 241, 234, 0.82);
+      margin: 0;
+      max-width: 34ch;
     }
     .role-card ul {
       list-style: none;
       display: grid;
-      gap: 8px;
+      gap: 6px;
+      margin-top: 4px;
     }
     .role-card li {
-      font-size: 12px;
-      line-height: 1.4;
+      font-size: 11.5px;
+      line-height: 1.35;
       padding-left: 14px;
       position: relative;
-      color: var(--muted);
+      color: rgba(244, 241, 234, 0.72);
     }
     .role-card li::before {
       content: "";
       position: absolute;
       left: 0;
-      top: 6px;
+      top: 5px;
       width: 6px;
       height: 6px;
       border-radius: 1px;
       background: var(--orange);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(244, 241, 234, 0.35);
+    }
+    .role-hint {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .role-track.is-auto { animation: none; }
+      .role-marquee {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        mask-image: none;
+        -webkit-mask-image: none;
+      }
     }
 
     /* Offline */
@@ -2472,7 +2791,7 @@
       }
       .page { padding-bottom: 100px; }
       .hero-content { padding-bottom: 72px; }
-      .role-grid { grid-template-columns: 1fr 1fr; }
+      .role-card { width: min(320px, 42vw); height: 460px; }
       .feature-row { grid-template-columns: 1fr 1.15fr; }
       .feature-row .img-frame { height: 100%; min-height: 220px; }
       .tier-row { grid-template-columns: repeat(3, 1fr); }
@@ -2500,7 +2819,8 @@
       .section { margin-bottom: 56px; }
       .hero-content { padding-bottom: 88px; }
       .hero-sub { font-size: 17px; max-width: 42ch; }
-      .role-grid { grid-template-columns: repeat(3, 1fr); }
+      .role-card { width: 340px; height: 480px; }
+      .role-track { gap: 20px; }
       .arch-paths { grid-template-columns: 1fr 1fr; gap: 14px; }
       .arch-path { padding: 16px; }
       .arch-path .path-title { font-size: 13px; margin-bottom: 6px; }
@@ -2630,13 +2950,13 @@
     <div class="tour-modal">
       <p class="label">FIRST RUN</p>
       <h2 id="welcome-tour-title">Set up Project Reality OS</h2>
-      <p>No setup cookie yet. Walk through role, project, and alerts — then enter the field loop.</p>
+      <p>No setup cookie yet. Pick a role, project, and alerts, then enter the field loop.</p>
       <ul class="welcome-points">
         <li>
           <span class="num" aria-hidden="true">1</span>
           <div>
             <strong>Pick how you work</strong>
-            <p>Engineer, planner, or lead — workspace follows your path.</p>
+            <p>Engineer, planner, or lead. Workspace follows your path.</p>
           </div>
         </li>
         <li>
@@ -2720,11 +3040,11 @@
       <p class="hero-eyebrow">Mining · Oil · Infrastructure</p>
       <h1 class="hero-brand">Project Reality <span class="accent">OS</span></h1>
       <p class="hero-sub">
-        Turn daily site reports into real-time project truth — even when the network drops out.
+        Field reports sync to the live plan the same day, even when the radio drops out.
       </p>
       <div class="cta-row" id="cta">
-        <a href="project-reality-os-auth-role.html" class="btn btn-primary">Start tracking</a>
-        <a href="#how-this-works" class="btn btn-ghost">See how this works</a>
+        <a href="project-reality-os-auth-role.html" class="btn btn-primary">Start free</a>
+        <a href="#how-this-works" class="btn btn-ghost">See the loop</a>
       </div>
     </div>
     <p class="hero-scroll-hint" aria-hidden="true">Scroll</p>
@@ -2737,7 +3057,7 @@
       <div class="section-head">
         <p class="section-label">Built with</p>
         <p class="section-intro">
-          Lean web stack. Ships as a page, saves on-device, syncs when the radio comes back.
+          Ships as a page. Saves on-device. Syncs when the radio comes back.
         </p>
       </div>
       <div class="stack-dock">
@@ -2855,7 +3175,7 @@
             <h2>Planning and execution still live in different worlds</h2>
             <p class="gap-intro">
               Site engineers write reports in the field. Planners update schedules days later.
-              By the time a delay is visible on the Gantt, cost has already compounded.
+              By the time a delay shows on the Gantt, cost has already compounded.
             </p>
           </div>
 
@@ -2871,7 +3191,7 @@
                 <h3>Notes trapped on phones</h3>
                 <p>
                   Daily reports sit in chat threads, PDFs, or paper pads. Photos lack task context.
-                  When connectivity fails, yesterday’s progress never leaves the site cabin.
+                  When connectivity fails, yesterday's progress never leaves the site cabin.
                 </p>
               </div>
             </article>
@@ -2900,7 +3220,7 @@
               />
               <div class="gap-spot-body">
                 <span class="pain-tag">Leadership</span>
-                <h3>Decisions on last week’s data</h3>
+                <h3>Decisions on last week's data</h3>
                 <p>
                   Delay alerts arrive after the window to recover. Stakeholders argue about which spreadsheet
                   is current. The programme looks fine until it suddenly is not.
@@ -2909,7 +3229,7 @@
             </article>
           </div>
 
-          <div class="gap-dots" id="gap-dots" aria-hidden="true">
+          <div class="gap-dots" id="gap-dots" role="tablist" aria-label="Gap points">
             <span class="gap-dot is-active" data-gap-dot="0"></span>
             <span class="gap-dot" data-gap-dot="1"></span>
             <span class="gap-dot" data-gap-dot="2"></span>
@@ -2921,7 +3241,7 @@
             </div>
             <span class="gap-progress-label" id="gap-progress-label">01 / 03</span>
           </div>
-          <p class="gap-hint">Scroll — each point takes the spotlight</p>
+          <p class="gap-hint">Scroll or tap a dot — each point takes the spotlight</p>
         </div>
       </div>
     </section>
@@ -2961,8 +3281,7 @@
         <p class="section-label">Field modules</p>
         <h2>Gear that maps to the job, not the org chart</h2>
         <p class="section-intro">
-          Hover tilts the card. Icons spin like a turntable. Same pattern as a product listing —
-          built for mining, oil, and civil packs you already recognize on site.
+          Mining, oil, and civil packs you already recognize on site. Open a module and start reporting.
         </p>
       </div>
       <div class="kit-marquee" aria-label="Scrolling field module cards">
@@ -3461,7 +3780,7 @@
       <div class="section-head">
         <h2>How Project Reality OS connects field to plan</h2>
         <p class="section-intro">
-          A calm, human-in-the-loop pipeline. AI proposes. Planners decide. The schedule stays truthful.
+          AI proposes. Planners decide. The schedule stays truthful.
         </p>
       </div>
       <div class="card" style="padding: 18px 14px;">
@@ -3596,7 +3915,7 @@
         <div class="steps-pin">
           <div class="steps-inner">
             <p class="steps-eyebrow">The loop</p>
-            <h2 class="steps-heading">Four calm steps. No drama.</h2>
+            <h2 class="steps-heading">Four steps. Report to sync.</h2>
 
             <div class="steps-rail" role="list" aria-hidden="true">
               <span class="steps-rail-fill" id="steps-rail-fill"></span>
@@ -3623,7 +3942,7 @@
               <div class="steps-stage-body">
                 <h3 class="steps-stage-label" id="steps-stage-label">Report</h3>
                 <p class="steps-stage-copy" id="steps-stage-copy">
-                  Capture progress in plain language and photos from the site — online or offline.
+                  Capture progress in plain language and photos from the site, online or offline.
                 </p>
               </div>
             </div>
@@ -3632,7 +3951,7 @@
               <article class="step-card">
                 <strong>01</strong>
                 <h3>Report</h3>
-                <p>Capture progress in plain language and photos from the site — online or offline.</p>
+                <p>Capture progress in plain language and photos from the site, online or offline.</p>
               </article>
               <article class="step-card">
                 <strong>02</strong>
@@ -3668,38 +3987,56 @@
       <div class="section-head">
         <h2>Built for the people who carry programme truth</h2>
         <p class="section-intro">
-          One operating layer across field, planning, and project leadership — without forcing anyone into a new reporting ritual.
+          One operating layer for field, planning, and leadership. No new reporting ritual.
         </p>
       </div>
-      <div class="role-grid">
-        <article class="role-card">
-          <h3>Site engineers</h3>
-          <p>Keep writing the way you already write. Add photos when useful. Connectivity is optional.</p>
-          <ul>
-            <li>Offline draft and local save</li>
-            <li>Suggested task links to confirm</li>
-            <li>Less retyping for the planning team</li>
-          </ul>
-        </article>
-        <article class="role-card">
-          <h3>Planners &amp; PMO</h3>
-          <p>Review a confidence-ranked queue instead of hunting through chat and email attachments.</p>
-          <ul>
-            <li>Approve / reject with one clear action</li>
-            <li>Risk flags before schedule commits</li>
-            <li>Traceable history on every task</li>
-          </ul>
-        </article>
-        <article class="role-card">
-          <h3>Project leads</h3>
-          <p>See confirmed progress the day it happens — not after the weekly spreadsheet ritual.</p>
-          <ul>
-            <li>One source of programme truth</li>
-            <li>Earlier delay visibility</li>
-            <li>Org-isolated project data</li>
-          </ul>
-        </article>
+      <div class="role-marquee" id="role-marquee" aria-label="Roles for site, planning, and leadership">
+        <div class="role-track" id="role-track">
+          <article class="role-card">
+            <div class="role-card-bg" style="background-image:url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=900&amp;q=80')" role="img" aria-label="Site engineer in hard hat on a mining worksite"></div>
+            <span class="role-card-glyph" style="--role-icon:url('assets/koboyo/hard-hat.svg')" aria-hidden="true"></span>
+            <div class="role-card-body">
+              <span class="role-card-tag">Field</span>
+              <h3>Site engineers</h3>
+              <p>Keep writing the way you already write. Add photos when useful. Connectivity is optional.</p>
+              <ul>
+                <li>Offline draft and local save</li>
+                <li>Suggested task links to confirm</li>
+                <li>Less retyping for the planning team</li>
+              </ul>
+            </div>
+          </article>
+          <article class="role-card">
+            <div class="role-card-bg" style="background-image:url('https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=900&amp;q=80')" role="img" aria-label="Engineer reviewing site progress on a tablet"></div>
+            <span class="role-card-glyph" style="--role-icon:url('assets/koboyo/clipboard.svg')" aria-hidden="true"></span>
+            <div class="role-card-body">
+              <span class="role-card-tag">Planning</span>
+              <h3>Planners &amp; PMO</h3>
+              <p>Review a confidence-ranked queue instead of hunting through chat and email attachments.</p>
+              <ul>
+                <li>Approve / reject with one clear action</li>
+                <li>Risk flags before schedule commits</li>
+                <li>Traceable history on every task</li>
+              </ul>
+            </div>
+          </article>
+          <article class="role-card">
+            <div class="role-card-bg" style="background-image:url('https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=900&amp;q=80')" role="img" aria-label="Open-pit mining landscape with heavy equipment"></div>
+            <span class="role-card-glyph" style="--role-icon:url('assets/koboyo/crane.svg')" aria-hidden="true"></span>
+            <div class="role-card-body">
+              <span class="role-card-tag">Leadership</span>
+              <h3>Project leads</h3>
+              <p>See confirmed progress the day it happens, not after the weekly spreadsheet chase.</p>
+              <ul>
+                <li>One source of programme truth</li>
+                <li>Earlier delay visibility</li>
+                <li>Org-isolated project data</li>
+              </ul>
+            </div>
+          </article>
+        </div>
       </div>
+      <p class="role-hint">auto scrolls a few times · hover to pause</p>
     </section>
 
     <!-- Tech in the field -->
@@ -3716,7 +4053,7 @@
           <div>
             <p>
               Write reports with zero connectivity. They save locally and sync the moment the device finds a signal.
-              No data loss. No “try again later.” Drafts stay on the device until the upload confirms.
+              No data loss. No "try again later." Drafts stay on the device until the upload confirms.
             </p>
             <ul class="bullet-list">
               <li>Local-first storage with conflict-safe sync when back online</li>
@@ -3745,14 +4082,14 @@
         <h2>One source of truth</h2>
         <p class="section-intro">
           Every approved report updates the live schedule. Delay alerts surface automatically.
-          Confidence tiers keep uncertain matches out of the “confirmed” column.
+          Confidence tiers keep uncertain matches out of the confirmed column.
         </p>
       </div>
       <div class="split-feature">
         <div class="card" style="padding: 0; overflow: hidden;">
           <div class="img-frame" style="border: none; border-radius: 0;">
             <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1100&q=80" alt="Project dashboard analytics on screen" />
-            <div class="img-caption">Live project dashboard — Confirmed / Review Needed / Possible Risk tiers</div>
+            <div class="img-caption">Live project dashboard: Confirmed / Review Needed / Possible Risk</div>
           </div>
           <div style="padding: 16px 18px;">
             <p>No more spreadsheet archaeology. Planners and leads share the same confirmed progress view, with provenance attached to each task.</p>
@@ -3761,7 +4098,7 @@
         <div class="tier-row" style="margin-top: 0; align-content: start;">
           <div class="tier" data-tier="confirmed">
             <strong>Confirmed</strong>
-            <span>High-confidence matches approved by a planner — safe to treat as programme truth.</span>
+            <span>High-confidence matches approved by a planner. Safe to treat as programme truth.</span>
           </div>
           <div class="tier" data-tier="review">
             <strong>Review needed</strong>
@@ -3769,7 +4106,7 @@
           </div>
           <div class="tier" data-tier="risk">
             <strong>Possible risk</strong>
-            <span>Conflicts, delays, or low confidence. Surfaced early — never silently written.</span>
+            <span>Conflicts, delays, or low confidence. Surfaced early, never silently written.</span>
           </div>
         </div>
       </div>
@@ -3786,7 +4123,7 @@
       <div class="outcome-grid">
         <article class="outcome">
           <h3>Same-day progress</h3>
-          <p>Approved field reports land on the live view before the next morning’s stand-up, not after the weekly chase.</p>
+          <p>Approved field reports land on the live view before the next morning's stand-up, not after the weekly chase.</p>
         </article>
         <article class="outcome">
           <h3>Less rework on matching</h3>
@@ -3802,9 +4139,9 @@
     <!-- Trust -->
     <section class="section" id="trust">
       <div class="section-head">
-        <h2>Human authority stays on top of every automated suggestion</h2>
+        <h2>Human authority stays on every automated suggestion</h2>
         <p class="section-intro">
-          Four controls that keep AI helpful without handing it the pen. Scroll — each layer stacks over the last.
+          Four controls that keep AI helpful without handing it the pen. Scroll to stack each layer.
         </p>
       </div>
       <div class="trust-stack" id="trust-stack">
@@ -3815,7 +4152,7 @@
           </div>
           <div class="trust-card-body">
             <h3>Planner in the loop</h3>
-            <p>AI suggests matches and flags risks. A responsible human always approves or rejects. Nothing is auto-written into the schedule — the planner keeps final authority on every change that hits the live plan.</p>
+            <p>AI suggests matches and flags risks. A responsible human always approves or rejects. Nothing is auto-written into the schedule. The planner keeps final authority on every change that hits the live plan.</p>
           </div>
           <div class="trust-card-foot">
             <span>Human sign-off required</span>
@@ -3829,7 +4166,7 @@
           </div>
           <div class="trust-card-body">
             <h3>Confidence tiers</h3>
-            <p>Every match carries a clear score: Confirmed, Review Needed, or Possible Risk. Low-confidence items never slip through quietly — they surface for review before they can distort progress reporting.</p>
+            <p>Every match carries a clear score: Confirmed, Review Needed, or Possible Risk. Low-confidence items never slip through quietly. They surface for review before they can distort progress reporting.</p>
           </div>
           <div class="trust-card-foot">
             <span>No silent low-confidence writes</span>
@@ -3843,7 +4180,7 @@
           </div>
           <div class="trust-card-body">
             <h3>Audit trail</h3>
-            <p>Who reported, who approved, when it synced. Full history stays attached to the task — so when questions come up weeks later, context is still sitting on the record, not lost in chat threads.</p>
+            <p>Who reported, who approved, when it synced. Full history stays attached to the task, so when questions come up weeks later, context is still on the record, not lost in chat threads.</p>
           </div>
           <div class="trust-card-foot">
             <span>Full provenance per task</span>
@@ -3857,7 +4194,7 @@
           </div>
           <div class="trust-card-body">
             <h3>Data stays yours</h3>
-            <p>Project data is isolated by organisation and project code. Site notes are never used to train models without explicit consent — your programme remains your programme.</p>
+            <p>Project data is isolated by organisation and project code. Site notes are never used to train models without explicit consent. Your programme remains your programme.</p>
           </div>
           <div class="trust-card-foot">
             <span>Org-isolated by design</span>
@@ -3872,7 +4209,7 @@
       <div class="section-head">
         <h2>Plan, people, and system in one loop</h2>
         <p class="section-intro">
-          Field capture, human review, and the schedule backbone stay connected — without forcing a new tool on every role.
+          Field capture, human review, and the schedule backbone stay connected. No forced tool swap for every role.
         </p>
       </div>
       <div class="image-marquee" aria-label="Site to system image gallery">
@@ -3918,7 +4255,7 @@
       <div class="section-head">
         <h2>The people behind Project Reality OS</h2>
         <p class="section-intro">
-          Six builders closing the gap between site reports and schedule truth. Cards auto-advance — swipe, tap a dot, or pick a name anytime.
+          Six builders closing the gap between site reports and schedule truth. Swipe, tap a dot, or pick a name.
         </p>
       </div>
       <div class="crew" id="crew" aria-label="Team member cards">
@@ -3941,8 +4278,8 @@
               Pick up where you left off
             </h2>
             <p class="mt-4 max-w-md text-[13px] leading-relaxed text-neutral-400">
-              Continue an offline draft, confirm a task link, or check sync status from the site —
-              same project truth as the desk, in your pocket.
+              Continue an offline draft, confirm a task link, or check sync status from the site.
+              Same project truth as the desk, in your pocket.
             </p>
             <div class="mt-8 flex flex-wrap gap-3">
               <a
@@ -4078,10 +4415,10 @@
         <h2>Close the planning-to-execution gap</h2>
         <p>
           Start with one project. Site engineers keep writing the way they already do.
-          Planners finally see reality as it happens — with approval, confidence tiers, and an audit trail on every update.
+          Planners see reality the day it happens, with approval, confidence tiers, and an audit trail on every update.
         </p>
-        <a href="project-reality-os-auth-role.html" class="btn btn-primary">Start tracking your project</a>
-        <p class="caption" style="margin-top: 14px;">No credit card · Takes under 3 minutes · Role-based access</p>
+        <a href="project-reality-os-auth-role.html" class="btn btn-primary">Start my free project</a>
+        <p class="caption" style="margin-top: 14px;">No credit card · Under 3 minutes · Role-based access</p>
       </div>
     </section>
 
@@ -4138,11 +4475,19 @@
       var hero = document.querySelector('.hero-stage');
       if (!header || !hero) return;
 
-      function updateHeader() {
-        var threshold = Math.max(hero.offsetHeight - 72, 80);
-        header.classList.toggle('is-solid', window.scrollY > threshold);
+      function scrollY() {
+        if (window.__prosLenis && typeof window.__prosLenis.scroll === 'number') {
+          return window.__prosLenis.scroll;
+        }
+        return window.scrollY || window.pageYOffset || 0;
       }
 
+      function updateHeader() {
+        var threshold = Math.max(hero.offsetHeight - 72, 80);
+        header.classList.toggle('is-solid', scrollY() > threshold);
+      }
+
+      window.__prosUpdateHeader = updateHeader;
       window.addEventListener('scroll', updateHeader, { passive: true });
       window.addEventListener('resize', updateHeader);
       updateHeader();
@@ -4235,6 +4580,7 @@
 
       measureHead();
       update();
+      window.__prosUpdateTrust = update;
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onResize);
       if (window.ResizeObserver && head) {
@@ -4243,6 +4589,46 @@
           last = cards.map(function () { return -1; });
           onScroll();
         }).observe(head);
+      }
+    })();
+
+    (function () {
+      var track = document.getElementById('role-track');
+      var marquee = document.getElementById('role-marquee');
+      if (!track || !marquee) return;
+
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var originals = Array.prototype.slice.call(track.children);
+      originals.forEach(function (card) {
+        var clone = card.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        track.appendChild(clone);
+      });
+
+      if (reduceMotion) return;
+
+      var started = false;
+      function startAuto() {
+        if (started) return;
+        started = true;
+        track.classList.add('is-auto');
+      }
+
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                startAuto();
+                io.disconnect();
+              }
+            });
+          },
+          { threshold: 0.28 }
+        );
+        io.observe(marquee);
+      } else {
+        startAuto();
       }
     })();
 
@@ -4597,16 +4983,22 @@
     (function () {
       var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var lenis = null;
+      var headerOffset = 72;
 
       if (!reduceMotion && typeof Lenis !== 'undefined') {
+        document.documentElement.classList.add('lenis', 'lenis-smooth');
+
         lenis = new Lenis({
-          duration: 1.15,
+          lerp: 0.085,
+          duration: 1.05,
           easing: function (t) {
             return Math.min(1, 1.001 - Math.pow(2, -10 * t));
           },
           smoothWheel: true,
-          wheelMultiplier: 0.92,
-          touchMultiplier: 1.35,
+          wheelMultiplier: 0.88,
+          touchMultiplier: 1.15,
+          syncTouch: false,
+          autoResize: true,
         });
         window.__prosLenis = lenis;
 
@@ -4619,16 +5011,49 @@
         }
         requestAnimationFrame(raf);
 
+        function scrollToHash(id, instant) {
+          if (!id || id === '#') return false;
+          var target = document.querySelector(id);
+          if (!target) return false;
+          lenis.scrollTo(target, {
+            offset: -headerOffset,
+            duration: instant ? 0 : 1.15,
+            lock: true,
+          });
+          return true;
+        }
+
         document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
           anchor.addEventListener('click', function (e) {
             var id = anchor.getAttribute('href');
-            if (!id || id === '#') return;
-            var target = document.querySelector(id);
-            if (!target) return;
+            if (!scrollToHash(id, false)) return;
             e.preventDefault();
-            lenis.scrollTo(target, { offset: -12, duration: 1.2 });
+            if (history.replaceState) {
+              try { history.replaceState(null, '', id); } catch (err) { /* ignore */ }
+            }
           });
         });
+
+        if (location.hash) {
+          requestAnimationFrame(function () {
+            scrollToHash(location.hash, true);
+          });
+        }
+
+        /* Pause momentum while first-run dialog is open */
+        var tour = document.getElementById('welcome-tour');
+        if (tour && typeof MutationObserver !== 'undefined') {
+          var syncTourScroll = function () {
+            var open = tour.classList.contains('is-open') && !tour.hidden;
+            document.documentElement.classList.toggle('lenis-stopped', open);
+            if (open) lenis.stop();
+            else lenis.start();
+          };
+          new MutationObserver(syncTourScroll).observe(tour, {
+            attributes: true,
+            attributeFilter: ['class', 'hidden'],
+          });
+        }
       }
 
       /* Key ideas: phrase lighting tied to scroll progress through track */
@@ -4694,6 +5119,8 @@
         paintIdeas();
         paintGap();
         paintSteps();
+        if (typeof window.__prosUpdateHeader === 'function') window.__prosUpdateHeader();
+        if (typeof window.__prosUpdateTrust === 'function') window.__prosUpdateTrust();
       }
       function onScrollStories() {
         if (ticking) return;
@@ -4717,6 +5144,7 @@
       var gapLabel = document.getElementById('gap-progress-label');
       var gapCount = gapSpots.length;
       var gapLast = -1;
+      var gapMq = window.matchMedia('(max-width: 720px)');
 
       function gapProgress() {
         if (!gapTrack || reduceMotion) return 1;
@@ -4724,6 +5152,35 @@
         var total = Math.max(rect.height - window.innerHeight, 1);
         return clamp((-rect.top) / total, 0, 1);
       }
+
+      function scrollGapToIndex(index) {
+        if (!gapTrack || reduceMotion || gapCount < 1) return;
+        var i = clamp(index, 0, gapCount - 1);
+        var rect = gapTrack.getBoundingClientRect();
+        var total = Math.max(rect.height - window.innerHeight, 1);
+        var targetY = window.scrollY + rect.top + (total * ((i + 0.5) / gapCount));
+        if (window.__prosLenis) {
+          window.__prosLenis.scrollTo(targetY, { duration: gapMq.matches ? 0.85 : 1.05 });
+        } else {
+          window.scrollTo({ top: targetY, behavior: 'smooth' });
+        }
+      }
+
+      gapDots.forEach(function (dot, i) {
+        dot.setAttribute('role', 'button');
+        dot.setAttribute('tabindex', '0');
+        dot.setAttribute('aria-label', 'Show gap point ' + (i + 1));
+        dot.style.cursor = 'pointer';
+        dot.addEventListener('click', function () {
+          scrollGapToIndex(i);
+        });
+        dot.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            scrollGapToIndex(i);
+          }
+        });
+      });
 
       function paintGap() {
         if (!gapTrack || !gapCount) return;
@@ -4751,9 +5208,14 @@
           el.classList.toggle('is-next', i > active);
         });
 
+        var gapHead = document.querySelector('.gap-head');
+        if (gapHead) gapHead.classList.toggle('is-dim', active > 0);
+
         gapDots.forEach(function (el, i) {
           el.classList.toggle('is-active', i === active);
           el.classList.toggle('is-done', i < active);
+          if (i === active) el.setAttribute('aria-current', 'true');
+          else el.removeAttribute('aria-current');
         });
 
         if (gapLabel && active !== gapLast) {
@@ -4777,7 +5239,7 @@
         {
           num: '01',
           label: 'Report',
-          copy: 'Capture progress in plain language and photos from the site — online or offline.'
+          copy: 'Capture progress in plain language and photos from the site, online or offline.'
         },
         {
           num: '02',
@@ -4872,7 +5334,7 @@
           '.section-head, .role-card, .outcome, .tier, .arch-diagram, .split-feature, .final-cta .card'
         );
         revealNodes.forEach(function (el, i) {
-          if (el.closest('#ideas') || el.closest('#steps') || el.closest('#gap')) return;
+          if (el.closest('#ideas') || el.closest('#steps') || el.closest('#gap') || el.closest('#roles')) return;
           el.setAttribute('data-reveal', '');
           el.style.setProperty('--reveal-delay', ((i % 4) * 60) + 'ms');
         });
@@ -4907,7 +5369,7 @@
         banner.className = 'resume-banner';
         banner.style.cssText = 'position:fixed;left:16px;right:16px;bottom:16px;z-index:70;max-width:560px;margin:0 auto;';
         banner.innerHTML =
-          '<p><strong>Resume setup?</strong> Optional — finish where you left off, or dismiss.</p>' +
+          '<p><strong>Resume setup?</strong> Optional. Finish where you left off, or dismiss.</p>' +
           '<div style="display:flex;gap:8px;">' +
           '<button type="button" class="btn btn-secondary btn-sm" id="resume-dismiss">Dismiss</button>' +
           '<a class="btn btn-primary btn-sm" href="project-reality-os-onboarding.html">Continue</a>' +
