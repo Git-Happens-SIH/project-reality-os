@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get set up — Project Reality OS</title>
+  <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="project-reality-os.css" />
+  <script src="pros-cookies.js"></script>
+</head>
+<body class="onboard-page">
+  <!-- Faded product preview behind the wizard -->
+  <div class="onboard-backdrop" aria-hidden="true">
+    <div class="onboard-backdrop-inner">
+      <header class="app-bar">
+        <span class="logo">Project Reality<span> OS</span></span>
+        <div class="app-bar-meta">
+          <span class="project-chip">NH-42-EAST</span>
+          <span class="role-chip">Team</span>
+        </div>
+      </header>
+      <div class="banner banner-delay">
+        <strong>Delay alert.</strong> Crane utilisation conflict open — view detail
+      </div>
+      <div class="page-head">
+        <p class="label">REAL-TIME PROJECT DASHBOARD</p>
+        <h1>One source of truth</h1>
+        <p>Every approved report updates the live schedule.</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-tile confirmed"><div class="stat-num">18</div><div class="stat-label">Confirmed</div></div>
+        <div class="stat-tile review"><div class="stat-num">5</div><div class="stat-label">Review Needed</div></div>
+        <div class="stat-tile risk"><div class="stat-num">2</div><div class="stat-label">Possible Risk</div></div>
+      </div>
+      <div class="card card-white" style="margin-top:14px;">
+        <div class="list-item">
+          <span class="badge badge-confirmed">Confirmed</span>
+          <div style="flex:1;">
+            <h3>Pier P7 pile cap complete</h3>
+            <p class="caption">Approved · 16:55 · A. Mehta → Planner</p>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="list-item">
+          <span class="badge badge-review">Review Needed</span>
+          <div style="flex:1;">
+            <h3>Deck pour — span 4–5</h3>
+            <p class="caption">AI match · waiting planner</p>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:10px;">
+        <h3 style="margin-bottom:8px;">Today’s sync</h3>
+        <p>3 reports queued offline · 1 conflict open · weekly view ready.</p>
+      </div>
+    </div>
+  </div>
+  <div class="onboard-veil" aria-hidden="true"></div>
+
+  <div class="onboard-stage" role="dialog" aria-modal="true" aria-labelledby="onboard-dialog-title">
+    <div class="onboard-modal">
+      <header class="onboard-modal-bar">
+        <a href="project-reality-os-landing.html" class="logo">Project Reality<span> OS</span></a>
+        <span class="project-chip" id="project-chip">Setup</span>
+      </header>
+
+      <div class="onboard-modal-body">
+        <div class="onboard-top">
+          <p class="label" id="step-label">STEP 01 · WELCOME</p>
+          <button type="button" class="onboard-skip" id="skip-btn">Skip for now →</button>
+        </div>
+
+        <div class="stepper-labelled" id="stepper" aria-label="Onboarding progress"></div>
+
+        <div id="resume-slot" hidden></div>
+
+        <h1 id="onboard-dialog-title" class="visually-hidden">Get set up</h1>
+
+        <!-- 0 Welcome tour -->
+        <section class="onboard-screen" data-screen="0">
+          <div class="page-head">
+            <h1>What Project Reality OS does</h1>
+            <p>Turns daily site reports into live schedule truth. Three core features — what each one does:</p>
+          </div>
+          <ul class="welcome-points">
+            <li>
+              <span class="num" aria-hidden="true">1</span>
+              <div>
+                <strong>Site report</strong>
+                <p>You write what happened on site (text + photos). Saves on device first so tunnels and low-signal zones still work. Sync pushes when signal returns.</p>
+              </div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">2</span>
+              <div>
+                <strong>AI match</strong>
+                <p>AI proposes which plan tasks your report touches. You (or a planner) confirm before anything writes to the schedule. AI proposes — humans decide.</p>
+              </div>
+            </li>
+            <li>
+              <span class="num" aria-hidden="true">3</span>
+              <div>
+                <strong>Live dashboard</strong>
+                <p>Shows every task as Confirmed (safe), Review Needed (human decision), or Possible Risk (delay/conflict). One screen instead of spreadsheet chase.</p>
+              </div>
+            </li>
+          </ul>
+          <div class="feature-explain">
+            <p class="label">The loop</p>
+            <p><strong>Report → AI Match → Approve → Sync.</strong> Each step is a task you will do in the product after setup.</p>
+          </div>
+        </section>
+
+    <!-- 1 Sample vs own -->
+    <section class="onboard-screen" data-screen="1" hidden>
+      <div class="page-head">
+        <h1>How do you want to start?</h1>
+        <p>Pick a path. Both unlock the same features — sample just preloads demo tasks so you can click around safely.</p>
+      </div>
+      <div class="pick-grid" role="radiogroup" aria-label="Start path">
+        <button type="button" class="pick-tile" data-path="sample" aria-pressed="false">
+          <span class="pick-check" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span>
+          <span class="pick-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 19h16"/><path d="M7 16V9"/><path d="M12 16V5"/><path d="M17 16v-6"/></svg>
+          </span>
+          <strong>Try sample data</strong>
+          <span>Loads NH-42 Eastern Corridor with fake reports, matches, and a delay alert so you can learn each task without risking a real job.</span>
+        </button>
+        <button type="button" class="pick-tile" data-path="own" aria-pressed="false">
+          <span class="pick-check" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span>
+          <span class="pick-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 7h18v12H3z"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </span>
+          <strong>Use my project</strong>
+          <span>You enter a real project code. Reports, matches, and approvals stay locked to that job only — nothing leaks across packages.</span>
+        </button>
+      </div>
+      <div class="feature-explain" id="path-explain">
+        <p class="label">What this choice does</p>
+        <p>Sample fills the dashboard behind this panel with demo numbers. Own project starts empty until your crew writes the first report.</p>
+      </div>
+    </section>
+
+    <!-- 2 Role picker -->
+    <section class="onboard-screen" data-screen="2" hidden>
+      <div class="page-head">
+        <h1>What do you do on site?</h1>
+        <p>Your role changes which tasks appear first — not who can see the project.</p>
+      </div>
+      <div class="pick-grid" role="radiogroup" aria-label="Your role">
+        <button type="button" class="pick-tile" data-role="engineer" aria-pressed="false">
+          <span class="pick-check" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span>
+          <span class="pick-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 0L4 11.6V20h8.4l5.3-5.3a4 4 0 0 0 0-5.4Z"/><path d="m12 8 4 4"/><path d="M4 16h4"/></svg>
+          </span>
+          <strong>Site Engineer</strong>
+          <span>Your tasks: write daily reports, attach photos, confirm which plan tasks the report hits, sync when back online.</span>
+        </button>
+        <button type="button" class="pick-tile" data-role="planner" aria-pressed="false">
+          <span class="pick-check" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span>
+          <span class="pick-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg>
+          </span>
+          <strong>Planner / PMO</strong>
+          <span>Your tasks: clear the review queue, approve or reject AI matches, open delay conflicts before they write to the programme.</span>
+        </button>
+        <button type="button" class="pick-tile" data-role="lead" aria-pressed="false">
+          <span class="pick-check" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span>
+          <span class="pick-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg>
+          </span>
+          <strong>Project Lead</strong>
+          <span>Your tasks: watch Confirmed / Review / Risk counts, drill into conflicts, keep the weekly programme honest.</span>
+        </button>
+      </div>
+      <div class="feature-explain" id="role-explain">
+        <p class="label">What this role unlocks</p>
+        <p>Pick a role to see which home screen and first task you get after setup.</p>
+      </div>
+    </section>
+
+    <!-- 3 Goals -->
+    <section class="onboard-screen" data-screen="3" hidden>
+      <div class="page-head">
+        <h1>Which features matter first?</h1>
+        <p>Tap chips to prioritise. Each feature below explains what the task does in the product.</p>
+      </div>
+      <div class="goal-chips" id="goal-chips" role="group" aria-label="Goals">
+        <button type="button" class="chip" data-goal="offline">Offline-first reports</button>
+        <button type="button" class="chip" data-goal="match">Faster AI matching</button>
+        <button type="button" class="chip" data-goal="approve">Cleaner approvals</button>
+        <button type="button" class="chip" data-goal="delay">Delay / conflict alerts</button>
+        <button type="button" class="chip" data-goal="audit">Audit trail on every task</button>
+        <button type="button" class="chip" data-goal="weekly">Weekly programme view</button>
+      </div>
+      <p class="caption" style="margin-top:12px;" id="goal-hint">Select at least one.</p>
+      <div class="goal-detail" id="goal-detail" hidden>
+        <p class="label">Feature · what the task does</p>
+        <h3 id="goal-detail-title">—</h3>
+        <p id="goal-detail-body">Tap a chip to read what that feature does.</p>
+      </div>
+    </section>
+
+    <!-- 4 Workspace -->
+    <section class="onboard-screen" data-screen="4" hidden>
+      <div class="page-head">
+        <h1>Scope your workspace</h1>
+        <p>Project code is the fence. Every report, match, and approval task stays inside it.</p>
+      </div>
+      <div class="card card-white">
+        <div class="form-group">
+          <label for="full-name">Your name</label>
+          <input class="input" id="full-name" type="text" placeholder="e.g. A. Mehta" autocomplete="name" />
+          <p class="form-hint">Shows on reports and the audit trail when you confirm a match.</p>
+        </div>
+        <div class="form-group">
+          <label for="org-name">Organisation</label>
+          <input class="input" id="org-name" type="text" placeholder="e.g. Meridian Infra" autocomplete="organization" />
+          <p class="form-hint">Labels the workspace for teammates joining the same job.</p>
+        </div>
+        <div class="form-group">
+          <label for="project-code">Project code</label>
+          <input class="input" id="project-code" type="text" placeholder="e.g. NH-42-EAST" autocomplete="off" required />
+          <p class="form-hint">Shared with your crew. Isolates all tasks to this job only.</p>
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label for="crew">Crew / package (optional)</label>
+          <input class="input" id="crew" type="text" placeholder="e.g. Package B — Structures" />
+          <p class="form-hint">Optional tag on your reports so planners filter by package.</p>
+        </div>
+      </div>
+      <div class="card" style="margin-top:10px;" id="workspace-preview">
+        <p class="label">Live preview</p>
+        <div class="card-header" style="margin-bottom:4px;">
+          <h3 id="preview-title">NH-42 Eastern Corridor</h3>
+          <span class="badge badge-confirmed">Active</span>
+        </div>
+        <div class="meta-row">
+          <span class="caption" id="preview-code">Code · NH-42-EAST</span>
+          <span class="caption" id="preview-org">Org · Meridian Infra</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 Notifications -->
+    <section class="onboard-screen" data-screen="5" hidden>
+      <div class="page-head">
+        <h1>What reaches you?</h1>
+        <p>Each alert is a task ping — turn on only what you need to act on.</p>
+      </div>
+      <div class="card card-white">
+        <div class="settings-row">
+          <div>
+            <strong>Match ready for review</strong>
+            <p class="caption">Task: open the match screen and confirm or reject the AI proposal before schedule write.</p>
+          </div>
+          <button type="button" class="toggle is-on" data-notif="match" aria-pressed="true" aria-label="Match ready alerts"></button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <strong>Delay / conflict signals</strong>
+            <p class="caption">Task: open Possible Risk detail, check crane/crew clash, decide before approving.</p>
+          </div>
+          <button type="button" class="toggle is-on" data-notif="delay" aria-pressed="true" aria-label="Delay alerts"></button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <strong>Sync complete</strong>
+            <p class="caption">Task: none urgent — confirms your offline queue reached the cloud.</p>
+          </div>
+          <button type="button" class="toggle" data-notif="sync" aria-pressed="false" aria-label="Sync alerts"></button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <strong>Quiet hours</strong>
+            <p class="caption">Mutes non-critical pings 22:00–06:00 so overnight noise does not create fake urgency.</p>
+          </div>
+          <button type="button" class="toggle is-on" data-notif="quiet" aria-pressed="true" aria-label="Quiet hours"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 Invite teammates -->
+    <section class="onboard-screen" data-screen="6" hidden>
+      <div class="page-head">
+        <h1>Invite your crew</h1>
+        <p>Invites assign roles so each person lands on the right first task.</p>
+      </div>
+      <div class="feature-explain" style="margin-bottom:10px; margin-top:0;">
+        <p class="label">What invite does</p>
+        <p><strong>Engineer</strong> gets report + match tasks. <strong>Planner</strong> gets review queue. <strong>Lead</strong> gets dashboard + risk. Same project code for all.</p>
+      </div>
+      <div class="card card-white">
+        <div id="invite-rows">
+          <div class="invite-row">
+            <input class="input invite-email" type="email" placeholder="engineer@company.com" autocomplete="email" />
+            <select class="input invite-role" aria-label="Invite role">
+              <option value="engineer">Engineer</option>
+              <option value="planner">Planner</option>
+              <option value="lead">Lead</option>
+            </select>
+          </div>
+          <div class="invite-row">
+            <input class="input invite-email" type="email" placeholder="planner@company.com" autocomplete="email" />
+            <select class="input invite-role" aria-label="Invite role">
+              <option value="planner">Planner</option>
+              <option value="engineer">Engineer</option>
+              <option value="lead">Lead</option>
+            </select>
+          </div>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" id="add-invite" style="margin-top:4px;">+ Add another</button>
+        <div class="divider"></div>
+        <div class="meta-row" style="margin:0; align-items:center;">
+          <span class="caption" id="invite-link">Invite link · pros.app/join/NH-42-EAST</span>
+          <button type="button" class="btn btn-secondary btn-sm" id="copy-invite">Copy</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 Checklist + celebration -->
+    <section class="onboard-screen" data-screen="7" hidden>
+      <div class="celebrate" id="celebrate-block">
+        <div class="celebrate-burst" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 3v3"/><path d="M12 18v3"/><path d="M3 12h3"/><path d="M18 12h3"/><path d="m5.6 5.6 2.1 2.1"/><path d="m16.3 16.3 2.1 2.1"/><path d="m16.3 5.6-2.1 2.1"/><path d="m5.6 16.3 2.1-2.1"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <div class="page-head" style="text-align:center;">
+          <h1>Workspace ready</h1>
+          <p id="celebrate-sub">First tasks below — tap each to mark done as you learn what it does.</p>
+        </div>
+      </div>
+
+      <div class="card card-white">
+        <div class="card-header">
+          <h3>Getting started tasks</h3>
+          <span class="caption" id="checklist-count">0 / 4</span>
+        </div>
+        <div class="checklist-progress" aria-hidden="true"><span id="checklist-bar" style="width:0%"></span></div>
+        <ul class="checklist" id="checklist">
+          <li class="checklist-item" data-task="report">
+            <span class="checklist-box"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span>
+            <div>
+              <strong>Write your first site report</strong>
+              <span class="task-does">Opens the report form. You log location, work done, and photos. Saves locally even with no signal.</span>
+            </div>
+          </li>
+          <li class="checklist-item" data-task="match">
+            <span class="checklist-box"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span>
+            <div>
+              <strong>Confirm one AI match</strong>
+              <span class="task-does">After AI runs, you tick which plan tasks are correct. Only confirmed matches can update the schedule.</span>
+            </div>
+          </li>
+          <li class="checklist-item" data-task="dashboard">
+            <span class="checklist-box"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span>
+            <div>
+              <strong>Open the live dashboard</strong>
+              <span class="task-does">Shows Confirmed / Review Needed / Possible Risk counts. Tap a row to open that task’s detail.</span>
+            </div>
+          </li>
+          <li class="checklist-item" data-task="invite">
+            <span class="checklist-box"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span>
+            <div>
+              <strong>Invite at least one teammate</strong>
+              <span class="task-does">Sends access with a role so their first screen matches their job (report vs review vs lead).</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="next-actions">
+        <a class="next-action" id="cta-primary" href="project-reality-os-site-report.html">
+          <span class="icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          </span>
+          <div>
+            <strong id="cta-primary-label">Write a site report</strong>
+            <span>Start the daily loop task</span>
+          </div>
+        </a>
+        <a class="next-action" href="project-reality-os-dashboard.html">
+          <span class="icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg>
+          </span>
+          <div>
+            <strong>Go to dashboard</strong>
+            <span>See live project truth</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+      </div>
+
+      <div class="btn-row onboard-modal-footer" id="nav-row">
+        <button type="button" class="btn btn-secondary" id="back-btn" hidden>Back</button>
+        <button type="button" class="btn btn-primary" id="next-btn">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      if (window.PROS && PROS.redirectIfOnboarded()) return;
+
+      var STEPS = [
+        { id: 'welcome', label: 'Welcome', chip: 'STEP 01 · WELCOME' },
+        { id: 'path', label: 'Start', chip: 'STEP 02 · START' },
+        { id: 'role', label: 'Role', chip: 'STEP 03 · ROLE' },
+        { id: 'goals', label: 'Goals', chip: 'STEP 04 · GOALS' },
+        { id: 'workspace', label: 'Project', chip: 'STEP 05 · PROJECT' },
+        { id: 'alerts', label: 'Alerts', chip: 'STEP 06 · ALERTS' },
+        { id: 'invite', label: 'Invite', chip: 'STEP 07 · INVITE' },
+        { id: 'ready', label: 'Ready', chip: 'STEP 08 · READY' }
+      ];
+
+      var state = {
+        step: 0,
+        path: 'sample',
+        role: 'engineer',
+        goals: [],
+        focusGoal: null,
+        name: '',
+        org: 'Meridian Infra',
+        project: 'NH-42-EAST',
+        crew: '',
+        notifications: { match: true, delay: true, sync: false, quiet: true },
+        invites: [],
+        checklist: {}
+      };
+
+      var PATH_EXPLAIN = {
+        sample: 'Sample fills the faded dashboard below with demo reports, matches, and a delay alert so you can practise each task without touching a live job.',
+        own: 'Own project starts clean. Your first task is writing a real report (or inviting a planner) under the project code you enter next.'
+      };
+      var ROLE_EXPLAIN = {
+        engineer: 'Home = site report. First tasks: write report → confirm AI match → sync. You feed the loop from the field.',
+        planner: 'Home = review queue. First tasks: approve/reject matches → open delay conflicts → keep schedule truthful.',
+        lead: 'Home = live dashboard. First tasks: scan Confirmed / Review / Risk → drill into conflicts → check weekly programme.'
+      };
+      var GOAL_EXPLAIN = {
+        offline: {
+          title: 'Offline-first reports',
+          body: 'Task: write the daily report on device. Feature saves locally so tunnels and dead zones do not block you; Sync pushes the queue when signal returns.'
+        },
+        match: {
+          title: 'Faster AI matching',
+          body: 'Task: after a report, review AI’s proposed plan tasks. You tick what is right. Wrong matches never write to the schedule.'
+        },
+        approve: {
+          title: 'Cleaner approvals',
+          body: 'Task: planner clears Review Needed items. Approve moves progress to Confirmed; reject sends it back with a reason on the audit trail.'
+        },
+        delay: {
+          title: 'Delay / conflict alerts',
+          body: 'Task: open Possible Risk cards (crane clash, sequence break). Feature surfaces the conflict before you approve a bad update.'
+        },
+        audit: {
+          title: 'Audit trail on every task',
+          body: 'Task: none extra — every confirm/reject stamps who/when. Feature keeps history so programme changes stay explainable.'
+        },
+        weekly: {
+          title: 'Weekly programme view',
+          body: 'Task: open weekly to see confirmed progress vs plan across the week. Feature replaces spreadsheet roll-ups for the lead.'
+        }
+      };
+
+      var draft = PROS.getDraft();
+      Object.keys(draft).forEach(function (k) {
+        if (draft[k] !== undefined && draft[k] !== null) state[k] = draft[k];
+      });
+
+      try {
+        var existingRole = PROS.safeGet('pros_role') || PROS.getCookie('pros_role');
+        var existingProject = PROS.safeGet('pros_project') || PROS.getCookie('pros_project');
+        if (existingRole) state.role = existingRole;
+        if (existingProject) state.project = existingProject;
+      } catch (e) {}
+
+      var savedStep = PROS.getStep();
+      if (typeof savedStep === 'number' && savedStep > 0 && savedStep < STEPS.length) {
+        state.step = savedStep;
+      }
+
+      var screens = document.querySelectorAll('.onboard-screen');
+      var stepper = document.getElementById('stepper');
+      var nextBtn = document.getElementById('next-btn');
+      var backBtn = document.getElementById('back-btn');
+      var skipBtn = document.getElementById('skip-btn');
+      var stepLabel = document.getElementById('step-label');
+      var projectChip = document.getElementById('project-chip');
+      var navRow = document.getElementById('nav-row');
+      var resumeSlot = document.getElementById('resume-slot');
+
+      STEPS.forEach(function (s, i) {
+        var seg = document.createElement('div');
+        seg.className = 'step-seg';
+        seg.innerHTML = '<div class="step-bar"></div><div class="step-name">' + s.label + '</div>';
+        seg.setAttribute('data-step', String(i));
+        stepper.appendChild(seg);
+      });
+
+      if (savedStep > 0 && savedStep < STEPS.length - 1) {
+        resumeSlot.hidden = false;
+        resumeSlot.innerHTML =
+          '<div class="resume-banner">' +
+          '<p><strong>Resume setup.</strong> Picking up at “' + STEPS[savedStep].label + '”.</p>' +
+          '<button type="button" class="btn btn-secondary btn-sm" id="resume-restart">Start over</button>' +
+          '</div>';
+        var restart = document.getElementById('resume-restart');
+        if (restart) {
+          restart.addEventListener('click', function () {
+            state.step = 0;
+            PROS.setStep(0);
+            resumeSlot.hidden = true;
+            render();
+          });
+        }
+      }
+
+      function persist() {
+        PROS.setStep(state.step);
+        PROS.setDraft({
+          path: state.path,
+          role: state.role,
+          goals: state.goals,
+          name: state.name,
+          org: state.org,
+          project: state.project,
+          crew: state.crew,
+          notifications: state.notifications,
+          invites: state.invites,
+          checklist: state.checklist
+        });
+        projectChip.textContent = state.project || 'Setup';
+      }
+
+      function canContinue() {
+        if (state.step === 1) return !!state.path;
+        if (state.step === 2) return !!state.role;
+        if (state.step === 3) return state.goals.length > 0;
+        if (state.step === 4) {
+          var code = document.getElementById('project-code').value.trim();
+          return code.length >= 2;
+        }
+        return true;
+      }
+
+      function syncFormIntoState() {
+        state.name = document.getElementById('full-name').value.trim();
+        state.org = document.getElementById('org-name').value.trim() || 'Meridian Infra';
+        state.project = document.getElementById('project-code').value.trim().toUpperCase() || 'NH-42-EAST';
+        state.crew = document.getElementById('crew').value.trim();
+        state.invites = [];
+        document.querySelectorAll('#invite-rows .invite-row').forEach(function (row) {
+          var email = row.querySelector('.invite-email').value.trim();
+          var role = row.querySelector('.invite-role').value;
+          if (email) state.invites.push({ email: email, role: role });
+        });
+        if (state.invites.length) state.checklist.invite = true;
+      }
+
+      function updatePreview() {
+        var code = document.getElementById('project-code').value.trim().toUpperCase() || 'NH-42-EAST';
+        var org = document.getElementById('org-name').value.trim() || 'Meridian Infra';
+        document.getElementById('preview-code').textContent = 'Code · ' + code;
+        document.getElementById('preview-org').textContent = 'Org · ' + org;
+        document.getElementById('preview-title').textContent =
+          state.path === 'sample' && code === 'NH-42-EAST'
+            ? 'NH-42 Eastern Corridor'
+            : code + ' workspace';
+        document.getElementById('invite-link').textContent = 'Invite link · pros.app/join/' + code;
+        projectChip.textContent = code;
+      }
+
+      function finish(opts) {
+        opts = opts || {};
+        syncFormIntoState();
+        PROS.markOnboarded({
+          role: state.role,
+          project: state.project,
+          name: state.name,
+          crew: state.crew,
+          org: state.org,
+          path: state.path,
+          goals: state.goals,
+          notifications: state.notifications,
+          invites: state.invites
+        });
+        var dest = opts.dest || PROS.homeForRole(state.role);
+        window.location.href = dest;
+      }
+
+      function render() {
+        screens.forEach(function (s) {
+          var on = Number(s.getAttribute('data-screen')) === state.step;
+          s.hidden = !on;
+          if (on) {
+            s.classList.remove('onboard-screen');
+            void s.offsetWidth;
+            s.classList.add('onboard-screen');
+          }
+        });
+
+        stepper.querySelectorAll('.step-seg').forEach(function (seg, i) {
+          seg.classList.toggle('is-active', i === state.step);
+          seg.classList.toggle('is-done', i < state.step);
+        });
+
+        stepLabel.textContent = STEPS[state.step].chip;
+        backBtn.hidden = state.step === 0;
+        skipBtn.hidden = state.step === STEPS.length - 1;
+        navRow.hidden = state.step === STEPS.length - 1;
+
+        if (state.step === STEPS.length - 1) {
+          nextBtn.textContent = 'Enter project';
+        } else if (state.step === 6) {
+          nextBtn.textContent = state.invites.length ? 'Send & continue' : 'Continue';
+        } else {
+          nextBtn.textContent = 'Continue';
+        }
+
+        document.querySelectorAll('[data-path]').forEach(function (el) {
+          var on = el.getAttribute('data-path') === state.path;
+          el.classList.toggle('is-selected', on);
+          el.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        document.querySelectorAll('[data-role]').forEach(function (el) {
+          var on = el.getAttribute('data-role') === state.role;
+          el.classList.toggle('is-selected', on);
+          el.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        document.querySelectorAll('#goal-chips .chip').forEach(function (el) {
+          el.classList.toggle('is-active', state.goals.indexOf(el.getAttribute('data-goal')) !== -1);
+        });
+        document.getElementById('goal-hint').textContent =
+          state.goals.length ? state.goals.length + ' selected' : 'Select at least one.';
+
+        var pathExplain = document.querySelector('#path-explain p:last-child');
+        if (pathExplain) pathExplain.textContent = PATH_EXPLAIN[state.path] || PATH_EXPLAIN.sample;
+
+        var roleExplain = document.querySelector('#role-explain p:last-child');
+        if (roleExplain) roleExplain.textContent = ROLE_EXPLAIN[state.role] || ROLE_EXPLAIN.engineer;
+
+        var goalDetail = document.getElementById('goal-detail');
+        var focus = state.focusGoal || (state.goals.length ? state.goals[state.goals.length - 1] : null);
+        if (goalDetail) {
+          if (focus && GOAL_EXPLAIN[focus]) {
+            goalDetail.hidden = false;
+            document.getElementById('goal-detail-title').textContent = GOAL_EXPLAIN[focus].title;
+            document.getElementById('goal-detail-body').textContent = GOAL_EXPLAIN[focus].body;
+          } else {
+            goalDetail.hidden = true;
+          }
+        }
+
+        document.getElementById('full-name').value = state.name || '';
+        document.getElementById('org-name').value = state.org || '';
+        document.getElementById('project-code').value = state.project || '';
+        document.getElementById('crew').value = state.crew || '';
+        if (state.path === 'sample' && !document.getElementById('project-code').value) {
+          document.getElementById('project-code').value = 'NH-42-EAST';
+          document.getElementById('org-name').value = state.org || 'Meridian Infra';
+        }
+        updatePreview();
+
+        document.querySelectorAll('[data-notif]').forEach(function (btn) {
+          var key = btn.getAttribute('data-notif');
+          var on = !!state.notifications[key];
+          btn.classList.toggle('is-on', on);
+          btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+
+        var done = 0;
+        document.querySelectorAll('#checklist .checklist-item').forEach(function (item) {
+          var key = item.getAttribute('data-task');
+          var isDone = !!state.checklist[key];
+          item.classList.toggle('is-done', isDone);
+          if (isDone) done += 1;
+        });
+        document.getElementById('checklist-count').textContent = done + ' / 4';
+        document.getElementById('checklist-bar').style.width = (done / 4 * 100) + '%';
+
+        var primary = document.getElementById('cta-primary');
+        var primaryLabel = document.getElementById('cta-primary-label');
+        if (state.role === 'planner' || state.role === 'lead') {
+          primary.href = 'project-reality-os-planner-review.html';
+          primaryLabel.textContent = 'Open review queue';
+        } else {
+          primary.href = 'project-reality-os-site-report.html';
+          primaryLabel.textContent = 'Write a site report';
+        }
+
+        nextBtn.disabled = !canContinue();
+        persist();
+      }
+
+      document.querySelectorAll('[data-path]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          state.path = el.getAttribute('data-path');
+          if (state.path === 'sample') {
+            state.project = 'NH-42-EAST';
+            state.org = state.org || 'Meridian Infra';
+          }
+          render();
+        });
+      });
+
+      document.querySelectorAll('[data-role]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          state.role = el.getAttribute('data-role');
+          render();
+        });
+      });
+
+      document.querySelectorAll('#goal-chips .chip').forEach(function (el) {
+        el.addEventListener('click', function () {
+          var g = el.getAttribute('data-goal');
+          var i = state.goals.indexOf(g);
+          if (i === -1) {
+            state.goals.push(g);
+            state.focusGoal = g;
+          } else {
+            state.goals.splice(i, 1);
+            state.focusGoal = state.goals.length ? state.goals[state.goals.length - 1] : null;
+          }
+          render();
+        });
+      });
+
+      ['full-name', 'org-name', 'project-code', 'crew'].forEach(function (id) {
+        document.getElementById(id).addEventListener('input', function () {
+          syncFormIntoState();
+          updatePreview();
+          nextBtn.disabled = !canContinue();
+          persist();
+        });
+      });
+
+      document.querySelectorAll('[data-notif]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var key = btn.getAttribute('data-notif');
+          state.notifications[key] = !state.notifications[key];
+          render();
+        });
+      });
+
+      document.getElementById('add-invite').addEventListener('click', function () {
+        var row = document.createElement('div');
+        row.className = 'invite-row';
+        row.innerHTML =
+          '<input class="input invite-email" type="email" placeholder="teammate@company.com" autocomplete="email" />' +
+          '<select class="input invite-role" aria-label="Invite role">' +
+          '<option value="engineer">Engineer</option>' +
+          '<option value="planner">Planner</option>' +
+          '<option value="lead">Lead</option>' +
+          '</select>';
+        document.getElementById('invite-rows').appendChild(row);
+      });
+
+      document.getElementById('copy-invite').addEventListener('click', function () {
+        var code = (document.getElementById('project-code').value.trim() || state.project || 'NH-42-EAST').toUpperCase();
+        var link = 'https://pros.app/join/' + code;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(link).then(function () {
+            document.getElementById('copy-invite').textContent = 'Copied';
+            setTimeout(function () {
+              document.getElementById('copy-invite').textContent = 'Copy';
+            }, 1600);
+          });
+        }
+      });
+
+      document.querySelectorAll('#checklist .checklist-item').forEach(function (item) {
+        item.addEventListener('click', function () {
+          var key = item.getAttribute('data-task');
+          state.checklist[key] = !state.checklist[key];
+          render();
+        });
+      });
+
+      document.getElementById('cta-primary').addEventListener('click', function (e) {
+        e.preventDefault();
+        finish({ dest: this.getAttribute('href') });
+      });
+      document.querySelector('.next-action[href="project-reality-os-dashboard.html"]').addEventListener('click', function (e) {
+        e.preventDefault();
+        finish({ dest: 'project-reality-os-dashboard.html' });
+      });
+
+      nextBtn.addEventListener('click', function () {
+        syncFormIntoState();
+        if (!canContinue()) return;
+        if (state.step < STEPS.length - 1) {
+          state.step += 1;
+          if (resumeSlot) resumeSlot.hidden = true;
+          render();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          finish();
+        }
+      });
+
+      backBtn.addEventListener('click', function () {
+        syncFormIntoState();
+        if (state.step > 0) {
+          state.step -= 1;
+          render();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+
+      skipBtn.addEventListener('click', function () {
+        if (state.step === 6) {
+          state.step += 1;
+          render();
+          return;
+        }
+        if (state.step < STEPS.length - 1) {
+          syncFormIntoState();
+          if (state.step === 1 && !state.path) state.path = 'sample';
+          if (state.step === 2 && !state.role) state.role = 'engineer';
+          if (state.step === 3 && !state.goals.length) state.goals = ['offline', 'match'];
+          if (state.step === 4) {
+            state.project = state.project || 'NH-42-EAST';
+            state.org = state.org || 'Meridian Infra';
+          }
+          state.step += 1;
+          render();
+        }
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>

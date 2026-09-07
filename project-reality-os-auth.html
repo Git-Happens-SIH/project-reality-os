@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign in — Project Reality OS</title>
+  <link rel="preload" href="assets/circle-loader.svg" as="image" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="project-reality-os.css" />
+  <script src="pros-cookies.js"></script>
+  <script src="pros-loader.js" defer></script>
+</head>
+<body>
+  <div class="app auth-shell">
+    <header class="app-bar">
+      <a href="project-reality-os-landing.html" class="logo">Project Reality<span> OS</span></a>
+      <a href="project-reality-os-landing.html" class="caption" style="text-decoration:none;">Back</a>
+    </header>
+
+    <div class="page-head">
+      <p class="label">ACCESS</p>
+      <h1>Join your project</h1>
+      <p>Role-based access. Site engineers report. Planners decide. One project code connects both.</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab is-active" data-tab="signup" role="tab" aria-selected="true">Sign up</button>
+      <button type="button" class="tab" data-tab="login" role="tab" aria-selected="false">Log in</button>
+    </div>
+
+    <form id="auth-form" class="card card-white" action="project-reality-os-onboarding.html" method="get">
+      <div class="form-group">
+        <label>Your role</label>
+        <div class="role-grid">
+          <label class="role-option is-selected">
+            <input type="radio" name="role" value="engineer" checked />
+            <strong>Site Engineer</strong>
+            <span>Write daily reports from the field. Confirm AI matches.</span>
+          </label>
+          <label class="role-option">
+            <input type="radio" name="role" value="planner" />
+            <strong>Planner / Manager</strong>
+            <span>Review matches. Approve schedule updates. Watch delays.</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="project-code">Project code</label>
+        <input class="input" id="project-code" name="project" type="text" placeholder="e.g. NH-42-EAST" required autocomplete="organization" />
+        <p class="form-hint">Shared with your organisation. Isolates project data.</p>
+      </div>
+
+      <div class="form-group" data-signup-only>
+        <label for="name">Full name</label>
+        <input class="input" id="name" name="name" type="text" placeholder="Your name" autocomplete="name" />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Work email</label>
+        <input class="input" id="email" name="email" type="email" placeholder="you@company.com" required autocomplete="email" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input class="input" id="password" name="password" type="password" placeholder="At least 8 characters" required autocomplete="new-password" minlength="8" />
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" id="submit-btn">Create account &amp; continue</button>
+      <p class="caption" style="text-align:center; margin-top:12px;">No credit card · Takes under 3 minutes · Role-based access</p>
+    </form>
+  </div>
+
+  <script>
+    (function () {
+      var tabs = document.querySelectorAll('.tab');
+      var form = document.getElementById('auth-form');
+      var submitBtn = document.getElementById('submit-btn');
+      var signupOnly = document.querySelectorAll('[data-signup-only]');
+      var password = document.getElementById('password');
+      var mode = 'signup';
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          mode = tab.getAttribute('data-tab');
+          tabs.forEach(function (t) {
+            var on = t === tab;
+            t.classList.toggle('is-active', on);
+            t.setAttribute('aria-selected', on ? 'true' : 'false');
+          });
+          signupOnly.forEach(function (el) {
+            el.style.display = mode === 'signup' ? '' : 'none';
+            var input = el.querySelector('input');
+            if (input) input.required = mode === 'signup';
+          });
+          password.autocomplete = mode === 'signup' ? 'new-password' : 'current-password';
+          submitBtn.textContent = mode === 'signup' ? 'Create account & continue' : 'Log in';
+          form.action = mode === 'signup'
+            ? 'project-reality-os-onboarding.html'
+            : 'project-reality-os-dashboard.html';
+        });
+      });
+
+      document.querySelectorAll('.role-option').forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          document.querySelectorAll('.role-option').forEach(function (o) {
+            o.classList.remove('is-selected');
+          });
+          opt.classList.add('is-selected');
+        });
+      });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var role = form.querySelector('input[name="role"]:checked').value;
+        var project = document.getElementById('project-code').value.trim() || 'NH-42-EAST';
+        try {
+          localStorage.setItem('pros_role', role);
+          localStorage.setItem('pros_project', project);
+        } catch (err) {}
+        if (mode === 'login') {
+          if (window.PROS && !PROS.isOnboarded()) {
+            window.location.href = 'project-reality-os-onboarding.html';
+            return;
+          }
+          window.location.href = role === 'planner'
+            ? 'project-reality-os-planner-review.html'
+            : 'project-reality-os-site-report.html';
+        } else {
+          window.location.href = 'project-reality-os-onboarding.html';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

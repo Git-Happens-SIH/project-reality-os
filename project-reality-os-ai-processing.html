@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Processing — Project Reality OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="project-reality-os.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-bar">
+      <a href="project-reality-os-landing.html" class="logo">Project Reality<span> OS</span></a>
+      <div class="app-bar-meta">
+        <span class="project-chip" id="project-chip">NH-42-EAST</span>
+        <span class="role-chip">Site Engineer</span>
+      </div>
+    </header>
+
+    <div class="page-head" style="text-align:center;">
+      <p class="label">AI MATCH LAYER</p>
+      <h1>Matching report to the live plan</h1>
+      <p style="margin:0 auto;">AI proposes task links and confidence scores. Nothing is written into the schedule yet.</p>
+    </div>
+
+    <div class="card card-white" style="text-align:center; margin-bottom:16px;">
+      <div class="spinner" aria-hidden="true"></div>
+      <h3 id="status-title">Reading site note…</h3>
+      <p id="status-sub" class="caption" style="margin-top:6px;">Plain text + photos · Offline sync complete</p>
+    </div>
+
+    <div class="progress-steps" id="steps">
+      <div class="progress-step is-done" data-step="0">
+        <div class="step-mark">✓</div>
+        <div>
+          <h3>Report received</h3>
+          <p>Local save verified · synced to project</p>
+        </div>
+      </div>
+      <div class="progress-step is-active" data-step="1">
+        <div class="step-mark">2</div>
+        <div>
+          <h3>Extracting work signals</h3>
+          <p>Location, quantities, blockers, weather</p>
+        </div>
+      </div>
+      <div class="progress-step is-pending" data-step="2">
+        <div class="step-mark">3</div>
+        <div>
+          <h3>Linking to plan tasks</h3>
+          <p>Confidence score · task candidates</p>
+        </div>
+      </div>
+      <div class="progress-step is-pending" data-step="3">
+        <div class="step-mark">4</div>
+        <div>
+          <h3>Ready for your confirmation</h3>
+          <p>You confirm before planner review</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="banner banner-ai" style="margin-top:18px;">
+      <strong>Human in the loop.</strong> AI suggests. You confirm matches. Planner still approves schedule writes.
+    </div>
+
+    <p class="caption" style="text-align:center; margin-top:16px;">
+      Taking longer than usual?
+      <a href="project-reality-os-match-confirmation.html" style="color:var(--black);">Skip to confirmation</a>
+    </p>
+  </div>
+
+  <script>
+    (function () {
+      try {
+        var p = localStorage.getItem('pros_project');
+        if (p) document.getElementById('project-chip').textContent = p;
+      } catch (e) {}
+
+      var titles = [
+        'Reading site note…',
+        'Extracting work signals…',
+        'Linking to plan tasks…',
+        'Preparing confirmation…'
+      ];
+      var subs = [
+        'Plain text + photos · Offline sync complete',
+        'Location, quantities, blockers',
+        'Scoring candidates against WBS',
+        'Almost ready'
+      ];
+      var stepEls = document.querySelectorAll('.progress-step');
+      var i = 1;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var delay = reduce ? 200 : 900;
+
+      function paint(n) {
+        stepEls.forEach(function (el, idx) {
+          el.classList.remove('is-done', 'is-active', 'is-pending');
+          if (idx < n) el.classList.add('is-done');
+          else if (idx === n) el.classList.add('is-active');
+          else el.classList.add('is-pending');
+          if (idx < n) el.querySelector('.step-mark').textContent = '✓';
+        });
+        document.getElementById('status-title').textContent = titles[Math.min(n, titles.length - 1)];
+        document.getElementById('status-sub').textContent = subs[Math.min(n, subs.length - 1)];
+      }
+
+      paint(1);
+      var timer = setInterval(function () {
+        i += 1;
+        if (i > 3) {
+          clearInterval(timer);
+          window.location.href = 'project-reality-os-match-confirmation.html';
+          return;
+        }
+        paint(i);
+      }, delay);
+    })();
+  </script>
+  <script src="pros-cookies.js"></script>
+  <script>if (window.PROS) PROS.requireOnboarded();</script>
+</body>
+</html>

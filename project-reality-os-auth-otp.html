@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify code — Project Reality OS</title>
+  <link rel="preload" href="assets/circle-loader.svg" as="image" type="image/svg+xml" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="pros-loader.js" defer></script>
+</head>
+<body>
+  <div class="flex min-h-screen items-center justify-center bg-neutral-100 p-6">
+    <div class="w-full max-w-sm rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm">
+      <h1 class="text-xl font-semibold text-neutral-900">Check your email</h1>
+      <p class="mt-1 text-sm text-neutral-500">
+        We sent a 6-digit code to
+        <span id="email-display" class="font-medium text-neutral-700">you@company.com</span>
+      </p>
+
+      <form id="otp-form" class="mt-6" action="project-reality-os-onboarding.html" method="get">
+        <div class="flex justify-between gap-2" id="otp-inputs" role="group" aria-label="One-time code">
+          <input type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" aria-label="Digit 1"
+            class="otp-digit size-12 rounded-xl border border-neutral-200 text-center text-lg font-semibold text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-4 focus:ring-neutral-900/10" />
+          <input type="text" inputmode="numeric" maxlength="1" aria-label="Digit 2"
+            class="otp-digit size-12 rounded-xl border border-neutral-200 text-center text-lg font-semibold text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-4 focus:ring-neutral-900/10" />
+          <input type="text" inputmode="numeric" maxlength="1" aria-label="Digit 3"
+            class="otp-digit size-12 rounded-xl border border-neutral-200 text-center text-lg font-semibold text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-4 focus:ring-neutral-900/10" />
+          <input type="text" inputmode="numeric" maxlength="1" aria-label="Digit 4"
+            class="otp-digit size-12 rounded-xl border border-neutral-200 text-center text-lg font-semibold text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-4 focus:ring-neutral-900/10" />
+          <input type="text" inputmode="numeric" maxlength="1" aria-label="Digit 5"
+            class="otp-digit size-12 rounded-xl border border-neutral-200 text-center text-lg font-semibold text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-4 focus:ring-neutral-900/10" />
+          <input type="text" inputmode="numeric" maxlength="1" aria-label="Digit 6"
+            class="otp-digit size-12 rounded-xl border border-neutral-200 text-center text-lg font-semibold text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-4 focus:ring-neutral-900/10" />
+        </div>
+
+        <button
+          type="submit"
+          id="verify-btn"
+          disabled
+          class="mt-6 w-full rounded-xl bg-neutral-900 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:hover:bg-neutral-300"
+        >
+          Verify
+        </button>
+      </form>
+
+      <p class="mt-4 text-center text-sm text-neutral-400" id="resend-line">
+        Didn't get it? Resend in <span id="resend-timer">0:30</span>
+      </p>
+      <p class="mt-4 text-center">
+        <a href="project-reality-os-auth-signup.html" class="text-xs font-medium text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline">Back</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var digits = Array.prototype.slice.call(document.querySelectorAll('.otp-digit'));
+      var verifyBtn = document.getElementById('verify-btn');
+      var resendLine = document.getElementById('resend-line');
+      var emailDisplay = document.getElementById('email-display');
+      var remaining = 30;
+      var timerId = null;
+
+      try {
+        var stored = sessionStorage.getItem('pros_otp_email');
+        if (stored) emailDisplay.textContent = stored;
+      } catch (err) {}
+
+      function onlyDigits(value) {
+        return String(value || '').replace(/\D/g, '');
+      }
+
+      function codeValue() {
+        return digits.map(function (el) { return el.value; }).join('');
+      }
+
+      function syncVerify() {
+        verifyBtn.disabled = codeValue().length !== 6;
+      }
+
+      function focusAt(index) {
+        if (index < 0 || index >= digits.length) return;
+        digits[index].focus();
+        digits[index].select();
+      }
+
+      function fillFrom(startIndex, raw) {
+        var chars = onlyDigits(raw).slice(0, digits.length - startIndex).split('');
+        chars.forEach(function (ch, i) {
+          digits[startIndex + i].value = ch;
+        });
+        var next = Math.min(startIndex + chars.length, digits.length - 1);
+        focusAt(chars.length ? next : startIndex);
+        syncVerify();
+      }
+
+      digits.forEach(function (input, index) {
+        input.addEventListener('input', function (e) {
+          var cleaned = onlyDigits(e.target.value);
+          if (cleaned.length > 1) {
+            fillFrom(index, cleaned);
+            return;
+          }
+          e.target.value = cleaned.slice(0, 1);
+          if (e.target.value && index < digits.length - 1) focusAt(index + 1);
+          syncVerify();
+        });
+
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Backspace') {
+            if (input.value) {
+              input.value = '';
+              syncVerify();
+              return;
+            }
+            if (index > 0) {
+              e.preventDefault();
+              digits[index - 1].value = '';
+              focusAt(index - 1);
+              syncVerify();
+            }
+            return;
+          }
+          if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            focusAt(index - 1);
+            return;
+          }
+          if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            focusAt(index + 1);
+            return;
+          }
+        });
+
+        input.addEventListener('paste', function (e) {
+          e.preventDefault();
+          var pasted = (e.clipboardData || window.clipboardData).getData('text');
+          fillFrom(0, pasted);
+        });
+
+        input.addEventListener('focus', function () {
+          input.select();
+        });
+      });
+
+      function formatTime(sec) {
+        var m = Math.floor(sec / 60);
+        var s = sec % 60;
+        return m + ':' + String(s).padStart(2, '0');
+      }
+
+      function showCountdown() {
+        resendLine.innerHTML = 'Didn\'t get it? Resend in <span id="resend-timer">' + formatTime(remaining) + '</span>';
+      }
+
+      function showResendButton() {
+        resendLine.innerHTML = 'Didn\'t get it? <button type="button" id="resend-btn" class="font-medium text-neutral-900 underline-offset-4 hover:underline">Resend code</button>';
+        document.getElementById('resend-btn').addEventListener('click', startResend);
+      }
+
+      function tick() {
+        remaining -= 1;
+        if (remaining <= 0) {
+          clearInterval(timerId);
+          timerId = null;
+          showResendButton();
+          return;
+        }
+        var timerEl = document.getElementById('resend-timer');
+        if (timerEl) timerEl.textContent = formatTime(remaining);
+      }
+
+      function startResend() {
+        remaining = 30;
+        showCountdown();
+        if (timerId) clearInterval(timerId);
+        timerId = setInterval(tick, 1000);
+      }
+
+      document.getElementById('otp-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (codeValue().length !== 6) return;
+        window.location.href = 'project-reality-os-onboarding.html';
+      });
+
+      syncVerify();
+      startResend();
+      digits[0].focus();
+    })();
+  </script>
+</body>
+</html>

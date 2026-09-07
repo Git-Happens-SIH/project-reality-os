@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report &amp; Task History — Project Reality OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="project-reality-os.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-bar">
+      <a href="project-reality-os-landing.html" class="logo">Project Reality<span> OS</span></a>
+      <div class="app-bar-meta">
+        <span class="project-chip" id="project-chip">NH-42-EAST</span>
+        <span class="role-chip">History</span>
+      </div>
+    </header>
+
+    <div class="page-head">
+      <p class="label">REPORT &amp; TASK HISTORY</p>
+      <h1>Full trail, still attached</h1>
+      <p>Who reported, who approved, when it synced. Context stays on the task.</p>
+    </div>
+
+    <div class="form-group">
+      <label for="search" class="caption" style="text-transform:none; letter-spacing:0;">Search reports or WBS</label>
+      <input class="input" id="search" type="search" placeholder="e.g. Pier P7, Mehta, crane…" />
+    </div>
+
+    <div class="filter-row">
+      <button type="button" class="chip is-active" data-filter="all">All</button>
+      <button type="button" class="chip" data-filter="report">Reports</button>
+      <button type="button" class="chip" data-filter="task">Tasks</button>
+      <button type="button" class="chip" data-filter="risk">Risks</button>
+    </div>
+
+    <div class="card-stack" id="history-list">
+      <article class="card card-white hist-item" data-type="report" data-text="pier p7 pile cap mehta pour">
+        <div class="card-header">
+          <h3>Daily report · Ch. 14+280</h3>
+          <span class="badge badge-confirmed">Approved</span>
+        </div>
+        <p class="caption">A. Mehta · Today 16:42 · Synced</p>
+        <p style="margin-top:8px;">Pier P7 pile cap pour completed (38 m³). Linked to WBS 4.2.1.</p>
+        <a href="project-reality-os-match-confirmation.html" class="caption" style="display:inline-block;margin-top:8px;color:var(--black);">View match set</a>
+      </article>
+
+      <article class="card card-white hist-item" data-type="task" data-text="wbs 4.2.1 pier p7">
+        <div class="card-header">
+          <h3>WBS 4.2.1 — Pier P7 pile cap</h3>
+          <span class="badge badge-confirmed">Confirmed</span>
+        </div>
+        <p class="caption">Progress write · Planner approved · 16:55</p>
+        <p style="margin-top:8px;">Marked complete from site report. Audit trail attached.</p>
+      </article>
+
+      <article class="card card-white hist-item" data-type="risk" data-text="crane package c risk">
+        <div class="card-header">
+          <h3>WBS 5.1.0 — Crane utilisation</h3>
+          <span class="badge badge-risk">Possible Risk</span>
+        </div>
+        <p class="caption">Conflict open · Package C booking</p>
+        <p style="margin-top:8px;">Idle time flagged against neighbouring package window.</p>
+        <a href="project-reality-os-delay-conflict.html" class="caption" style="display:inline-block;margin-top:8px;color:var(--risk);">Open conflict detail</a>
+      </article>
+
+      <article class="card card-white hist-item" data-type="report" data-text="embankment singh lift">
+        <div class="card-header">
+          <h3>Daily report · Ch. 13+050</h3>
+          <span class="badge badge-review">In review</span>
+        </div>
+        <p class="caption">R. Singh · Today 14:10 · Synced</p>
+        <p style="margin-top:8px;">Embankment lift 3 complete. Compaction tests pending lab.</p>
+      </article>
+
+      <article class="card card-white hist-item" data-type="task" data-text="wbs 3.4.2 embankment">
+        <div class="card-header">
+          <h3>WBS 3.4.2 — Embankment lift 3</h3>
+          <span class="badge badge-review">Review Needed</span>
+        </div>
+        <p class="caption">Awaiting planner · lab return</p>
+        <p style="margin-top:8px;">No schedule write until approval.</p>
+      </article>
+    </div>
+
+    <p class="caption" style="margin-top:16px; text-align:center;">
+      Prefer the weekly cut?
+      <a href="project-reality-os-weekly.html" style="color:var(--black);">Open milestone summary</a>
+    </p>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Primary">
+    <div class="bottom-nav-inner">
+      <a class="nav-item" href="project-reality-os-site-report.html">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        Report
+      </a>
+      <a class="nav-item" href="project-reality-os-planner-review.html">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Review
+      </a>
+      <a class="nav-item" href="project-reality-os-dashboard.html">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-item is-active" href="project-reality-os-history.html">
+        <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5M12 7v5l4 2"/></svg>
+        History
+      </a>
+      <a class="nav-item" href="project-reality-os-settings.html">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        Account
+      </a>
+    </div>
+  </nav>
+
+  <script>
+    (function () {
+      try {
+        var p = localStorage.getItem('pros_project');
+        if (p) document.getElementById('project-chip').textContent = p;
+      } catch (e) {}
+
+      var filter = 'all';
+      var search = document.getElementById('search');
+      var items = document.querySelectorAll('.hist-item');
+
+      function apply() {
+        var q = (search.value || '').toLowerCase().trim();
+        items.forEach(function (item) {
+          var typeOk = filter === 'all' || item.getAttribute('data-type') === filter;
+          var textOk = !q || (item.getAttribute('data-text') || '').indexOf(q) !== -1
+            || item.textContent.toLowerCase().indexOf(q) !== -1;
+          item.hidden = !(typeOk && textOk);
+        });
+      }
+
+      document.querySelectorAll('.chip').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          document.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('is-active'); });
+          chip.classList.add('is-active');
+          filter = chip.getAttribute('data-filter');
+          apply();
+        });
+      });
+      search.addEventListener('input', apply);
+    })();
+  </script>
+  <script src="pros-cookies.js"></script>
+  <script>if (window.PROS) PROS.requireOnboarded();</script>
+</body>
+</html>

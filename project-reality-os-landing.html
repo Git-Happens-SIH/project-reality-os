@@ -1,0 +1,4633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Reality OS — Turn daily site reports into real-time project truth</title>
+  <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml" />
+  <link rel="preload" href="assets/circle-loader.svg" as="image" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.css" />
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+  <script src="pros-loader.js" defer></script>
+  <script>
+    tailwind.config = {
+      corePlugins: { preflight: false },
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Arial', 'sans-serif'],
+            serif: ['Times New Roman', 'Times', 'serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root {
+      --orange: #FF8A00;
+      --purple: #4B00FF;
+      --cream: #FCF9F0;
+      --pale-yellow: #FFF0B8;
+      --black: #171717;
+      --muted: #4F4B45;
+      --border: #1C1C1C;
+      --green: #55B85A;
+      --charcoal: #262626;
+      --white: #FFFFFF;
+      --page-pad: 16px;
+      --page-max: 560px;
+      --hero-ink: #F4F1EA;
+      --hero-muted: rgba(244, 241, 234, 0.72);
+      --hero-veil: rgba(10, 12, 14, 0.58);
+      --font-display: 'Bebas Neue', Impact, Haettenschweiler, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--cream);
+      color: var(--black);
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: clip; /* clip keeps sticky intact; hidden breaks it */
+    }
+
+    h1, h2, h3, .serif {
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    h1 { font-size: clamp(28px, 4vw, 44px); line-height: 1.08; }
+    h2 { font-size: clamp(22px, 3vw, 32px); line-height: 1.15; }
+    h3 { font-size: clamp(18px, 2.2vw, 22px); line-height: 1.2; }
+    p, li { font-size: 13px; color: var(--muted); }
+    .caption { font-size: 10px; color: var(--muted); letter-spacing: 0.02em; }
+
+    .page {
+      max-width: var(--page-max);
+      margin: 0 auto;
+      padding: 36px var(--page-pad) 80px;
+    }
+
+    /* Header — overlays dark hero, flips cream after scroll */
+    .site-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      padding: 0 var(--page-pad);
+    }
+    .site-header-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px 12px;
+      padding: 18px 0 14px;
+      border-bottom: 1px solid rgba(244, 241, 234, 0.18);
+    }
+    .site-header.is-solid {
+      position: sticky;
+      top: 0;
+      background: rgba(252, 249, 240, 0.94);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1.5px solid var(--border);
+    }
+    .site-header.is-solid .site-header-inner {
+      border-bottom: none;
+      padding: 14px 0;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--hero-ink);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      min-width: 0;
+      flex-shrink: 1;
+      line-height: 1;
+    }
+    .site-header.is-solid .logo { color: var(--black); }
+    .logo-mark {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      display: block;
+    }
+    .logo-text { white-space: nowrap; }
+    .logo-os { color: var(--orange); }
+
+    .header-actions {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+
+    .nav-toggle {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 44px;
+      min-width: 44px;
+      padding: 8px 10px;
+      border: 1.5px solid rgba(244, 241, 234, 0.45);
+      border-radius: 5px;
+      background: transparent;
+      color: var(--hero-ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .site-header.is-solid .nav-toggle {
+      border-color: var(--border);
+      background: var(--cream);
+      color: var(--black);
+    }
+    .nav-toggle:hover { background: rgba(244, 241, 234, 0.08); }
+    .site-header.is-solid .nav-toggle:hover { background: #f5f0e4; }
+    .nav-toggle:focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 2px;
+    }
+    .nav-toggle-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      width: 14px;
+    }
+    .nav-toggle-bars span {
+      display: block;
+      height: 1.5px;
+      background: currentColor;
+      border-radius: 1px;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+    .site-header.is-open .nav-toggle-bars span:nth-child(1) {
+      transform: translateY(4.5px) rotate(45deg);
+    }
+    .site-header.is-open .nav-toggle-bars span:nth-child(2) { opacity: 0; }
+    .site-header.is-open .nav-toggle-bars span:nth-child(3) {
+      transform: translateY(-4.5px) rotate(-45deg);
+    }
+
+    .nav-cta-mobile {
+      display: none;
+      padding: 8px 12px;
+      font-size: 11px;
+      min-height: 44px;
+    }
+
+    nav {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    nav a {
+      font-size: 11px;
+      color: var(--hero-muted);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    nav a:hover { color: var(--hero-ink); }
+    .site-header.is-solid nav a { color: var(--muted); }
+    .site-header.is-solid nav a:hover { color: var(--black); }
+    nav a:focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+    nav .btn { color: var(--black); }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 9px 16px;
+      border-radius: 5px;
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+    }
+    .btn-primary {
+      background: var(--orange);
+      color: var(--black);
+      box-shadow: 2px 2px 0 #111;
+    }
+    .btn-primary:hover {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0 #111;
+      background: #e67b00;
+    }
+    .btn-secondary {
+      background: var(--cream);
+      color: var(--black);
+    }
+    .btn-secondary:hover { background: #f5f0e4; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--hero-ink);
+      border-color: rgba(244, 241, 234, 0.55);
+      box-shadow: none;
+    }
+    .btn-ghost:hover {
+      background: rgba(244, 241, 234, 0.08);
+      border-color: var(--hero-ink);
+    }
+
+    /* —— Cinematic hero (United Carriers-inspired) —— */
+    .hero-stage {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      color: var(--hero-ink);
+      overflow: hidden;
+      background: #0a0c0e;
+    }
+    .hero-media {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-media video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.06);
+      transform-origin: center center;
+      animation: hero-drift 28s ease-in-out infinite alternate;
+    }
+    .hero-veil {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(180deg, rgba(8, 10, 12, 0.55) 0%, rgba(8, 10, 12, 0.28) 38%, rgba(8, 10, 12, 0.72) 100%),
+        linear-gradient(90deg, rgba(8, 10, 12, 0.55) 0%, rgba(8, 10, 12, 0.12) 55%, rgba(8, 10, 12, 0.35) 100%);
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 120px var(--page-pad) 56px;
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--hero-muted);
+      margin-bottom: 18px;
+      opacity: 0;
+      animation: hero-rise 0.7s ease 0.15s forwards;
+    }
+    .hero-brand {
+      font-family: var(--font-display);
+      font-size: clamp(56px, 12vw, 128px);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      color: var(--hero-ink);
+      margin: 0 0 18px;
+      max-width: 12ch;
+      text-wrap: balance;
+      opacity: 0;
+      animation: hero-rise 0.85s ease 0.28s forwards;
+    }
+    .hero-brand .accent { color: var(--orange); }
+    .hero-sub {
+      font-size: clamp(14px, 1.6vw, 17px);
+      color: var(--hero-muted);
+      margin: 0 0 28px;
+      max-width: 38ch;
+      line-height: 1.55;
+      opacity: 0;
+      animation: hero-rise 0.8s ease 0.42s forwards;
+    }
+    .cta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: hero-rise 0.8s ease 0.55s forwards;
+    }
+    .cta-row .btn {
+      min-height: 44px;
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .hero-scroll-hint {
+      position: absolute;
+      z-index: 2;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--hero-muted);
+      opacity: 0;
+      animation: hero-rise 0.7s ease 0.9s forwards, hero-pulse 2.4s ease 1.6s infinite;
+    }
+    @keyframes hero-drift {
+      from { transform: scale(1.06) translate3d(0, 0, 0); }
+      to { transform: scale(1.12) translate3d(0, -1.5%, 0); }
+    }
+    @keyframes hero-rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes hero-pulse {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 0.9; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-media video { animation: none; transform: scale(1.02); }
+      .hero-eyebrow,
+      .hero-brand,
+      .hero-sub,
+      .cta-row,
+      .hero-scroll-hint {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* Images */
+    .img-frame {
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      overflow: hidden;
+      background: var(--white);
+    }
+    .img-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+    .img-caption {
+      font-size: 10px;
+      color: var(--muted);
+      padding: 8px 12px;
+      border-top: 1px solid var(--border);
+      background: var(--cream);
+    }
+
+    /* Tech stack marquee — dock-style app icons */
+    .stack-strip {
+      margin: 4px 0 48px;
+      padding: 0;
+    }
+    .stack-strip .section-head {
+      text-align: center;
+      margin: 0 auto 18px;
+      max-width: 42ch;
+    }
+    .stack-strip .section-label {
+      margin-bottom: 8px;
+    }
+    .stack-strip .section-intro {
+      margin: 0 auto;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .stack-dock {
+      position: relative;
+      overflow: hidden;
+      width: 100vw;
+      max-width: 100vw;
+      margin-left: calc(50% - 50vw);
+      padding: 22px 0 28px;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% 100%, rgba(255, 138, 0, 0.14), transparent 70%),
+        linear-gradient(180deg, transparent 0%, rgba(23, 23, 23, 0.03) 100%);
+      mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+    }
+    .stack-dock::after {
+      content: "";
+      position: absolute;
+      left: 12%;
+      right: 12%;
+      bottom: 10px;
+      height: 10px;
+      border-radius: 100%;
+      background: rgba(23, 23, 23, 0.12);
+      filter: blur(6px);
+      pointer-events: none;
+    }
+    .stack-marquee { position: relative; z-index: 1; }
+    .stack-track {
+      display: flex;
+      width: max-content;
+      gap: 16px;
+      align-items: flex-end;
+      padding: 14px 8px 10px;
+      animation: stack-scroll 34s linear infinite;
+      will-change: transform;
+    }
+    .stack-marquee:hover .stack-track,
+    .stack-marquee:focus-within .stack-track {
+      animation-play-state: paused;
+    }
+    .stack-icon {
+      flex: 0 0 auto;
+      width: 68px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+      color: var(--muted);
+      transform-origin: center bottom;
+      transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), color 0.15s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .stack-icon:hover,
+    .stack-icon:focus-visible {
+      transform: scale(1.3) translateY(-10px);
+      color: var(--black);
+      z-index: 5;
+    }
+    .stack-icon:focus-visible { outline: none; }
+    .stack-icon:focus-visible .stack-face {
+      outline: 2px solid var(--orange);
+      outline-offset: 3px;
+    }
+    .stack-face {
+      width: 68px;
+      height: 68px;
+      border-radius: 16px;
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 3px 0 #111;
+      transition: box-shadow 0.24s ease, border-radius 0.24s ease, transform 0.24s ease;
+      overflow: hidden;
+    }
+    .stack-icon:hover .stack-face,
+    .stack-icon:focus-visible .stack-face {
+      box-shadow: 4px 6px 0 #111;
+      border-radius: 18px;
+    }
+    .stack-face svg {
+      width: 32px;
+      height: 32px;
+      display: block;
+    }
+    .stack-name {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+      opacity: 0.88;
+    }
+    .stack-icon:hover .stack-name,
+    .stack-icon:focus-visible .stack-name {
+      opacity: 1;
+      font-weight: 600;
+    }
+    .stack-face.html { background: #E34F26; }
+    .stack-face.css { background: #264DE4; }
+    .stack-face.js { background: #F7DF1E; }
+    .stack-face.svg { background: #FFB13B; }
+    .stack-face.fonts { background: #4285F4; }
+    .stack-face.unsplash { background: #111111; }
+    .stack-face.offline { background: #FFF0B8; }
+    .stack-face.storage { background: #55B85A; }
+    .stack-face.html svg,
+    .stack-face.css svg,
+    .stack-face.fonts svg,
+    .stack-face.unsplash svg { fill: #fff; }
+    .stack-face.js svg { fill: #171717; }
+    .stack-face.svg svg { fill: #171717; }
+    .stack-face.offline svg { stroke: #171717; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .stack-face.storage svg { fill: #fff; }
+    @keyframes stack-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(calc(-50% - 8px)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .stack-track {
+        animation: none;
+        overflow-x: auto;
+        width: 100%;
+        max-width: 100vw;
+        padding-left: 16px;
+        padding-right: 16px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .stack-track::-webkit-scrollbar { display: none; }
+      .stack-dock {
+        mask-image: none;
+        -webkit-mask-image: none;
+      }
+      .stack-icon { transition: none; }
+    }
+
+    /* Field modules — 3D product card marquee (AI Canvas–inspired) */
+    .field-kit {
+      margin-bottom: 48px;
+      overflow: visible;
+    }
+    .field-kit .section-head { max-width: 48ch; }
+    .kit-marquee {
+      margin-top: 18px;
+      overflow: hidden;
+      width: 100vw;
+      max-width: 100vw;
+      margin-left: calc(50% - 50vw);
+      padding: 12px 0 8px;
+      perspective: 1200px;
+      mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+    }
+    .kit-track {
+      display: flex;
+      width: max-content;
+      gap: 16px;
+      padding: 8px 20px 20px;
+      animation: kit-scroll 48s linear infinite;
+      will-change: transform;
+    }
+    .kit-marquee:hover .kit-track,
+    .kit-marquee:focus-within .kit-track {
+      animation-play-state: paused;
+    }
+    .kit-card {
+      flex: 0 0 auto;
+      width: min(260px, 78vw);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      background: var(--white);
+      box-shadow: 3px 4px 0 #111;
+      padding: 14px 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+      transform-style: preserve-3d;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+      transform: rotateX(0deg) rotateY(0deg) translateZ(0);
+    }
+    .kit-card:hover,
+    .kit-card:focus-visible {
+      transform: rotateX(8deg) rotateY(-10deg) translateY(-6px);
+      box-shadow: 6px 10px 0 #111;
+      outline: none;
+    }
+    .kit-card:focus-visible {
+      box-shadow: 6px 10px 0 #111, 0 0 0 2px var(--cream), 0 0 0 4px var(--orange);
+    }
+    .kit-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .kit-tag {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--pale-yellow);
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 7px;
+    }
+    .kit-wish {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: var(--cream);
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      flex: none;
+    }
+    .kit-wish svg { width: 14px; height: 14px; }
+    .kit-stage {
+      position: relative;
+      height: 168px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background:
+        linear-gradient(165deg, #f7f1e4 0%, #ebe4d4 55%, #ddd4c0 100%);
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      transform-style: preserve-3d;
+    }
+    .kit-stage::before {
+      content: "";
+      position: absolute;
+      inset: auto 12% 18px;
+      height: 18px;
+      border-radius: 100%;
+      background: rgba(23, 23, 23, 0.16);
+      filter: blur(4px);
+      transform: translateZ(0);
+    }
+    .kit-glyph {
+      width: 112px;
+      height: 112px;
+      color: var(--black);
+      background: currentColor;
+      -webkit-mask: var(--kit-icon) center / contain no-repeat;
+      mask: var(--kit-icon) center / contain no-repeat;
+      position: relative;
+      z-index: 1;
+      transform: translateZ(28px);
+      animation: kit-spin 9s linear infinite;
+      filter: drop-shadow(0 10px 0 rgba(23, 23, 23, 0.08));
+    }
+    .kit-card:hover .kit-glyph,
+    .kit-card:focus-visible .kit-glyph {
+      animation-duration: 4.5s;
+    }
+    .kit-hint {
+      position: absolute;
+      left: 10px;
+      bottom: 8px;
+      font-size: 9px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: rgba(23, 23, 23, 0.45);
+      z-index: 2;
+    }
+    .kit-meta { display: grid; gap: 4px; }
+    .kit-brand {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .kit-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .kit-title {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.15;
+      color: var(--black);
+      letter-spacing: -0.01em;
+    }
+    .kit-price {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--black);
+      white-space: nowrap;
+    }
+    .kit-swatches {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      margin-top: 2px;
+    }
+    .kit-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      box-shadow: 1px 1px 0 rgba(23, 23, 23, 0.15);
+    }
+    .kit-swatch.is-active {
+      outline: 2px solid var(--orange);
+      outline-offset: 1px;
+    }
+    .kit-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      margin-top: 2px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: var(--orange);
+      color: var(--black);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      box-shadow: 2px 2px 0 #111;
+    }
+    .kit-cta svg { width: 15px; height: 15px; flex: none; }
+    .kit-credit {
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .kit-credit a { color: var(--black); }
+    @keyframes kit-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(calc(-50% - 8px)); }
+    }
+    @keyframes kit-spin {
+      from { transform: translateZ(28px) rotateY(0deg); }
+      to { transform: translateZ(28px) rotateY(360deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .kit-track {
+        animation: none;
+        overflow-x: auto;
+        width: 100%;
+        max-width: 100vw;
+        padding-left: 16px;
+        padding-right: 16px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .kit-track::-webkit-scrollbar { display: none; }
+      .kit-marquee {
+        mask-image: none;
+        -webkit-mask-image: none;
+      }
+      .kit-glyph { animation: none; }
+      .kit-card,
+      .kit-card:hover,
+      .kit-card:focus-visible {
+        transition: none;
+        transform: none;
+      }
+    }
+
+    /* Section */
+    .section { margin-bottom: 40px; }
+    .section-head {
+      margin-bottom: 14px;
+      max-width: 54ch;
+    }
+    .section-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .section-intro {
+      font-size: 14px;
+      line-height: 1.55;
+      margin-top: 6px;
+      max-width: 54ch;
+    }
+
+    .card {
+      background: var(--cream);
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      padding: 20px 18px;
+    }
+    .card + .card { margin-top: 12px; }
+    .card h3 { margin-bottom: 8px; color: var(--black); }
+    .card p { font-size: 12.5px; line-height: 1.5; }
+
+    /* Pain grid */
+    .pain-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .pain-card {
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      padding: 16px;
+      background: var(--white);
+    }
+    .pain-card h3 {
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+    .pain-card p {
+      font-size: 12.5px;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .pain-card .pain-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 8px;
+    }
+
+    /* Tech image grid */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .tech-grid .img-frame { aspect-ratio: 4/3; }
+    .tech-grid img { height: 100%; object-fit: cover; }
+
+    /* From site to system — horizontal image marquee */
+    .image-marquee {
+      margin-top: 14px;
+      overflow: hidden;
+      width: 100vw;
+      max-width: 100vw;
+      margin-left: calc(50% - 50vw);
+      mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+    }
+    .image-marquee-track {
+      display: flex;
+      width: max-content;
+      gap: 10px;
+      animation: marquee-scroll 36s linear infinite;
+      will-change: transform;
+    }
+    .image-marquee:hover .image-marquee-track {
+      animation-play-state: paused;
+    }
+    .image-marquee-track .img-frame {
+      flex: 0 0 auto;
+      width: min(240px, 68vw);
+      aspect-ratio: 4/3;
+    }
+    .image-marquee-track img {
+      height: 100%;
+      object-fit: cover;
+    }
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(calc(-50% - 5px)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .image-marquee-track {
+        animation: none;
+        overflow-x: auto;
+        width: 100%;
+        max-width: 100vw;
+        padding: 0 16px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .image-marquee-track::-webkit-scrollbar { display: none; }
+      .image-marquee {
+        mask-image: none;
+        -webkit-mask-image: none;
+      }
+    }
+
+    /* Architecture diagram — field → plan flowchart canvas */
+    .arch-diagram {
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      background: var(--cream);
+      background-image: radial-gradient(#d8d0c4 1px, transparent 1.25px);
+      background-size: 18px 18px;
+      background-position: center;
+      padding: 22px 14px 18px;
+      overflow: hidden;
+    }
+    .arch-flow {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 0;
+    }
+    .arch-step {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 6px;
+    }
+    .arch-kind {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      line-height: 1;
+    }
+    .arch-kind--field {
+      background: color-mix(in srgb, #6b8f71 16%, var(--cream));
+      color: #3d5c44;
+    }
+    .arch-kind--ai {
+      background: color-mix(in srgb, var(--orange) 16%, var(--cream));
+      color: #b35f00;
+    }
+    .arch-kind--human {
+      background: color-mix(in srgb, #e8c547 22%, var(--cream));
+      color: #6b5a10;
+    }
+    .arch-kind--plan {
+      background: color-mix(in srgb, #4a6fa5 14%, var(--cream));
+      color: #2c466e;
+    }
+    .arch-node {
+      flex: 1;
+      min-width: 0;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 10px;
+      text-align: center;
+      background: var(--white);
+      box-shadow: 0 1px 2px rgba(23, 23, 23, 0.04), 0 6px 16px rgba(23, 23, 23, 0.04);
+      position: relative;
+    }
+    .arch-node.highlight {
+      background: var(--pale-yellow);
+      box-shadow: 0 0 0 1.5px color-mix(in srgb, #e8c547 55%, transparent), 0 6px 16px rgba(23, 23, 23, 0.05);
+    }
+    .arch-node.orange-node {
+      background: #FFF4E6;
+      border-color: color-mix(in srgb, var(--orange) 45%, var(--border));
+    }
+    .arch-node.plan-node {
+      background: #f3f6fb;
+      border-color: color-mix(in srgb, #4a6fa5 35%, var(--border));
+    }
+    .arch-node .node-icon {
+      width: 30px;
+      height: 30px;
+      margin: 0 auto 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--white);
+      font-size: 14px;
+    }
+    .arch-node .node-title {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 3px;
+      line-height: 1.25;
+    }
+    .arch-node .node-desc {
+      font-size: 9.5px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .arch-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 44px;
+      align-self: center;
+      margin-top: 28px; /* align with cards under kind pills */
+      padding: 0;
+      color: var(--orange);
+    }
+    .arch-arrow svg {
+      width: 40px;
+      height: 18px;
+      overflow: visible;
+    }
+    .arch-arrow .arrow-track {
+      stroke: color-mix(in srgb, var(--orange) 28%, #d8d0c4);
+      stroke-width: 2;
+      stroke-linecap: round;
+      fill: none;
+    }
+    .arch-arrow .arrow-shaft {
+      stroke: var(--orange);
+      stroke-width: 2.2;
+      stroke-dasharray: 6 10;
+      stroke-linecap: round;
+      fill: none;
+      animation: arrow-flow 1s linear infinite;
+    }
+    .arch-arrow .arrow-head {
+      fill: var(--orange);
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: arrow-nudge 1s ease-in-out infinite;
+    }
+    .arch-arrow[data-delay="1"] .arrow-shaft { animation-delay: 0.18s; }
+    .arch-arrow[data-delay="2"] .arrow-shaft { animation-delay: 0.36s; }
+    .arch-arrow[data-delay="3"] .arrow-shaft { animation-delay: 0.54s; }
+    .arch-arrow--down {
+      width: auto;
+      height: 40px;
+      margin-top: 0;
+      padding: 2px 0;
+      align-self: center;
+    }
+    .arch-arrow--down svg {
+      width: 18px;
+      height: 36px;
+    }
+    .arch-arrow--down .arrow-shaft {
+      animation-name: arrow-flow-v;
+    }
+    .arch-arrow--down .arrow-head {
+      animation-name: arrow-nudge-v;
+    }
+    .arch-arrow-desktop { display: flex; }
+    .arch-arrow-mobile { display: none; }
+
+    @keyframes arrow-flow {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: -32; }
+    }
+    @keyframes arrow-flow-v {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: -32; }
+    }
+    @keyframes arrow-nudge {
+      0%, 100% { transform: translateX(0); opacity: 1; }
+      50% { transform: translateX(2px); opacity: 0.7; }
+    }
+    @keyframes arrow-nudge-v {
+      0%, 100% { transform: translateY(0); opacity: 1; }
+      50% { transform: translateY(2px); opacity: 0.7; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .arch-arrow .arrow-shaft,
+      .arch-arrow .arrow-head {
+        animation: none;
+      }
+    }
+
+    .arch-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+      justify-content: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+    }
+
+    .arch-paths {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .arch-path {
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      background: var(--white);
+    }
+    .arch-path .path-title {
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--black);
+    }
+    .arch-path p {
+      font-size: 11px;
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    /* Steps — legacy grid kept only as reduced-motion fallback shell */
+    .steps {
+      display: none;
+    }
+
+    /* Steps story — scroll-scrubbed chapters */
+    .steps-story {
+      position: relative;
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+      margin-bottom: 48px;
+      background:
+        radial-gradient(100% 70% at 80% 10%, rgba(255, 138, 0, 0.12), transparent 50%),
+        radial-gradient(80% 60% at 10% 90%, rgba(85, 184, 90, 0.08), transparent 45%),
+        linear-gradient(180deg, #171717 0%, #1f1f1f 55%, #262626 100%);
+      border-top: 1.5px solid var(--border);
+      border-bottom: 1.5px solid var(--border);
+      color: #F4F1EA;
+    }
+    .steps-track {
+      position: relative;
+      height: 360vh;
+    }
+    .steps-pin {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      min-height: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 88px var(--page-pad) 56px;
+      isolation: isolate;
+    }
+    .steps-inner {
+      position: relative;
+      z-index: 1;
+      width: min(920px, 100%);
+    }
+    .steps-eyebrow {
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(244, 241, 234, 0.55);
+      margin-bottom: 12px;
+    }
+    .steps-heading {
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: 500;
+      font-size: clamp(28px, 4.6vw, 48px);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      color: #F4F1EA;
+      margin: 0 0 28px;
+      max-width: 16ch;
+    }
+    .steps-rail {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0;
+      position: relative;
+      margin-bottom: 36px;
+      padding-bottom: 4px;
+    }
+    .steps-rail::before {
+      content: '';
+      position: absolute;
+      left: 6%;
+      right: 6%;
+      top: 15px;
+      height: 2px;
+      background: rgba(244, 241, 234, 0.14);
+      z-index: 0;
+    }
+    .steps-rail-fill {
+      position: absolute;
+      left: 6%;
+      top: 15px;
+      height: 2px;
+      width: 0%;
+      max-width: 88%;
+      background: var(--orange);
+      z-index: 1;
+      will-change: width;
+    }
+    .steps-rail-item {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      cursor: default;
+      font-family: 'Inter', Arial, sans-serif;
+      color: rgba(244, 241, 234, 0.35);
+      transition: color 0.35s ease;
+    }
+    .steps-rail-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(244, 241, 234, 0.35);
+      background: #1f1f1f;
+      box-shadow: 0 0 0 4px #1f1f1f;
+      transition:
+        background 0.35s ease,
+        border-color 0.35s ease,
+        transform 0.35s ease;
+    }
+    .steps-rail-name {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1.2;
+    }
+    .steps-rail-item.is-active,
+    .steps-rail-item.is-done {
+      color: #F4F1EA;
+    }
+    .steps-rail-item.is-active .steps-rail-dot {
+      background: var(--orange);
+      border-color: var(--orange);
+      transform: scale(1.25);
+    }
+    .steps-rail-item.is-done .steps-rail-dot {
+      background: #F4F1EA;
+      border-color: #F4F1EA;
+    }
+
+    .steps-stage {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 18px 22px;
+      align-items: start;
+      min-height: 168px;
+    }
+    .steps-stage-num {
+      font-family: var(--font-display), 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(64px, 12vw, 112px);
+      line-height: 0.85;
+      letter-spacing: 0.02em;
+      color: var(--orange);
+      transition: opacity 0.3s ease, transform 0.35s ease;
+    }
+    .steps-stage-body {
+      padding-top: 8px;
+    }
+    .steps-stage-label {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: #F4F1EA;
+      margin: 0 0 10px;
+      line-height: 1.1;
+    }
+    .steps-stage-copy {
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: clamp(14px, 1.7vw, 17px);
+      line-height: 1.5;
+      color: rgba(244, 241, 234, 0.72);
+      margin: 0;
+      max-width: 38ch;
+    }
+    .steps-stage.is-swap .steps-stage-num,
+    .steps-stage.is-swap .steps-stage-body {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    .steps-stage-num,
+    .steps-stage-body {
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+
+    .steps-progress {
+      margin-top: 32px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .steps-progress-track {
+      flex: 1;
+      height: 2px;
+      background: rgba(244, 241, 234, 0.14);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .steps-progress-fill {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: var(--orange);
+      will-change: width;
+    }
+    .steps-progress-label {
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(244, 241, 234, 0.55);
+      white-space: nowrap;
+      font-family: 'Inter', Arial, sans-serif;
+      font-weight: 600;
+    }
+    .steps-hint {
+      margin-top: 12px;
+      font-size: 11px;
+      color: rgba(244, 241, 234, 0.45);
+      letter-spacing: 0.04em;
+      font-family: 'Inter', Arial, sans-serif;
+    }
+    .steps-fallback { display: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .steps-track { height: auto; }
+      .steps-pin {
+        position: relative;
+        height: auto;
+        min-height: 0;
+        padding: 56px var(--page-pad);
+      }
+      .steps-progress,
+      .steps-hint,
+      .steps-rail,
+      .steps-stage { display: none; }
+      .steps-fallback {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-top: 8px;
+      }
+      .steps-fallback .step-card {
+        border: 1.5px solid rgba(244, 241, 234, 0.2);
+        border-radius: 8px;
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .steps-fallback .step-card strong {
+        display: block;
+        color: var(--orange);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        margin-bottom: 6px;
+      }
+      .steps-fallback .step-card h3 {
+        color: #F4F1EA;
+        font-size: 18px;
+        margin-bottom: 6px;
+      }
+      .steps-fallback .step-card p {
+        color: rgba(244, 241, 234, 0.7);
+        font-size: 13px;
+        margin: 0;
+      }
+    }
+
+    /* Roles */
+    .role-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .role-card {
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      padding: 18px 16px;
+      background: var(--white);
+    }
+    .role-card h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .role-card p {
+      font-size: 12.5px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    .role-card ul {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+    .role-card li {
+      font-size: 12px;
+      line-height: 1.4;
+      padding-left: 14px;
+      position: relative;
+      color: var(--muted);
+    }
+    .role-card li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 6px;
+      width: 6px;
+      height: 6px;
+      border-radius: 1px;
+      background: var(--orange);
+      border: 1px solid var(--border);
+    }
+
+    /* Offline */
+    .offline-callout {
+      background: var(--pale-yellow);
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      padding: 16px 18px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .offline-callout svg { flex-shrink: 0; margin-top: 2px; }
+    .offline-callout p { font-size: 12.5px; color: var(--black); }
+
+    .bullet-list {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .bullet-list li {
+      font-size: 12.5px;
+      line-height: 1.45;
+      padding-left: 14px;
+      position: relative;
+    }
+    .bullet-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 6px;
+      width: 6px;
+      height: 6px;
+      background: var(--orange);
+      border: 1px solid var(--border);
+      border-radius: 1px;
+    }
+
+    /* Visibility tiers */
+    .tier-row {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .tier {
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 14px;
+      background: var(--cream);
+      display: grid;
+      gap: 4px;
+    }
+    .tier strong {
+      font-size: 12px;
+      color: var(--black);
+    }
+    .tier span {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .tier[data-tier="confirmed"] { background: #F3FBF4; }
+    .tier[data-tier="review"] { background: #FFF8EC; }
+    .tier[data-tier="risk"] { background: #FFF4E6; }
+
+    /* Trust — sticky stack (scroll-linked bury + stepped peek) */
+    #trust {
+      --trust-pin: 72px;
+      --trust-peek: 14px;
+    }
+    #trust .section-head {
+      position: sticky;
+      top: var(--trust-pin);
+      z-index: 6;
+      margin-bottom: 18px;
+      padding: 10px 0 14px;
+      background: linear-gradient(
+        180deg,
+        var(--cream) 0%,
+        var(--cream) 72%,
+        rgba(252, 249, 240, 0) 100%
+      );
+      backdrop-filter: blur(0.5px);
+    }
+    .trust-stack {
+      position: relative;
+      margin-top: 4px;
+      padding-bottom: 22vh;
+      isolation: isolate;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .trust-card {
+      --i: 1;
+      position: sticky;
+      top: calc(var(--trust-pin) + var(--trust-head, 108px) + (var(--i) - 1) * var(--trust-peek));
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 22px 26px;
+      background: var(--white);
+      min-height: min(58vh, 400px);
+      margin-bottom: clamp(72px, 22vh, 180px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.65) inset,
+        0 18px 40px rgba(23, 23, 23, 0.08);
+      transform-origin: 50% 0%;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      will-change: transform, filter, opacity;
+      transition: none;
+    }
+    .trust-card:last-child {
+      margin-bottom: 0;
+    }
+    .trust-card[data-index="1"] { --i: 1; z-index: 1; background: #FFFCFA; }
+    .trust-card[data-index="2"] { --i: 2; z-index: 2; background: #FFF8EC; }
+    .trust-card[data-index="3"] { --i: 3; z-index: 3; background: #F7F4FF; }
+    .trust-card[data-index="4"] { --i: 4; z-index: 4; background: #F3FBF4; }
+
+    /* Native scroll-driven bury when supported; JS takes over otherwise */
+    @supports (animation-timeline: view()) {
+      .trust-stack:not([data-js-smooth="on"]) .trust-card:not([data-index="4"]) {
+        animation: trust-recede linear both;
+        animation-timeline: view();
+        animation-range: exit-crossing 0% exit 85%;
+      }
+      @keyframes trust-recede {
+        to {
+          transform: translate3d(0, -16px, 0) scale(0.925);
+          filter: brightness(0.8);
+          opacity: 0.78;
+        }
+      }
+    }
+    .trust-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .trust-card-index {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 42px;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--black);
+      opacity: 0.18;
+    }
+    .trust-card-tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--orange);
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      padding: 5px 8px;
+      background: var(--cream);
+    }
+    .trust-card h3 {
+      font-size: 28px;
+      line-height: 1.12;
+      margin-bottom: 12px;
+      color: var(--black);
+      max-width: 14ch;
+    }
+    .trust-card p {
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--muted);
+      max-width: 42ch;
+    }
+    .trust-card-body { flex: 1; }
+    .trust-card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 16px;
+      border-top: 1.5px solid #e8e2d6;
+    }
+    .trust-card-foot span {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--black);
+    }
+    .trust-card-foot .trust-progress {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #trust .section-head {
+        position: static;
+        background: transparent;
+        backdrop-filter: none;
+      }
+      .trust-stack { padding-bottom: 0; }
+      .trust-card {
+        position: relative;
+        top: auto;
+        min-height: 0;
+        margin-bottom: 12px;
+        transform: none !important;
+        opacity: 1 !important;
+        filter: none !important;
+        animation: none !important;
+        will-change: auto;
+      }
+    }
+
+    /* Feature image row */
+    .feature-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      align-items: stretch;
+      margin-top: 4px;
+    }
+    .feature-row .img-frame { min-height: 180px; }
+    .feature-row img { height: 100%; min-height: 180px; object-fit: cover; }
+
+    .split-feature {
+      display: grid;
+      gap: 12px;
+    }
+
+    /* Outcomes */
+    .outcome-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .outcome {
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      padding: 16px;
+      background: var(--white);
+    }
+    .outcome h3 {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+    .outcome p {
+      font-size: 12.5px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1.5px solid var(--border);
+      text-align: center;
+    }
+    footer .logo {
+      display: inline-flex;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    footer p { font-size: 11px; margin-bottom: 6px; }
+    footer a { color: var(--muted); text-decoration: none; font-size: 11px; }
+    footer a:hover { color: var(--black); }
+
+    .final-cta .card {
+      text-align: center;
+      padding: 28px 20px;
+    }
+    .final-cta h2 { margin-bottom: 10px; }
+    .final-cta p {
+      margin-bottom: 20px;
+      max-width: 44ch;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Meet the crew */
+    .crew {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      user-select: none;
+    }
+    .crew-stage {
+      position: relative;
+      width: 174px;
+      height: 218px;
+      margin: 12px 0 4px;
+    }
+    .crew-card {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 174px;
+      height: 218px;
+      margin-left: -87px;
+      margin-top: -109px;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      overflow: hidden;
+      background: var(--white);
+      touch-action: none;
+      will-change: transform, opacity;
+      transition: box-shadow 0.2s ease;
+    }
+    .crew-card.is-front {
+      cursor: grab;
+      box-shadow: 2px 2px 0 #111;
+    }
+    .crew-card.is-front:active { cursor: grabbing; }
+    .crew-card.is-selected {
+      outline: 2px solid var(--orange);
+      outline-offset: -2px;
+    }
+    .crew-card-face {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 16px 14px;
+      position: relative;
+    }
+    .crew-card-face[data-tone="0"] { background: var(--pale-yellow); }
+    .crew-card-face[data-tone="1"] { background: #FFF4E6; }
+    .crew-card-face[data-tone="2"] { background: #F7F4FF; }
+    .crew-card-face[data-tone="3"] { background: #F3FBF4; }
+    .crew-card-face[data-tone="4"] { background: var(--cream); }
+    .crew-card-face[data-tone="5"] { background: var(--white); }
+    .crew-initials {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -62%);
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 42px;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      color: var(--black);
+      line-height: 1;
+      opacity: 0.92;
+    }
+    .crew-card-meta { position: relative; z-index: 1; }
+    .crew-card-meta strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--black);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+    }
+    .crew-card-meta span {
+      display: block;
+      margin-top: 3px;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+    .crew-check {
+      position: absolute;
+      right: 12px;
+      bottom: 14px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: var(--orange);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+    .crew-card.is-selected .crew-check { display: flex; }
+    .crew-check svg {
+      width: 12px;
+      height: 12px;
+      stroke: var(--black);
+      stroke-width: 2.4;
+      fill: none;
+    }
+    .crew-dots {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      justify-content: center;
+      min-height: 8px;
+    }
+    .crew-dot {
+      height: 5px;
+      width: 5px;
+      border-radius: 3px;
+      background: var(--black);
+      opacity: 0.22;
+      transition: width 0.25s ease, opacity 0.25s ease;
+    }
+    .crew-dot.is-current {
+      width: 18px;
+      opacity: 1;
+      background: var(--orange);
+    }
+    .crew-hint {
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+    .crew-hint-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--orange);
+      color: var(--black);
+      border: 1.5px solid var(--border);
+      border-radius: 5px;
+      padding: 7px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 #111;
+    }
+    .crew-hint-btn:hover {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0 #111;
+    }
+    .crew-roster {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .crew-roster button {
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      background: var(--white);
+      padding: 10px 12px;
+      text-align: left;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.12s ease;
+    }
+    .crew-roster button:hover { background: #f5f0e4; }
+    .crew-roster button.is-active {
+      background: var(--pale-yellow);
+    }
+    .crew-roster button:focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 2px;
+    }
+    .crew-roster strong {
+      display: block;
+      font-size: 12px;
+      color: var(--black);
+      font-weight: 600;
+      line-height: 1.3;
+    }
+    .crew-roster span {
+      display: block;
+      margin-top: 2px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .crew-card { transition: none; }
+      .crew-dot { transition: none; }
+    }
+
+    /* —— Key ideas (Airtable-style scroll story) —— */
+    .ideas-story {
+      --ideas-ink: var(--black);
+      --ideas-dim: rgba(23, 23, 23, 0.18);
+      --ideas-active: var(--black);
+      --ideas-accent: var(--orange);
+      position: relative;
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+      margin-bottom: 48px;
+      background:
+        radial-gradient(120% 80% at 12% 18%, rgba(255, 138, 0, 0.10), transparent 55%),
+        radial-gradient(90% 70% at 88% 72%, rgba(75, 0, 255, 0.06), transparent 50%),
+        linear-gradient(180deg, #F7F2E6 0%, var(--cream) 48%, #F4EFE3 100%);
+      border-top: 1.5px solid var(--border);
+      border-bottom: 1.5px solid var(--border);
+      /* visible — overflow clip breaks sticky pin */
+    }
+    .ideas-track {
+      position: relative;
+      height: 320vh;
+    }
+    .ideas-pin {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      min-height: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 88px var(--page-pad) 64px;
+      isolation: isolate;
+    }
+    .ideas-layers {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ideas-float {
+      position: absolute;
+      border-radius: 4px;
+      border: 1.5px solid rgba(28, 28, 28, 0.12);
+      will-change: transform, opacity;
+    }
+    .ideas-float--a {
+      width: min(28vw, 220px);
+      height: min(18vw, 120px);
+      left: 6%;
+      top: 18%;
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.22), rgba(255, 240, 184, 0.35));
+    }
+    .ideas-float--b {
+      width: min(22vw, 170px);
+      height: min(28vw, 200px);
+      right: 8%;
+      top: 22%;
+      background: linear-gradient(160deg, rgba(75, 0, 255, 0.10), rgba(252, 249, 240, 0.55));
+    }
+    .ideas-float--c {
+      width: min(18vw, 140px);
+      height: min(12vw, 90px);
+      right: 18%;
+      bottom: 16%;
+      background: rgba(255, 240, 184, 0.55);
+    }
+    .ideas-copy {
+      position: relative;
+      z-index: 1;
+      width: min(920px, 100%);
+      max-width: 42rem;
+    }
+    .ideas-eyebrow {
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .ideas-line {
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: 500;
+      font-size: clamp(28px, 5.2vw, 56px);
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+      color: var(--ideas-dim);
+      margin: 0;
+    }
+    .ideas-phrase {
+      color: inherit;
+      transition: color 0.35s ease, opacity 0.35s ease;
+      opacity: 0.55;
+    }
+    .ideas-phrase.is-lit {
+      color: var(--ideas-active);
+      opacity: 1;
+    }
+    .ideas-phrase.is-lit[data-accent="1"] {
+      color: var(--ideas-accent);
+    }
+    .ideas-phrase.is-passed {
+      color: rgba(23, 23, 23, 0.42);
+      opacity: 0.9;
+    }
+    .ideas-progress {
+      margin-top: 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ideas-progress-track {
+      flex: 1;
+      height: 2px;
+      background: rgba(28, 28, 28, 0.12);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .ideas-progress-fill {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: var(--orange);
+      transform-origin: left center;
+      will-change: width;
+    }
+    .ideas-progress-label {
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+      font-family: 'Inter', Arial, sans-serif;
+      font-weight: 600;
+    }
+    .ideas-hint {
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* Soft enter for section heads / cards */
+    [data-reveal] {
+      opacity: 0;
+      transform: translate3d(0, 22px, 0);
+      transition:
+        opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      transition-delay: var(--reveal-delay, 0ms);
+      will-change: opacity, transform;
+    }
+    [data-reveal].is-in {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ideas-track { height: auto; }
+      .ideas-pin {
+        position: relative;
+        height: auto;
+        min-height: 0;
+        padding: 56px var(--page-pad);
+      }
+      .ideas-phrase,
+      .ideas-phrase.is-passed {
+        color: var(--ideas-ink);
+        opacity: 1;
+      }
+      .ideas-phrase.is-lit[data-accent="1"] { color: var(--ideas-accent); }
+      .ideas-layers { display: none; }
+      .ideas-progress,
+      .ideas-hint { display: none; }
+      [data-reveal] {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
+    /* —— Mobile —— */
+    @media (max-width: 720px) {
+      .site-header-inner { padding: 12px 0; }
+      .logo { font-size: 14px; max-width: calc(100% - 168px); }
+      .ideas-track { height: 280vh; }
+      .ideas-pin { min-height: 100svh; padding-top: 96px; }
+      .ideas-line { font-size: clamp(26px, 8vw, 36px); }
+      .steps-track { height: 300vh; }
+      .steps-pin { min-height: 100svh; padding-top: 96px; }
+      .steps-rail-name { font-size: 9px; }
+      .steps-stage {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        min-height: 190px;
+      }
+      .steps-stage-num { font-size: clamp(56px, 18vw, 80px); }
+
+      .nav-toggle { display: inline-flex; }
+      .nav-cta-mobile { display: inline-flex; }
+      .nav-cta-desktop { display: none; }
+      .header-actions { display: flex; }
+
+      nav {
+        display: none;
+        flex-basis: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding-top: 8px;
+        border-top: 1px solid rgba(244, 241, 234, 0.18);
+        margin-top: 4px;
+      }
+      .site-header.is-open nav { display: flex; }
+      .site-header.is-solid.is-open nav { border-top-color: #e5e0d6; }
+
+      nav a:not(.btn) {
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 10px 4px;
+        font-size: 13px;
+        color: var(--hero-ink);
+        border-bottom: 1px solid rgba(244, 241, 234, 0.14);
+      }
+      .site-header.is-solid nav a:not(.btn) {
+        color: var(--black);
+        border-bottom-color: #e5e0d6;
+      }
+      nav a:not(.btn):last-of-type { border-bottom: none; }
+
+      .cta-row { flex-direction: column; }
+      .cta-row .btn { width: 100%; min-height: 44px; }
+      .hero-content { padding: 100px var(--page-pad) 72px; }
+      #trust { --trust-pin: 64px; --trust-peek: 10px; }
+      .trust-card {
+        min-height: min(54vh, 360px);
+        padding: 24px 18px 22px;
+        margin-bottom: clamp(36px, 10vh, 72px);
+      }
+      .trust-card h3 { font-size: 24px; }
+      .trust-card-index { font-size: 34px; }
+      .tech-grid { grid-template-columns: 1fr; }
+      .arch-paths { grid-template-columns: 1fr; }
+      .arch-diagram { padding: 16px 12px 14px; }
+      .arch-flow {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+      }
+      .arch-step {
+        gap: 6px;
+      }
+      .arch-kind {
+        align-self: flex-start;
+      }
+      .arch-node {
+        padding: 14px 12px;
+        text-align: left;
+        display: grid;
+        grid-template-columns: 36px 1fr;
+        grid-template-rows: auto auto;
+        column-gap: 10px;
+        align-items: center;
+      }
+      .arch-node .node-icon {
+        margin: 0;
+        grid-row: 1 / span 2;
+      }
+      .arch-node .node-title {
+        font-size: 12px;
+        margin-bottom: 2px;
+      }
+      .arch-node .node-desc {
+        font-size: 10.5px;
+      }
+      .arch-node .node-desc br { display: none; }
+      .arch-arrow {
+        margin-top: 0;
+        width: auto;
+      }
+      .arch-arrow-desktop { display: none; }
+      .arch-arrow-mobile { display: flex; }
+    }
+
+    /* —— Tablet —— */
+    @media (min-width: 721px) {
+      :root {
+        --page-max: 760px;
+        --page-pad: 24px;
+      }
+      .page { padding-bottom: 100px; }
+      .hero-content { padding-bottom: 72px; }
+      .pain-grid { grid-template-columns: 1fr 1fr; }
+      .pain-grid .pain-card:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+      }
+      .role-grid { grid-template-columns: 1fr 1fr; }
+      .feature-row { grid-template-columns: 1fr 1.15fr; }
+      .feature-row .img-frame { height: 100%; min-height: 220px; }
+      .tier-row { grid-template-columns: repeat(3, 1fr); }
+      .outcome-grid { grid-template-columns: repeat(3, 1fr); }
+      .crew-roster { grid-template-columns: repeat(3, 1fr); }
+      .image-marquee-track .img-frame { width: min(280px, 40vw); }
+      .stack-icon { width: 76px; }
+      .stack-face { width: 76px; height: 76px; border-radius: 18px; }
+      .stack-face svg { width: 36px; height: 36px; }
+      .stack-icon:hover,
+      .stack-icon:focus-visible { transform: scale(1.34) translateY(-12px); }
+      .kit-card { width: 280px; }
+      .kit-stage { height: 184px; }
+      .kit-glyph { width: 124px; height: 124px; }
+      nav { gap: 18px; }
+      nav a { font-size: 12px; }
+    }
+
+    /* —— Desktop —— */
+    @media (min-width: 1024px) {
+      :root {
+        --page-max: 1080px;
+        --page-pad: 32px;
+      }
+      .section { margin-bottom: 56px; }
+      .hero-content { padding-bottom: 88px; }
+      .hero-sub { font-size: 17px; max-width: 42ch; }
+      .pain-grid { grid-template-columns: repeat(3, 1fr); }
+      .pain-grid .pain-card:last-child:nth-child(odd) { grid-column: auto; }
+      .role-grid { grid-template-columns: repeat(3, 1fr); }
+      .arch-paths { grid-template-columns: 1fr 1fr; gap: 14px; }
+      .arch-path { padding: 16px; }
+      .arch-path .path-title { font-size: 13px; margin-bottom: 6px; }
+      .arch-path p { font-size: 12.5px; }
+      .split-feature {
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 16px;
+        align-items: stretch;
+      }
+      .trust-card {
+        max-width: 720px;
+        margin-left: auto;
+        margin-right: auto;
+        min-height: min(58vh, 400px);
+      }
+      .trust-card h3 { font-size: 34px; max-width: 16ch; }
+      .trust-card p { font-size: 15px; max-width: 48ch; }
+      .final-cta .card { padding: 40px 48px; }
+      .btn { font-size: 13px; padding: 11px 18px; }
+      .image-marquee-track .img-frame { width: 300px; }
+    }
+
+    @media (min-width: 1280px) {
+      :root { --page-max: 1160px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .nav-toggle-bars span { transition: none; }
+    }
+
+    /* First-run tour + resume (landing only) */
+    .tour-modal-root {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(23, 23, 23, 0.55);
+    }
+    .tour-modal-root.is-open { display: flex; }
+    .tour-modal {
+      width: min(420px, 100%);
+      background: var(--cream);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 22px 20px 18px;
+      box-shadow: 4px 4px 0 #111;
+    }
+    .tour-modal .label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .tour-modal h2 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 22px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--black);
+    }
+    .tour-modal > p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .welcome-points {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+    }
+    .welcome-points li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      background: var(--white);
+    }
+    .welcome-points .num {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 18px;
+      color: var(--orange);
+      line-height: 1;
+      min-width: 22px;
+    }
+    .welcome-points strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 2px;
+    }
+    .welcome-points p { font-size: 12px; color: var(--muted); margin: 0; }
+    .tour-modal .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .tour-modal .btn-row .btn { flex: 1; min-width: 120px; text-align: center; }
+    .resume-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      background: var(--pale-yellow);
+    }
+    .resume-banner p { margin: 0; color: var(--black); font-size: 13px; }
+    .resume-banner strong { font-weight: 600; }
+  </style>
+</head>
+<body>
+  <!-- First-run welcome tour (shown when onboarding cookie missing) -->
+  <div class="tour-modal-root" id="welcome-tour" role="dialog" aria-modal="true" aria-labelledby="welcome-tour-title" hidden>
+    <div class="tour-modal">
+      <p class="label">FIRST RUN</p>
+      <h2 id="welcome-tour-title">Set up Project Reality OS</h2>
+      <p>No setup cookie yet. Walk through role, project, and alerts — then enter the field loop.</p>
+      <ul class="welcome-points">
+        <li>
+          <span class="num" aria-hidden="true">1</span>
+          <div>
+            <strong>Pick how you work</strong>
+            <p>Engineer, planner, or lead — workspace follows your path.</p>
+          </div>
+        </li>
+        <li>
+          <span class="num" aria-hidden="true">2</span>
+          <div>
+            <strong>Scope one project</strong>
+            <p>Sample corridor or your own code. Data stays isolated.</p>
+          </div>
+        </li>
+        <li>
+          <span class="num" aria-hidden="true">3</span>
+          <div>
+            <strong>Start the daily loop</strong>
+            <p>Report → AI match → approve → sync.</p>
+          </div>
+        </li>
+      </ul>
+      <div class="btn-row" style="margin-top:18px;">
+        <button type="button" class="btn btn-secondary" id="tour-dismiss">Browse landing</button>
+        <a href="project-reality-os-onboarding.html" class="btn btn-primary">Start setup</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header overlays cinematic hero -->
+  <header class="site-header" id="site-header">
+    <div class="site-header-inner">
+      <a href="#" class="logo" aria-label="Project Reality OS">
+        <svg class="logo-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <rect x="1.5" y="1.5" width="29" height="29" rx="3" stroke="#1C1C1C" stroke-width="1.5" fill="#FCF9F0"/>
+          <rect x="7" y="7" width="14" height="14" rx="1.5" stroke="#1C1C1C" stroke-width="1.5" fill="none"/>
+          <rect x="11" y="11" width="14" height="14" rx="1.5" stroke="#1C1C1C" stroke-width="1.5" fill="#FCF9F0"/>
+          <rect x="18" y="18" width="7" height="7" rx="1" fill="#FF8A00" stroke="#1C1C1C" stroke-width="1.5"/>
+        </svg>
+        <span class="logo-text">Project Reality<span class="logo-os"> OS</span></span>
+      </a>
+      <div class="header-actions">
+        <a href="project-reality-os-auth-role.html" class="btn btn-primary nav-cta-mobile">Start free</a>
+        <button
+          type="button"
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Menu"
+        >
+          <span class="nav-toggle-bars" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+          Menu
+        </button>
+      </div>
+      <nav id="site-nav">
+        <a href="#field-kit">Modules</a>
+        <a href="#how-this-works">How this works</a>
+        <a href="#ideas">Ideas</a>
+        <a href="#steps">Steps</a>
+        <a href="#roles">Who it is for</a>
+        <a href="#trust">Trust</a>
+        <a href="#team">Team</a>
+        <a href="project-reality-os-auth-role.html" class="btn btn-primary nav-cta-desktop" style="padding: 6px 12px; font-size: 11px;">Start free</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Full-bleed cinematic hero — United Carriers inspired -->
+  <section class="hero-stage" aria-label="Hero">
+    <div class="hero-media" aria-hidden="true">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        poster="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=1600&amp;q=70"
+      >
+        <source src="assets/hero-mining-oil.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div class="hero-veil" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Mining · Oil · Infrastructure</p>
+      <h1 class="hero-brand">Project Reality <span class="accent">OS</span></h1>
+      <p class="hero-sub">
+        Turn daily site reports into real-time project truth — even when the network drops out.
+      </p>
+      <div class="cta-row" id="cta">
+        <a href="project-reality-os-auth-role.html" class="btn btn-primary">Start tracking</a>
+        <a href="#how-this-works" class="btn btn-ghost">See how this works</a>
+      </div>
+    </div>
+    <p class="hero-scroll-hint" aria-hidden="true">Scroll</p>
+  </section>
+
+  <div class="page">
+
+    <!-- Tech stack — horizontal app-icon marquee -->
+    <section class="stack-strip" id="stack" aria-label="Technology used in this product">
+      <div class="section-head">
+        <p class="section-label">Built with</p>
+        <p class="section-intro">
+          Lean web stack. Ships as a page, saves on-device, syncs when the radio comes back.
+        </p>
+      </div>
+      <div class="stack-dock">
+      <div class="stack-marquee">
+        <div class="stack-track">
+          <!-- set A -->
+          <a class="stack-icon" href="#stack" aria-label="HTML5">
+            <span class="stack-face html" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 0h21l-1.91 21.5L12 24l-8.57-2.5L1.5 0zm7.03 6.75l-.17 1.94h7.3l-.23 2.57H8.1l-.17 1.9h7.5l-.35 3.9L12 18.4l-3.06-.85-.2-2.25H6.78l.35 3.94L12 20.55l4.9-1.36.75-8.4H7.53L7.7 8.7h8.7l.17-1.95H8.53z"/></svg>
+            </span>
+            <span class="stack-name">HTML5</span>
+          </a>
+          <a class="stack-icon" href="#stack" aria-label="CSS3">
+            <span class="stack-face css" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 0h21l-1.91 21.5L12 24l-8.59-2.5L1.5 0zm5.66 6.75 1.1 12.35L12 20.4l3.74-1.03.76-8.5H8.95l.17 1.95h5.86l-.25 2.7-2.73.76-2.74-.76-.17-1.95H7.08l.35 3.9L12 18.55l4.55-1.26.96-10.54H7.16z"/></svg>
+            </span>
+            <span class="stack-name">CSS3</span>
+          </a>
+          <a class="stack-icon" href="#stack" aria-label="JavaScript">
+            <span class="stack-face js" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0V0zm22.03 19.44c-.18-1.12-1.1-2.06-3.02-2.94-.64-.3-1.35-.5-1.56-.97-.08-.22-.1-.35-.08-.52.06-.4.35-.65.8-.76.62-.14 1.55.08 2.24.54l.36.24.5-.9c-.27-.22-.62-.4-.96-.53-.52-.2-1.2-.32-1.82-.28-1.66.08-2.74 1.06-2.66 2.48.04.7.36 1.28 1.14 1.7 1.14.6 2.34.96 2.5 1.7.14.66-.28 1.1-1.2 1.34-.74.2-1.72.1-2.5-.36l-.36-.22-.54.88c.26.22.7.46 1.18.64.8.28 1.8.36 2.64.22 1.9-.28 3.14-1.34 2.94-3.04zM13.7 12.4H11.9c0 2.14-.02 4.26-.02 6.4-.1 1.18-.6 1.56-1.4 1.6-.82.04-1.4-.28-1.84-.86l-.5.86c.56.7 1.34 1.08 2.36 1.12 1.5.06 2.66-.8 2.74-2.7.04-1.2.02-4.64.02-6.42h.44z"/></svg>
+            </span>
+            <span class="stack-name">JavaScript</span>
+          </a>
+          <a class="stack-icon" href="#stack" aria-label="SVG">
+            <span class="stack-face svg" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm13 0h2v3h3v2h-3v3h-2v-3h-3v-2h3v-3z"/></svg>
+            </span>
+            <span class="stack-name">SVG</span>
+          </a>
+          <a class="stack-icon" href="#stack" aria-label="Inter via Google Fonts">
+            <span class="stack-face fonts" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.1 15.5H8.8l3.2-11h2l3.2 11h-2.1l-.7-2.5H11.6l-.7 2.5zm1.7-8.7-.95 3.7h1.9l-.95-3.7z"/></svg>
+            </span>
+            <span class="stack-name">Inter</span>
+          </a>
+          <a class="stack-icon" href="#stack" aria-label="Unsplash photography">
+            <span class="stack-face unsplash" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 6.75V0h9v6.75h-9zm9 3.75H24V24H0V10.5h7.5v6.75h9V10.5z"/></svg>
+            </span>
+            <span class="stack-name">Unsplash</span>
+          </a>
+          <a class="stack-icon" href="#stack" aria-label="Offline-first local save">
+            <span class="stack-face offline" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M2 8.82A12.95 12.95 0 0 1 12 5c2.7 0 5.18.83 7.24 2.24"/><path d="M5.5 12.3A8.96 8.96 0 0 1 12 10c1.86 0 3.58.56 5 1.52"/><path d="M8.8 15.7A4.98 4.98 0 0 1 12 15c.9 0 1.74.24 2.47.66"/><circle cx="12" cy="19" r="1.2" fill="#171717" stroke="none"/></svg>
+            </span>
+            <span class="stack-name">Offline</span>
+          </a>
+          <a class="stack-icon" href="#stack" aria-label="localStorage">
+            <span class="stack-face storage" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h16a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2zm18 7v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7h20zM6 8.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+            </span>
+            <span class="stack-name">Storage</span>
+          </a>
+          <!-- set B (duplicate for seamless loop) -->
+          <a class="stack-icon" href="#stack" aria-label="HTML5" tabindex="-1">
+            <span class="stack-face html" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 0h21l-1.91 21.5L12 24l-8.57-2.5L1.5 0zm7.03 6.75l-.17 1.94h7.3l-.23 2.57H8.1l-.17 1.9h7.5l-.35 3.9L12 18.4l-3.06-.85-.2-2.25H6.78l.35 3.94L12 20.55l4.9-1.36.75-8.4H7.53L7.7 8.7h8.7l.17-1.95H8.53z"/></svg>
+            </span>
+            <span class="stack-name">HTML5</span>
+          </a>
+          <a class="stack-icon" href="#stack" aria-label="CSS3" tabindex="-1">
+            <span class="stack-face css" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 0h21l-1.91 21.5L12 24l-8.59-2.5L1.5 0zm5.66 6.75 1.1 12.35L12 20.4l3.74-1.03.76-8.5H8.95l.17 1.95h5.86l-.25 2.7-2.73.76-2.74-.76-.17-1.95H7.08l.35 3.9L12 18.55l4.55-1.26.96-10.54H7.16z"/></svg>
+            </span>
+            <span class="stack-name">CSS3</span>
+          </a>
+          <a class="stack-icon" href="#stack" aria-label="JavaScript" tabindex="-1">
+            <span class="stack-face js" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0V0zm22.03 19.44c-.18-1.12-1.1-2.06-3.02-2.94-.64-.3-1.35-.5-1.56-.97-.08-.22-.1-.35-.08-.52.06-.4.35-.65.8-.76.62-.14 1.55.08 2.24.54l.36.24.5-.9c-.27-.22-.62-.4-.96-.53-.52-.2-1.2-.32-1.82-.28-1.66.08-2.74 1.06-2.66 2.48.04.7.36 1.28 1.14 1.7 1.14.6 2.34.96 2.5 1.7.14.66-.28 1.1-1.2 1.34-.74.2-1.72.1-2.5-.36l-.36-.22-.54.88c.26.22.7.46 1.18.64.8.28 1.8.36 2.64.22 1.9-.28 3.14-1.34 2.94-3.04zM13.7 12.4H11.9c0 2.14-.02 4.26-.02 6.4-.1 1.18-.6 1.56-1.4 1.6-.82.04-1.4-.28-1.84-.86l-.5.86c.56.7 1.34 1.08 2.36 1.12 1.5.06 2.66-.8 2.74-2.7.04-1.2.02-4.64.02-6.42h.44z"/></svg>
+            </span>
+            <span class="stack-name">JavaScript</span>
+          </a>
+          <a class="stack-icon" href="#stack" aria-label="SVG" tabindex="-1">
+            <span class="stack-face svg" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm13 0h2v3h3v2h-3v3h-2v-3h-3v-2h3v-3z"/></svg>
+            </span>
+            <span class="stack-name">SVG</span>
+          </a>
+          <a class="stack-icon" href="#stack" aria-label="Inter via Google Fonts" tabindex="-1">
+            <span class="stack-face fonts" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.1 15.5H8.8l3.2-11h2l3.2 11h-2.1l-.7-2.5H11.6l-.7 2.5zm1.7-8.7-.95 3.7h1.9l-.95-3.7z"/></svg>
+            </span>
+            <span class="stack-name">Inter</span>
+          </a>
+          <a class="stack-icon" href="#stack" aria-label="Unsplash photography" tabindex="-1">
+            <span class="stack-face unsplash" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 6.75V0h9v6.75h-9zm9 3.75H24V24H0V10.5h7.5v6.75h9V10.5z"/></svg>
+            </span>
+            <span class="stack-name">Unsplash</span>
+          </a>
+          <a class="stack-icon" href="#stack" aria-label="Offline-first local save" tabindex="-1">
+            <span class="stack-face offline" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M2 8.82A12.95 12.95 0 0 1 12 5c2.7 0 5.18.83 7.24 2.24"/><path d="M5.5 12.3A8.96 8.96 0 0 1 12 10c1.86 0 3.58.56 5 1.52"/><path d="M8.8 15.7A4.98 4.98 0 0 1 12 15c.9 0 1.74.24 2.47.66"/><circle cx="12" cy="19" r="1.2" fill="#171717" stroke="none"/></svg>
+            </span>
+            <span class="stack-name">Offline</span>
+          </a>
+          <a class="stack-icon" href="#stack" aria-label="localStorage" tabindex="-1">
+            <span class="stack-face storage" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h16a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2zm18 7v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7h20zM6 8.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+            </span>
+            <span class="stack-name">Storage</span>
+          </a>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- Problem -->
+    <section class="section" id="gap">
+      <div class="section-head">
+        <h2>Planning and execution still live in different worlds</h2>
+        <p class="section-intro">
+          Site engineers write reports in the field. Planners update schedules days later.
+          By the time a delay is visible on the Gantt, cost has already compounded.
+        </p>
+      </div>
+      <div class="pain-grid">
+        <article class="pain-card">
+          <span class="pain-tag">Field</span>
+          <h3>Notes trapped on phones</h3>
+          <p>
+            Daily reports sit in chat threads, PDFs, or paper pads. Photos lack task context.
+            When connectivity fails, yesterday’s progress never leaves the site cabin.
+          </p>
+        </article>
+        <article class="pain-card">
+          <span class="pain-tag">Planning</span>
+          <h3>Manual matching, stale truth</h3>
+          <p>
+            Someone retypes field notes into Primavera, MS Project, or Excel.
+            Matching unstructured text to WBS codes is slow, error-prone, and always behind the site.
+          </p>
+        </article>
+        <article class="pain-card">
+          <span class="pain-tag">Leadership</span>
+          <h3>Decisions on last week’s data</h3>
+          <p>
+            Delay alerts arrive after the window to recover. Stakeholders argue about which spreadsheet
+            is current. The programme looks fine until it suddenly is not.
+          </p>
+        </article>
+      </div>
+      <div class="tech-grid" style="margin-top: 16px;">
+        <div class="img-frame">
+          <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=700&q=80" alt="Construction workers on site with heavy machinery" />
+          <div class="img-caption">Field reality</div>
+        </div>
+        <div class="img-frame">
+          <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=700&q=80" alt="Project manager reviewing schedules on laptop" />
+          <div class="img-caption">Planning desk</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key ideas — scroll-scrubbed thesis (Airtable-style) -->
+    <section class="ideas-story" id="ideas" aria-label="Key ideas">
+      <div class="ideas-track" id="ideas-track">
+        <div class="ideas-pin">
+          <div class="ideas-layers" aria-hidden="true">
+            <span class="ideas-float ideas-float--a" data-parallax="0.12"></span>
+            <span class="ideas-float ideas-float--b" data-parallax="-0.18"></span>
+            <span class="ideas-float ideas-float--c" data-parallax="0.08"></span>
+          </div>
+          <div class="ideas-copy">
+            <p class="ideas-eyebrow">The operating idea</p>
+            <p class="ideas-line" id="ideas-line">
+              <span class="ideas-phrase" data-idea="0">Field reports leave the cabin.</span>
+              <span class="ideas-phrase" data-idea="1"> AI matches them to the live plan.</span>
+              <span class="ideas-phrase" data-idea="2" data-accent="1"> A planner keeps the pen.</span>
+              <span class="ideas-phrase" data-idea="3"> Truth syncs when the radio comes back.</span>
+            </p>
+            <div class="ideas-progress" aria-hidden="true">
+              <div class="ideas-progress-track">
+                <span class="ideas-progress-fill" id="ideas-progress-fill"></span>
+              </div>
+              <span class="ideas-progress-label" id="ideas-progress-label">01 / 04</span>
+            </div>
+            <p class="ideas-hint">Scroll to walk the idea</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Field modules — 3D product cards (Koboyo mining SVGs) -->
+    <section class="section field-kit" id="field-kit" aria-label="Field modules">
+      <div class="section-head">
+        <p class="section-label">Field modules</p>
+        <h2>Gear that maps to the job, not the org chart</h2>
+        <p class="section-intro">
+          Hover tilts the card. Icons spin like a turntable. Same pattern as a product listing —
+          built for mining, oil, and civil packs you already recognize on site.
+        </p>
+      </div>
+      <div class="kit-marquee" aria-label="Scrolling field module cards">
+        <div class="kit-track">
+          <!-- set A -->
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Site Report Pack">
+            <div class="kit-card-top">
+              <span class="kit-tag">New</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/hard-hat.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Field</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Site Report Pack</h3>
+                <span class="kit-price">Free</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#c07a4e"></span>
+                <span class="kit-swatch" style="background:#43403c"></span>
+                <span class="kit-swatch" style="background:#8a9a7b"></span>
+                <span class="kit-swatch" style="background:#ccbda3"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Earthworks Sync">
+            <div class="kit-card-top">
+              <span class="kit-tag">Live</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/bulldozer.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Earthworks</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Earthworks Sync</h3>
+                <span class="kit-price">Site</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#FF8A00"></span>
+                <span class="kit-swatch" style="background:#43403c"></span>
+                <span class="kit-swatch" style="background:#55B85A"></span>
+                <span class="kit-swatch" style="background:#FFF0B8"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Crane &amp; Lift Log">
+            <div class="kit-card-top">
+              <span class="kit-tag">Lift</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/crane.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Heavy</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Crane &amp; Lift Log</h3>
+                <span class="kit-price">Shift</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#264DE4"></span>
+                <span class="kit-swatch" style="background:#171717"></span>
+                <span class="kit-swatch" style="background:#c07a4e"></span>
+                <span class="kit-swatch" style="background:#e8e0d0"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Oil Barrel Track">
+            <div class="kit-card-top">
+              <span class="kit-tag">Oil</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/oil-barrel.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Upstream</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Oil Barrel Track</h3>
+                <span class="kit-price">Pad</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#1C1C1C"></span>
+                <span class="kit-swatch" style="background:#FF8A00"></span>
+                <span class="kit-swatch" style="background:#4F4B45"></span>
+                <span class="kit-swatch" style="background:#FCF9F0"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Radio Desk">
+            <div class="kit-card-top">
+              <span class="kit-tag">Offline</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/walkie-talkie.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Comms</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Radio Desk</h3>
+                <span class="kit-price">Cabin</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#55B85A"></span>
+                <span class="kit-swatch" style="background:#43403c"></span>
+                <span class="kit-swatch" style="background:#FF8A00"></span>
+                <span class="kit-swatch" style="background:#ccbda3"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Planner Clipboard">
+            <div class="kit-card-top">
+              <span class="kit-tag">Review</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/clipboard.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Plan</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Planner Clipboard</h3>
+                <span class="kit-price">HQ</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#FFF0B8"></span>
+                <span class="kit-swatch" style="background:#8a9a7b"></span>
+                <span class="kit-swatch" style="background:#43403c"></span>
+                <span class="kit-swatch" style="background:#FF8A00"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Safety Shift">
+            <div class="kit-card-top">
+              <span class="kit-tag">HSE</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/safety-helmet.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Safety</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Safety Shift</h3>
+                <span class="kit-price">Gate</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#FF8A00"></span>
+                <span class="kit-swatch" style="background:#E34F26"></span>
+                <span class="kit-swatch" style="background:#FFF0B8"></span>
+                <span class="kit-swatch" style="background:#171717"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Drill Progress">
+            <div class="kit-card-top">
+              <span class="kit-tag">Mine</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/drill.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Mining</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Drill Progress</h3>
+                <span class="kit-price">Face</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#8a9a7b"></span>
+                <span class="kit-swatch" style="background:#c07a4e"></span>
+                <span class="kit-swatch" style="background:#43403c"></span>
+                <span class="kit-swatch" style="background:#ccbda3"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+
+          <!-- set B (duplicate for seamless loop) -->
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Site Report Pack" tabindex="-1">
+            <div class="kit-card-top">
+              <span class="kit-tag">New</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/hard-hat.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Field</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Site Report Pack</h3>
+                <span class="kit-price">Free</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#c07a4e"></span>
+                <span class="kit-swatch" style="background:#43403c"></span>
+                <span class="kit-swatch" style="background:#8a9a7b"></span>
+                <span class="kit-swatch" style="background:#ccbda3"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Earthworks Sync" tabindex="-1">
+            <div class="kit-card-top">
+              <span class="kit-tag">Live</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/bulldozer.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Earthworks</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Earthworks Sync</h3>
+                <span class="kit-price">Site</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#FF8A00"></span>
+                <span class="kit-swatch" style="background:#43403c"></span>
+                <span class="kit-swatch" style="background:#55B85A"></span>
+                <span class="kit-swatch" style="background:#FFF0B8"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Crane &amp; Lift Log" tabindex="-1">
+            <div class="kit-card-top">
+              <span class="kit-tag">Lift</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/crane.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Heavy</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Crane &amp; Lift Log</h3>
+                <span class="kit-price">Shift</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#264DE4"></span>
+                <span class="kit-swatch" style="background:#171717"></span>
+                <span class="kit-swatch" style="background:#c07a4e"></span>
+                <span class="kit-swatch" style="background:#e8e0d0"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Oil Barrel Track" tabindex="-1">
+            <div class="kit-card-top">
+              <span class="kit-tag">Oil</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/oil-barrel.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Upstream</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Oil Barrel Track</h3>
+                <span class="kit-price">Pad</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#1C1C1C"></span>
+                <span class="kit-swatch" style="background:#FF8A00"></span>
+                <span class="kit-swatch" style="background:#4F4B45"></span>
+                <span class="kit-swatch" style="background:#FCF9F0"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Radio Desk" tabindex="-1">
+            <div class="kit-card-top">
+              <span class="kit-tag">Offline</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/walkie-talkie.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Comms</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Radio Desk</h3>
+                <span class="kit-price">Cabin</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#55B85A"></span>
+                <span class="kit-swatch" style="background:#43403c"></span>
+                <span class="kit-swatch" style="background:#FF8A00"></span>
+                <span class="kit-swatch" style="background:#ccbda3"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Planner Clipboard" tabindex="-1">
+            <div class="kit-card-top">
+              <span class="kit-tag">Review</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/clipboard.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Plan</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Planner Clipboard</h3>
+                <span class="kit-price">HQ</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#FFF0B8"></span>
+                <span class="kit-swatch" style="background:#8a9a7b"></span>
+                <span class="kit-swatch" style="background:#43403c"></span>
+                <span class="kit-swatch" style="background:#FF8A00"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Safety Shift" tabindex="-1">
+            <div class="kit-card-top">
+              <span class="kit-tag">HSE</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/safety-helmet.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Safety</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Safety Shift</h3>
+                <span class="kit-price">Gate</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#FF8A00"></span>
+                <span class="kit-swatch" style="background:#E34F26"></span>
+                <span class="kit-swatch" style="background:#FFF0B8"></span>
+                <span class="kit-swatch" style="background:#171717"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+
+          <a class="kit-card" href="project-reality-os-auth-role.html" aria-label="Drill Progress" tabindex="-1">
+            <div class="kit-card-top">
+              <span class="kit-tag">Mine</span>
+              <span class="kit-wish" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </span>
+            </div>
+            <div class="kit-stage">
+              <span class="kit-glyph" style="--kit-icon:url('assets/koboyo/drill.svg')" aria-hidden="true"></span>
+              <span class="kit-hint">Drag to rotate</span>
+            </div>
+            <div class="kit-meta">
+              <div class="kit-brand">Reality OS · Mining</div>
+              <div class="kit-title-row">
+                <h3 class="kit-title">Drill Progress</h3>
+                <span class="kit-price">Face</span>
+              </div>
+              <div class="kit-swatches" aria-hidden="true">
+                <span class="kit-swatch is-active" style="background:#8a9a7b"></span>
+                <span class="kit-swatch" style="background:#c07a4e"></span>
+                <span class="kit-swatch" style="background:#43403c"></span>
+                <span class="kit-swatch" style="background:#ccbda3"></span>
+              </div>
+            </div>
+            <span class="kit-cta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+              Open module
+            </span>
+          </a>
+        </div>
+      </div>
+      <p class="kit-credit">
+        Icons from <a href="https://koboyo.com/icons" rel="noopener">Koboyo</a> · card pattern inspired by
+        <a href="https://aicanvas.me/components/3d-product-card" rel="noopener">AI Canvas 3D Product Card</a>
+      </p>
+    </section>
+
+    <!-- How this works -->
+    <section class="section" id="how-this-works">
+      <div class="section-head">
+        <h2>How Project Reality OS connects field to plan</h2>
+        <p class="section-intro">
+          A calm, human-in-the-loop pipeline. AI proposes. Planners decide. The schedule stays truthful.
+        </p>
+      </div>
+      <div class="card" style="padding: 18px 14px;">
+        <div class="arch-diagram" role="img" aria-label="Field to plan workflow: Site Report flows to AI Match, then Planner Review, then Live Plan">
+          <div class="arch-flow">
+            <div class="arch-step">
+              <span class="arch-kind arch-kind--field">Field</span>
+              <div class="arch-node">
+                <div class="node-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#171717" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </div>
+                <div class="node-title">Site Report</div>
+                <div class="node-desc">Plain text + photos<br>Offline-first</div>
+              </div>
+            </div>
+
+            <div class="arch-arrow arch-arrow-desktop" aria-hidden="true">
+              <svg viewBox="0 0 40 18" aria-hidden="true">
+                <line class="arrow-track" x1="2" y1="9" x2="30" y2="9" />
+                <line class="arrow-shaft" x1="2" y1="9" x2="30" y2="9" />
+                <polygon class="arrow-head" points="28,3.5 38,9 28,14.5" />
+              </svg>
+            </div>
+            <div class="arch-arrow arch-arrow-mobile arch-arrow--down" aria-hidden="true">
+              <svg viewBox="0 0 18 36" aria-hidden="true">
+                <line class="arrow-track" x1="9" y1="2" x2="9" y2="26" />
+                <line class="arrow-shaft" x1="9" y1="2" x2="9" y2="26" />
+                <polygon class="arrow-head" points="3.5,24 9,34 14.5,24" />
+              </svg>
+            </div>
+
+            <div class="arch-step">
+              <span class="arch-kind arch-kind--ai">AI</span>
+              <div class="arch-node orange-node">
+                <div class="node-icon" style="border-color:#FF8A00; background:#FFF4E6;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF8A00" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                </div>
+                <div class="node-title">AI Match Layer</div>
+                <div class="node-desc">Confidence score<br>Task linking</div>
+              </div>
+            </div>
+
+            <div class="arch-arrow arch-arrow-desktop" data-delay="1" aria-hidden="true">
+              <svg viewBox="0 0 40 18" aria-hidden="true">
+                <line class="arrow-track" x1="2" y1="9" x2="30" y2="9" />
+                <line class="arrow-shaft" x1="2" y1="9" x2="30" y2="9" />
+                <polygon class="arrow-head" points="28,3.5 38,9 28,14.5" />
+              </svg>
+            </div>
+            <div class="arch-arrow arch-arrow-mobile arch-arrow--down" data-delay="1" aria-hidden="true">
+              <svg viewBox="0 0 18 36" aria-hidden="true">
+                <line class="arrow-track" x1="9" y1="2" x2="9" y2="26" />
+                <line class="arrow-shaft" x1="9" y1="2" x2="9" y2="26" />
+                <polygon class="arrow-head" points="3.5,24 9,34 14.5,24" />
+              </svg>
+            </div>
+
+            <div class="arch-step">
+              <span class="arch-kind arch-kind--human">Human</span>
+              <div class="arch-node highlight">
+                <div class="node-icon" style="background:#FFF0B8;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#171717" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <div class="node-title">Planner Review</div>
+                <div class="node-desc">Approve / Reject<br>Flag risks</div>
+              </div>
+            </div>
+
+            <div class="arch-arrow arch-arrow-desktop" data-delay="2" aria-hidden="true">
+              <svg viewBox="0 0 40 18" aria-hidden="true">
+                <line class="arrow-track" x1="2" y1="9" x2="30" y2="9" />
+                <line class="arrow-shaft" x1="2" y1="9" x2="30" y2="9" />
+                <polygon class="arrow-head" points="28,3.5 38,9 28,14.5" />
+              </svg>
+            </div>
+            <div class="arch-arrow arch-arrow-mobile arch-arrow--down" data-delay="2" aria-hidden="true">
+              <svg viewBox="0 0 18 36" aria-hidden="true">
+                <line class="arrow-track" x1="9" y1="2" x2="9" y2="26" />
+                <line class="arrow-shaft" x1="9" y1="2" x2="9" y2="26" />
+                <polygon class="arrow-head" points="3.5,24 9,34 14.5,24" />
+              </svg>
+            </div>
+
+            <div class="arch-step">
+              <span class="arch-kind arch-kind--plan">Plan</span>
+              <div class="arch-node plan-node">
+                <div class="node-icon" style="border-color:#4a6fa5; background:#e8eef6;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2c466e" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                </div>
+                <div class="node-title">Live Plan</div>
+                <div class="node-desc">Schedule truth<br>Audit trail</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#e8f0ea; border-color:#6b8f71;"></div>
+              Field capture
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#FFF4E6; border-color:#FF8A00;"></div>
+              AI-assisted
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#FFF0B8;"></div>
+              Human decision
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#f3f6fb; border-color:#4a6fa5;"></div>
+              Live plan
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-paths">
+          <div class="arch-path">
+            <div class="path-title">Site Engineer path</div>
+            <p>Write report with photos → Local save → Auto-sync when online → Confirm suggested task links</p>
+          </div>
+          <div class="arch-path">
+            <div class="path-title">Planner path</div>
+            <p>Open review queue → Sort by confidence → Approve, reject, or flag risk → Dashboard and schedule update</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Steps — scroll-scrubbed chapters -->
+    <section class="steps-story" id="steps" aria-label="Four calm steps">
+      <div class="steps-track" id="steps-track">
+        <div class="steps-pin">
+          <div class="steps-inner">
+            <p class="steps-eyebrow">The loop</p>
+            <h2 class="steps-heading">Four calm steps. No drama.</h2>
+
+            <div class="steps-rail" role="list" aria-hidden="true">
+              <span class="steps-rail-fill" id="steps-rail-fill"></span>
+              <div class="steps-rail-item is-active" data-step="0" role="listitem">
+                <span class="steps-rail-dot"></span>
+                <span class="steps-rail-name">Report</span>
+              </div>
+              <div class="steps-rail-item" data-step="1" role="listitem">
+                <span class="steps-rail-dot"></span>
+                <span class="steps-rail-name">AI Match</span>
+              </div>
+              <div class="steps-rail-item" data-step="2" role="listitem">
+                <span class="steps-rail-dot"></span>
+                <span class="steps-rail-name">Approve</span>
+              </div>
+              <div class="steps-rail-item" data-step="3" role="listitem">
+                <span class="steps-rail-dot"></span>
+                <span class="steps-rail-name">Sync</span>
+              </div>
+            </div>
+
+            <div class="steps-stage" id="steps-stage">
+              <span class="steps-stage-num" id="steps-stage-num" aria-hidden="true">01</span>
+              <div class="steps-stage-body">
+                <h3 class="steps-stage-label" id="steps-stage-label">Report</h3>
+                <p class="steps-stage-copy" id="steps-stage-copy">
+                  Capture progress in plain language and photos from the site — online or offline.
+                </p>
+              </div>
+            </div>
+
+            <div class="steps-fallback" aria-hidden="true">
+              <article class="step-card">
+                <strong>01</strong>
+                <h3>Report</h3>
+                <p>Capture progress in plain language and photos from the site — online or offline.</p>
+              </article>
+              <article class="step-card">
+                <strong>02</strong>
+                <h3>AI Match</h3>
+                <p>System links notes to plan tasks and scores confidence so review stays focused.</p>
+              </article>
+              <article class="step-card">
+                <strong>03</strong>
+                <h3>Approve</h3>
+                <p>Planner accepts, rejects, or flags risk. Human authority stays on every change.</p>
+              </article>
+              <article class="step-card">
+                <strong>04</strong>
+                <h3>Sync</h3>
+                <p>Approved progress hits the live dashboard and schedule with a full audit trail.</p>
+              </article>
+            </div>
+
+            <div class="steps-progress" aria-hidden="true">
+              <div class="steps-progress-track">
+                <span class="steps-progress-fill" id="steps-progress-fill"></span>
+              </div>
+              <span class="steps-progress-label" id="steps-progress-label">01 / 04</span>
+            </div>
+            <p class="steps-hint">Scroll through each step</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Who it is for -->
+    <section class="section" id="roles">
+      <div class="section-head">
+        <h2>Built for the people who carry programme truth</h2>
+        <p class="section-intro">
+          One operating layer across field, planning, and project leadership — without forcing anyone into a new reporting ritual.
+        </p>
+      </div>
+      <div class="role-grid">
+        <article class="role-card">
+          <h3>Site engineers</h3>
+          <p>Keep writing the way you already write. Add photos when useful. Connectivity is optional.</p>
+          <ul>
+            <li>Offline draft and local save</li>
+            <li>Suggested task links to confirm</li>
+            <li>Less retyping for the planning team</li>
+          </ul>
+        </article>
+        <article class="role-card">
+          <h3>Planners &amp; PMO</h3>
+          <p>Review a confidence-ranked queue instead of hunting through chat and email attachments.</p>
+          <ul>
+            <li>Approve / reject with one clear action</li>
+            <li>Risk flags before schedule commits</li>
+            <li>Traceable history on every task</li>
+          </ul>
+        </article>
+        <article class="role-card">
+          <h3>Project leads</h3>
+          <p>See confirmed progress the day it happens — not after the weekly spreadsheet ritual.</p>
+          <ul>
+            <li>One source of programme truth</li>
+            <li>Earlier delay visibility</li>
+            <li>Org-isolated project data</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Tech in the field -->
+    <section class="section" id="field">
+      <div class="section-head">
+        <h2>Offline-first by design</h2>
+        <p class="section-intro">
+          Remote corridors, tunnels, and low-signal zones are normal for infrastructure work.
+          Reporting should not wait for a bar of reception.
+        </p>
+      </div>
+      <div class="card">
+        <div class="feature-row">
+          <div>
+            <p>
+              Write reports with zero connectivity. They save locally and sync the moment the device finds a signal.
+              No data loss. No “try again later.” Drafts stay on the device until the upload confirms.
+            </p>
+            <ul class="bullet-list">
+              <li>Local-first storage with conflict-safe sync when back online</li>
+              <li>Photo attachments queued with the same report payload</li>
+              <li>Clear sync status so engineers know what is still pending</li>
+            </ul>
+            <div class="offline-callout" style="margin-top: 14px; padding: 12px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#171717" stroke-width="1.8">
+                <path d="M1 1l22 22"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/>
+              </svg>
+              <div>
+                <p style="font-size: 11.5px; margin: 0;">Works in remote sites, tunnels, and low-signal zones.</p>
+              </div>
+            </div>
+          </div>
+          <div class="img-frame">
+            <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800&q=80" alt="Engineer using tablet on construction site" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard preview -->
+    <section class="section" id="visibility">
+      <div class="section-head">
+        <h2>One source of truth</h2>
+        <p class="section-intro">
+          Every approved report updates the live schedule. Delay alerts surface automatically.
+          Confidence tiers keep uncertain matches out of the “confirmed” column.
+        </p>
+      </div>
+      <div class="split-feature">
+        <div class="card" style="padding: 0; overflow: hidden;">
+          <div class="img-frame" style="border: none; border-radius: 0;">
+            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1100&q=80" alt="Project dashboard analytics on screen" />
+            <div class="img-caption">Live project dashboard — Confirmed / Review Needed / Possible Risk tiers</div>
+          </div>
+          <div style="padding: 16px 18px;">
+            <p>No more spreadsheet archaeology. Planners and leads share the same confirmed progress view, with provenance attached to each task.</p>
+          </div>
+        </div>
+        <div class="tier-row" style="margin-top: 0; align-content: start;">
+          <div class="tier" data-tier="confirmed">
+            <strong>Confirmed</strong>
+            <span>High-confidence matches approved by a planner — safe to treat as programme truth.</span>
+          </div>
+          <div class="tier" data-tier="review">
+            <strong>Review needed</strong>
+            <span>Ambiguous links or incomplete notes. Held until a human decides.</span>
+          </div>
+          <div class="tier" data-tier="risk">
+            <strong>Possible risk</strong>
+            <span>Conflicts, delays, or low confidence. Surfaced early — never silently written.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Outcomes -->
+    <section class="section" id="outcomes">
+      <div class="section-head">
+        <h2>Same people. Faster truth.</h2>
+        <p class="section-intro">
+          Project Reality OS does not replace your schedule tool. It closes the gap between what happened on site and what the plan believes.
+        </p>
+      </div>
+      <div class="outcome-grid">
+        <article class="outcome">
+          <h3>Same-day progress</h3>
+          <p>Approved field reports land on the live view before the next morning’s stand-up, not after the weekly chase.</p>
+        </article>
+        <article class="outcome">
+          <h3>Less rework on matching</h3>
+          <p>AI proposes task links with scores. Planners spend time deciding, not hunting through unstructured notes.</p>
+        </article>
+        <article class="outcome">
+          <h3>Earlier recovery windows</h3>
+          <p>Delay and risk signals appear while the site can still adjust crews, materials, or sequence.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Trust -->
+    <section class="section" id="trust">
+      <div class="section-head">
+        <h2>Human authority stays on top of every automated suggestion</h2>
+        <p class="section-intro">
+          Four controls that keep AI helpful without handing it the pen. Scroll — each layer stacks over the last.
+        </p>
+      </div>
+      <div class="trust-stack" id="trust-stack">
+        <article class="trust-card" data-index="1">
+          <div class="trust-card-top">
+            <span class="trust-card-index" aria-hidden="true">01</span>
+            <span class="trust-card-tag">Approval</span>
+          </div>
+          <div class="trust-card-body">
+            <h3>Planner in the loop</h3>
+            <p>AI suggests matches and flags risks. A responsible human always approves or rejects. Nothing is auto-written into the schedule — the planner keeps final authority on every change that hits the live plan.</p>
+          </div>
+          <div class="trust-card-foot">
+            <span>Human sign-off required</span>
+            <span class="trust-progress">1 / 4</span>
+          </div>
+        </article>
+        <article class="trust-card" data-index="2">
+          <div class="trust-card-top">
+            <span class="trust-card-index" aria-hidden="true">02</span>
+            <span class="trust-card-tag">Scoring</span>
+          </div>
+          <div class="trust-card-body">
+            <h3>Confidence tiers</h3>
+            <p>Every match carries a clear score: Confirmed, Review Needed, or Possible Risk. Low-confidence items never slip through quietly — they surface for review before they can distort progress reporting.</p>
+          </div>
+          <div class="trust-card-foot">
+            <span>No silent low-confidence writes</span>
+            <span class="trust-progress">2 / 4</span>
+          </div>
+        </article>
+        <article class="trust-card" data-index="3">
+          <div class="trust-card-top">
+            <span class="trust-card-index" aria-hidden="true">03</span>
+            <span class="trust-card-tag">History</span>
+          </div>
+          <div class="trust-card-body">
+            <h3>Audit trail</h3>
+            <p>Who reported, who approved, when it synced. Full history stays attached to the task — so when questions come up weeks later, context is still sitting on the record, not lost in chat threads.</p>
+          </div>
+          <div class="trust-card-foot">
+            <span>Full provenance per task</span>
+            <span class="trust-progress">3 / 4</span>
+          </div>
+        </article>
+        <article class="trust-card" data-index="4">
+          <div class="trust-card-top">
+            <span class="trust-card-index" aria-hidden="true">04</span>
+            <span class="trust-card-tag">Ownership</span>
+          </div>
+          <div class="trust-card-body">
+            <h3>Data stays yours</h3>
+            <p>Project data is isolated by organisation and project code. Site notes are never used to train models without explicit consent — your programme remains your programme.</p>
+          </div>
+          <div class="trust-card-foot">
+            <span>Org-isolated by design</span>
+            <span class="trust-progress">4 / 4</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- From site to system -->
+    <section class="section">
+      <div class="section-head">
+        <h2>Plan, people, and system in one loop</h2>
+        <p class="section-intro">
+          Field capture, human review, and the schedule backbone stay connected — without forcing a new tool on every role.
+        </p>
+      </div>
+      <div class="image-marquee" aria-label="Site to system image gallery">
+        <div class="image-marquee-track">
+          <div class="img-frame">
+            <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=500&q=80" alt="Architectural plans and blueprints" />
+            <div class="img-caption">Plan layer</div>
+          </div>
+          <div class="img-frame">
+            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=500&q=80" alt="Engineer collaborating with digital tools" />
+            <div class="img-caption">Human + AI loop</div>
+          </div>
+          <div class="img-frame">
+            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500&q=80" alt="Team reviewing project progress" />
+            <div class="img-caption">Planner review</div>
+          </div>
+          <div class="img-frame">
+            <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=500&q=80" alt="Code and systems infrastructure" />
+            <div class="img-caption">System backbone</div>
+          </div>
+          <div class="img-frame" aria-hidden="true">
+            <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=500&q=80" alt="" />
+            <div class="img-caption">Plan layer</div>
+          </div>
+          <div class="img-frame" aria-hidden="true">
+            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=500&q=80" alt="" />
+            <div class="img-caption">Human + AI loop</div>
+          </div>
+          <div class="img-frame" aria-hidden="true">
+            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500&q=80" alt="" />
+            <div class="img-caption">Planner review</div>
+          </div>
+          <div class="img-frame" aria-hidden="true">
+            <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=500&q=80" alt="" />
+            <div class="img-caption">System backbone</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team -->
+    <section class="section" id="team">
+      <div class="section-head">
+        <h2>The people behind Project Reality OS</h2>
+        <p class="section-intro">
+          Six builders closing the gap between site reports and schedule truth. Cards auto-advance — swipe, tap a dot, or pick a name anytime.
+        </p>
+      </div>
+      <div class="crew" id="crew" aria-label="Team member cards">
+        <div class="crew-stage" id="crew-stage" aria-live="polite"></div>
+        <div class="crew-dots" id="crew-dots" role="tablist" aria-label="Team members"></div>
+        <div class="crew-hint" id="crew-hint">swipe to browse</div>
+        <div class="crew-roster" id="crew-roster"></div>
+      </div>
+    </section>
+
+    <!-- App download -->
+    <section class="section" id="download" aria-labelledby="download-heading">
+      <div class="mx-auto max-w-5xl px-6 py-12 sm:px-10 sm:py-16 lg:px-12 lg:py-20">
+        <div class="grid grid-cols-1 items-center gap-10 rounded-2xl bg-neutral-900 p-8 sm:grid-cols-2 sm:gap-12 sm:p-12 lg:gap-16 lg:p-14">
+          <div>
+            <p class="text-[10px] font-medium uppercase tracking-[0.14em] text-neutral-400">
+              Mobile app
+            </p>
+            <h2 id="download-heading" class="mt-3 font-serif text-[clamp(1.5rem,2.4vw,2rem)] font-medium leading-tight tracking-tight text-white">
+              Pick up where you left off
+            </h2>
+            <p class="mt-4 max-w-md text-[13px] leading-relaxed text-neutral-400">
+              Continue an offline draft, confirm a task link, or check sync status from the site —
+              same project truth as the desk, in your pocket.
+            </p>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a
+                href="#"
+                class="inline-flex items-center gap-3 rounded-xl border border-neutral-600 px-4 py-3 text-white no-underline transition-colors hover:border-neutral-400"
+                aria-label="Download on the App Store"
+              >
+                <svg class="h-7 w-7 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M16.365 1.43c0 1.14-.435 2.22-1.215 3.03-.84.87-2.22 1.545-3.39 1.455-.15-1.125.435-2.28 1.17-3.075C13.74 1.86 15.09 1.2 16.365 1.43zM20.64 17.43c-.69 1.515-1.53 2.91-2.76 2.94-1.2.03-1.59-.72-2.97-.72-1.365 0-1.8.69-2.94.75-1.17.06-2.07-1.47-2.775-2.97-1.455-3.075-2.55-8.7-.06-11.145.93-.945 2.25-1.545 3.6-1.56 1.125 0 2.19.765 2.94.765.735 0 2.01-.945 3.39-.81.57.03 2.175.24 3.21 1.8-.09.06-1.92 1.125-1.89 3.36.03 2.655 2.325 3.54 2.355 3.555-.03.09-.36 1.26-.9 2.445z"/>
+                </svg>
+                <span class="flex flex-col items-start leading-tight">
+                  <span class="text-[10px] uppercase tracking-wide text-neutral-400">Download on the</span>
+                  <span class="text-sm font-semibold text-white">App Store</span>
+                </span>
+              </a>
+              <a
+                href="#"
+                class="inline-flex items-center gap-3 rounded-xl border border-neutral-600 px-4 py-3 text-white no-underline transition-colors hover:border-neutral-400"
+                aria-label="Get it on Google Play"
+              >
+                <svg class="h-7 w-7 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="#34A853" d="M3.6 20.4 13.2 12 3.6 3.6v16.8z"/>
+                  <path fill="#FBBC04" d="m13.2 12 2.55-2.25 5.4 3.15c.75.45.75 1.5 0 1.95l-5.4 3.15L13.2 12z"/>
+                  <path fill="#4285F4" d="M3.6 3.6 13.2 12l2.55-2.25 4.35-7.5c.3-.525-.075-1.2-.675-1.2H4.2c-.45 0-.75.45-.6.9z"/>
+                  <path fill="#EA4335" d="M3.6 20.4c-.15.45.15.9.6.9h15.225c.6 0 .975-.675.675-1.2l-4.35-7.5L13.2 12 3.6 20.4z"/>
+                </svg>
+                <span class="flex flex-col items-start leading-tight">
+                  <span class="text-[10px] uppercase tracking-wide text-neutral-400">Get it on</span>
+                  <span class="text-sm font-semibold text-white">Google Play</span>
+                </span>
+              </a>
+            </div>
+            <p class="mt-6 text-xs text-neutral-500">
+              Supports iOS 15+ and Android 10 · Offline drafts included
+            </p>
+          </div>
+
+          <div class="hidden sm:flex items-center justify-center">
+            <div class="flex w-full max-w-[220px] flex-col items-center rounded-2xl bg-white px-6 py-7 shadow-sm">
+              <div
+                class="relative grid h-[148px] w-[148px] grid-cols-7 grid-rows-7 gap-[3px] bg-white p-1"
+                role="img"
+                aria-label="QR code to download the app"
+              >
+                <!-- data modules -->
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-neutral-900"></span>
+                <span class="rounded-[1px] bg-transparent"></span>
+
+                <!-- finder: top-left -->
+                <div class="absolute left-1 top-1 h-[46px] w-[46px] border-[3px] border-neutral-900 p-[3px]">
+                  <div class="h-full w-full border-[3px] border-neutral-900 p-[4px]">
+                    <div class="h-full w-full bg-neutral-900"></div>
+                  </div>
+                </div>
+                <!-- finder: top-right -->
+                <div class="absolute right-1 top-1 h-[46px] w-[46px] border-[3px] border-neutral-900 p-[3px]">
+                  <div class="h-full w-full border-[3px] border-neutral-900 p-[4px]">
+                    <div class="h-full w-full bg-neutral-900"></div>
+                  </div>
+                </div>
+                <!-- finder: bottom-left -->
+                <div class="absolute bottom-1 left-1 h-[46px] w-[46px] border-[3px] border-neutral-900 p-[3px]">
+                  <div class="h-full w-full border-[3px] border-neutral-900 p-[4px]">
+                    <div class="h-full w-full bg-neutral-900"></div>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-4 text-center text-xs text-neutral-500">
+                Point your camera here
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="section final-cta" style="margin-top: 48px;">
+      <div class="card">
+        <h2>Close the planning-to-execution gap</h2>
+        <p>
+          Start with one project. Site engineers keep writing the way they already do.
+          Planners finally see reality as it happens — with approval, confidence tiers, and an audit trail on every update.
+        </p>
+        <a href="project-reality-os-auth-role.html" class="btn btn-primary">Start tracking your project</a>
+        <p class="caption" style="margin-top: 14px;">No credit card · Takes under 3 minutes · Role-based access</p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <a href="#" class="logo" aria-label="Project Reality OS">
+        <svg class="logo-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <rect x="1.5" y="1.5" width="29" height="29" rx="3" stroke="#1C1C1C" stroke-width="1.5" fill="#FCF9F0"/>
+          <rect x="7" y="7" width="14" height="14" rx="1.5" stroke="#1C1C1C" stroke-width="1.5" fill="none"/>
+          <rect x="11" y="11" width="14" height="14" rx="1.5" stroke="#1C1C1C" stroke-width="1.5" fill="#FCF9F0"/>
+          <rect x="18" y="18" width="7" height="7" rx="1" fill="#FF8A00" stroke="#1C1C1C" stroke-width="1.5"/>
+        </svg>
+        <span class="logo-text">Project Reality<span class="logo-os"> OS</span></span>
+      </a>
+      <p>Intelligent data capture &amp; schedule-linking for infrastructure teams.</p>
+      <p class="caption" style="margin-top: 8px;">
+        <a href="#team">Team</a> · <a href="#">Privacy</a> · <a href="#">Support</a> · <a href="#">hello@projectrealityos.ai</a>
+      </p>
+    </footer>
+
+  </div>
+
+  <script>
+    (function () {
+      var header = document.getElementById('site-header') || document.querySelector('header');
+      var toggle = document.querySelector('.nav-toggle');
+      var nav = document.getElementById('site-nav');
+      if (!header || !toggle || !nav) return;
+
+      function setOpen(open) {
+        header.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+
+      toggle.addEventListener('click', function () {
+        setOpen(!header.classList.contains('is-open'));
+      });
+
+      nav.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () { setOpen(false); });
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') setOpen(false);
+      });
+
+      window.addEventListener('resize', function () {
+        if (window.matchMedia('(min-width: 721px)').matches) setOpen(false);
+      });
+    })();
+
+    (function () {
+      var header = document.getElementById('site-header');
+      var hero = document.querySelector('.hero-stage');
+      if (!header || !hero) return;
+
+      function updateHeader() {
+        var threshold = Math.max(hero.offsetHeight - 72, 80);
+        header.classList.toggle('is-solid', window.scrollY > threshold);
+      }
+
+      window.addEventListener('scroll', updateHeader, { passive: true });
+      window.addEventListener('resize', updateHeader);
+      updateHeader();
+    })();
+
+    (function () {
+      var trust = document.getElementById('trust');
+      var stack = document.getElementById('trust-stack');
+      var head = trust ? trust.querySelector('.section-head') : null;
+      if (!trust || !stack) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      var cards = Array.prototype.slice.call(stack.querySelectorAll('.trust-card'));
+      var last = cards.map(function () { return -1; });
+      var raf = 0;
+      var mqMobile = window.matchMedia('(max-width: 720px)');
+
+      // Always drive bury in JS so cover progress is pixel-true on sticky stacks.
+      // CSS view() exit range is a nice progressive enhancement but unreliable while stuck.
+      stack.setAttribute('data-js-smooth', 'on');
+
+      function clamp(n, min, max) {
+        return Math.min(max, Math.max(min, n));
+      }
+
+      function smoothstep(t) {
+        t = clamp(t, 0, 1);
+        return t * t * (3 - 2 * t);
+      }
+
+      function measureHead() {
+        if (!head) return;
+        trust.style.setProperty('--trust-head', Math.round(head.getBoundingClientRect().height) + 'px');
+      }
+
+      function progressFor(i) {
+        if (i >= cards.length - 1) return 0;
+        var card = cards[i];
+        var next = cards[i + 1];
+        if (!card || !next) return 0;
+
+        var pin = mqMobile.matches ? 64 : 72;
+        var peek = mqMobile.matches ? 10 : 14;
+        var headH = head ? head.getBoundingClientRect().height : 108;
+        var nextPin = pin + headH + i * peek;
+        var travel = Math.max(card.offsetHeight * 0.85, 160);
+        var nextTop = next.getBoundingClientRect().top;
+        var raw = (nextPin + travel - nextTop) / travel;
+        return smoothstep(raw);
+      }
+
+      function update() {
+        raf = 0;
+        cards.forEach(function (card, i) {
+          if (!card || i === cards.length - 1) return;
+          var p = progressFor(i);
+          var key = (p * 1000) | 0;
+          if (key === last[i]) return;
+          last[i] = key;
+
+          if (p <= 0.001) {
+            card.style.transform = 'translate3d(0,0,0)';
+            card.style.opacity = '1';
+            card.style.filter = 'none';
+            return;
+          }
+
+          var scale = 1 - p * 0.075;
+          var lift = p * -14;
+          var fade = 1 - p * 0.22;
+          var bright = 1 - p * 0.18;
+
+          card.style.transform =
+            'translate3d(0,' + lift.toFixed(2) + 'px,0) scale(' + scale.toFixed(4) + ')';
+          card.style.opacity = fade.toFixed(3);
+          card.style.filter = 'brightness(' + bright.toFixed(3) + ')';
+        });
+      }
+
+      function onScroll() {
+        if (raf) return;
+        raf = window.requestAnimationFrame(update);
+      }
+
+      function onResize() {
+        measureHead();
+        last = cards.map(function () { return -1; });
+        onScroll();
+      }
+
+      measureHead();
+      update();
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onResize);
+      if (window.ResizeObserver && head) {
+        new ResizeObserver(function () {
+          measureHead();
+          last = cards.map(function () { return -1; });
+          onScroll();
+        }).observe(head);
+      }
+    })();
+
+    (function () {
+      var stage = document.getElementById('crew-stage');
+      var dotsEl = document.getElementById('crew-dots');
+      var hintEl = document.getElementById('crew-hint');
+      var rosterEl = document.getElementById('crew-roster');
+      if (!stage || !dotsEl || !hintEl || !rosterEl) return;
+
+      var CREW = [
+        { id: 0, name: 'Nikunj Rustagi', role: 'Builder', initials: 'NR' },
+        { id: 1, name: 'Sahil Singh', role: 'Builder', initials: 'SS' },
+        { id: 2, name: 'Payal Solanki', role: 'Builder', initials: 'PS' },
+        { id: 3, name: 'Riya Soorma', role: 'Builder', initials: 'RS' },
+        { id: 4, name: 'Dhairya Jindal', role: 'Builder', initials: 'DJ' },
+        { id: 5, name: 'Shailendar Pal', role: 'Builder', initials: 'SP' }
+      ];
+
+      var SLOTS = [
+        { x: 0, y: 0, rotate: 1.5, scale: 1, z: 6 },
+        { x: 48, y: -6, rotate: 7, scale: 0.92, z: 5 },
+        { x: -42, y: -3, rotate: -8, scale: 0.9, z: 4 },
+        { x: 8, y: 22, rotate: 3, scale: 0.86, z: 3 },
+        { x: -10, y: 28, rotate: -2.5, scale: 0.82, z: 2 },
+        { x: 2, y: 34, rotate: 1, scale: 0.78, z: 1 }
+      ];
+
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var order = CREW.map(function (m) { return m.id; });
+      var selectedId = null;
+      var exiting = null;
+      var dismissing = false;
+      var dragDelta = 0;
+      var pointerId = null;
+      var startX = 0;
+      var currentX = 0;
+      var cardNodes = {};
+      var rosterButtons = {};
+      var AUTO_MS = 3200;
+      var RESUME_MS = 5000;
+      var autoTimer = null;
+      var resumeTimer = null;
+      var autoPaused = false;
+      var sectionInView = true;
+      var crewRoot = document.getElementById('crew');
+
+      function memberById(id) {
+        for (var i = 0; i < CREW.length; i++) {
+          if (CREW[i].id === id) return CREW[i];
+        }
+        return null;
+      }
+
+      function springTransition() {
+        return reduceMotion
+          ? 'none'
+          : 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease';
+      }
+
+      function exitTransition() {
+        return reduceMotion
+          ? 'none'
+          : 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease';
+      }
+
+      function build() {
+        CREW.forEach(function (member) {
+          var card = document.createElement('article');
+          card.className = 'crew-card';
+          card.dataset.id = String(member.id);
+          card.setAttribute('aria-label', member.name + ', ' + member.role);
+          card.innerHTML =
+            '<div class="crew-card-face" data-tone="' + member.id + '">' +
+              '<span class="crew-initials" aria-hidden="true">' + member.initials + '</span>' +
+              '<div class="crew-card-meta">' +
+                '<strong>' + member.name + '</strong>' +
+                '<span>' + member.role + '</span>' +
+              '</div>' +
+              '<span class="crew-check" aria-hidden="true">' +
+                '<svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"></polyline></svg>' +
+              '</span>' +
+            '</div>';
+          stage.appendChild(card);
+          cardNodes[member.id] = card;
+
+          var dot = document.createElement('button');
+          dot.type = 'button';
+          dot.className = 'crew-dot';
+          dot.setAttribute('aria-label', 'Show ' + member.name);
+          dot.dataset.id = String(member.id);
+          dotsEl.appendChild(dot);
+          dot.addEventListener('click', function () {
+            pauseAuto(true);
+            bringToFront(member.id);
+          });
+
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.innerHTML = '<strong>' + member.name + '</strong><span>' + member.role + '</span>';
+          btn.setAttribute('aria-label', 'Focus ' + member.name);
+          rosterEl.appendChild(btn);
+          rosterButtons[member.id] = btn;
+          btn.addEventListener('click', function () {
+            pauseAuto(true);
+            bringToFront(member.id);
+            selectMember(member.id);
+          });
+        });
+
+        bindFrontCard();
+        render();
+        startAuto();
+      }
+
+      function clearAuto() {
+        if (autoTimer) {
+          window.clearTimeout(autoTimer);
+          autoTimer = null;
+        }
+      }
+
+      function clearResume() {
+        if (resumeTimer) {
+          window.clearTimeout(resumeTimer);
+          resumeTimer = null;
+        }
+      }
+
+      function canAutoplay() {
+        return !reduceMotion && !autoPaused && sectionInView && !dismissing && pointerId === null;
+      }
+
+      function startAuto() {
+        clearAuto();
+        if (!canAutoplay()) return;
+        autoTimer = window.setTimeout(function () {
+          if (!canAutoplay()) return;
+          dismiss('left');
+        }, AUTO_MS);
+      }
+
+      function pauseAuto(scheduleResume) {
+        autoPaused = true;
+        clearAuto();
+        clearResume();
+        if (!scheduleResume || reduceMotion) return;
+        resumeTimer = window.setTimeout(function () {
+          autoPaused = false;
+          startAuto();
+        }, RESUME_MS);
+      }
+
+      function resumeAutoSoon() {
+        if (reduceMotion) return;
+        autoPaused = false;
+        clearResume();
+        startAuto();
+      }
+
+      function unbindFrontCard() {
+        Object.keys(cardNodes).forEach(function (id) {
+          var card = cardNodes[id];
+          card.onpointerdown = null;
+          card.onpointermove = null;
+          card.onpointerup = null;
+          card.onpointercancel = null;
+          card.onclick = null;
+        });
+      }
+
+      function bindFrontCard() {
+        unbindFrontCard();
+        var frontId = order[0];
+        var card = cardNodes[frontId];
+        if (!card) return;
+
+        card.onpointerdown = function (e) {
+          if (dismissing || e.button !== 0) return;
+          pauseAuto(false);
+          pointerId = e.pointerId;
+          startX = e.clientX;
+          currentX = 0;
+          dragDelta = 0;
+          card.setPointerCapture(pointerId);
+          card.style.transition = 'none';
+        };
+
+        card.onpointermove = function (e) {
+          if (pointerId === null || e.pointerId !== pointerId) return;
+          currentX = e.clientX - startX;
+          dragDelta = currentX;
+          var rot = currentX * 0.04;
+          card.style.transform =
+            'translate3d(' + currentX + 'px, 0, 0) rotate(' + rot + 'deg) scale(1)';
+        };
+
+        card.onpointerup = function (e) {
+          if (pointerId === null || e.pointerId !== pointerId) return;
+          finishDrag(card);
+        };
+
+        card.onpointercancel = function (e) {
+          if (pointerId === null || e.pointerId !== pointerId) return;
+          finishDrag(card);
+        };
+
+        card.onclick = function () {
+          if (Math.abs(dragDelta) >= 8) return;
+          selectMember(frontId === selectedId ? null : frontId);
+        };
+      }
+
+      function finishDrag(card) {
+        try { card.releasePointerCapture(pointerId); } catch (err) {}
+        pointerId = null;
+        if (Math.abs(currentX) > 80) {
+          pauseAuto(true);
+          dismiss(currentX < 0 ? 'left' : 'right');
+        } else {
+          card.style.transition = springTransition();
+          render();
+          pauseAuto(true);
+        }
+        setTimeout(function () { dragDelta = 0; }, 0);
+      }
+
+      function dismiss(dir) {
+        if (dismissing) return;
+        clearAuto();
+        dismissing = true;
+        var frontId = order[0];
+        exiting = { id: frontId, dir: dir };
+        render();
+
+        window.setTimeout(function () {
+          order = order.slice(1).concat(order[0]);
+          exiting = null;
+          dismissing = false;
+          bindFrontCard();
+          render(true);
+          if (!autoPaused) startAuto();
+        }, reduceMotion ? 0 : 420);
+      }
+
+      function bringToFront(id) {
+        if (dismissing || order[0] === id) {
+          render();
+          return;
+        }
+        clearAuto();
+        var idx = order.indexOf(id);
+        if (idx < 0) return;
+        order = order.slice(idx).concat(order.slice(0, idx));
+        bindFrontCard();
+        render();
+        if (!autoPaused) startAuto();
+      }
+
+      function selectMember(id) {
+        selectedId = id;
+        if (id !== null) {
+          pauseAuto(true);
+        } else {
+          resumeAutoSoon();
+        }
+        render();
+      }
+
+      function render(instantBack) {
+        CREW.forEach(function (member) {
+          var card = cardNodes[member.id];
+          var slotIndex = order.indexOf(member.id);
+          var slot = SLOTS[slotIndex] || SLOTS[SLOTS.length - 1];
+          var isExiting = exiting && exiting.id === member.id;
+          var isFront = slotIndex === 0 && !isExiting;
+
+          card.classList.toggle('is-front', isFront);
+          card.classList.toggle('is-selected', selectedId === member.id);
+          card.style.zIndex = String(isExiting ? 20 : slot.z);
+
+          if (isExiting) {
+            card.style.transition = exitTransition();
+            var flyX = exiting.dir === 'left' ? -420 : 420;
+            var flyRot = exiting.dir === 'left' ? -20 : 20;
+            card.style.transform =
+              'translate3d(' + flyX + 'px, 140px, 0) rotate(' + flyRot + 'deg) scale(0.85)';
+            card.style.opacity = '0';
+          } else {
+            card.style.transition = instantBack && slotIndex === order.length - 1
+              ? 'none'
+              : springTransition();
+            card.style.transform =
+              'translate3d(' + slot.x + 'px, ' + slot.y + 'px, 0) rotate(' + slot.rotate + 'deg) scale(' + slot.scale + ')';
+            card.style.opacity = '1';
+          }
+
+          var dot = dotsEl.querySelector('[data-id="' + member.id + '"]');
+          if (dot) dot.classList.toggle('is-current', order[0] === member.id);
+
+          var rosterBtn = rosterButtons[member.id];
+          if (rosterBtn) {
+            rosterBtn.classList.toggle('is-active', order[0] === member.id || selectedId === member.id);
+          }
+        });
+
+        if (selectedId !== null) {
+          var selected = memberById(selectedId);
+          hintEl.innerHTML = '';
+          var clearBtn = document.createElement('button');
+          clearBtn.type = 'button';
+          clearBtn.className = 'crew-hint-btn';
+          clearBtn.textContent = selected.name + ' selected';
+          clearBtn.addEventListener('click', function () { selectMember(null); });
+          hintEl.appendChild(clearBtn);
+        } else {
+          hintEl.textContent = reduceMotion ? 'swipe to browse' : 'auto-scrolling · swipe anytime';
+        }
+      }
+
+      if (crewRoot) {
+        crewRoot.addEventListener('mouseenter', function () { pauseAuto(false); });
+        crewRoot.addEventListener('mouseleave', function () {
+          if (pointerId === null) resumeAutoSoon();
+        });
+        crewRoot.addEventListener('focusin', function () { pauseAuto(false); });
+        crewRoot.addEventListener('focusout', function () {
+          window.setTimeout(function () {
+            if (!crewRoot.contains(document.activeElement) && pointerId === null) {
+              resumeAutoSoon();
+            }
+          }, 0);
+        });
+      }
+
+      if ('IntersectionObserver' in window && crewRoot) {
+        var io = new IntersectionObserver(function (entries) {
+          sectionInView = entries[0] && entries[0].isIntersecting;
+          if (sectionInView) startAuto();
+          else clearAuto();
+        }, { threshold: 0.35 });
+        io.observe(crewRoot);
+      }
+
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) clearAuto();
+        else startAuto();
+      });
+
+      build();
+    })();
+
+    /* Lenis smooth scroll + key-ideas scrub + reveals */
+    (function () {
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var lenis = null;
+
+      if (!reduceMotion && typeof Lenis !== 'undefined') {
+        lenis = new Lenis({
+          duration: 1.15,
+          easing: function (t) {
+            return Math.min(1, 1.001 - Math.pow(2, -10 * t));
+          },
+          smoothWheel: true,
+          wheelMultiplier: 0.92,
+          touchMultiplier: 1.35,
+        });
+        window.__prosLenis = lenis;
+
+        function raf(time) {
+          lenis.raf(time);
+          if (typeof window.__prosScrollPaint === 'function') {
+            window.__prosScrollPaint();
+          }
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+          anchor.addEventListener('click', function (e) {
+            var id = anchor.getAttribute('href');
+            if (!id || id === '#') return;
+            var target = document.querySelector(id);
+            if (!target) return;
+            e.preventDefault();
+            lenis.scrollTo(target, { offset: -12, duration: 1.2 });
+          });
+        });
+      }
+
+      /* Key ideas: phrase lighting tied to scroll progress through track */
+      var track = document.getElementById('ideas-track');
+      var phrases = track ? Array.prototype.slice.call(track.querySelectorAll('.ideas-phrase')) : [];
+      var fill = document.getElementById('ideas-progress-fill');
+      var label = document.getElementById('ideas-progress-label');
+      var floats = track ? Array.prototype.slice.call(track.querySelectorAll('[data-parallax]')) : [];
+      var ideaCount = phrases.length;
+      var lastActive = -1;
+
+      function clamp(n, a, b) {
+        return Math.max(a, Math.min(b, n));
+      }
+
+      function ideasProgress() {
+        if (!track || reduceMotion) return 1;
+        var rect = track.getBoundingClientRect();
+        var total = Math.max(rect.height - window.innerHeight, 1);
+        var scrolled = -rect.top;
+        return clamp(scrolled / total, 0, 1);
+      }
+
+      function paintIdeas() {
+        if (!track) return;
+        var p = ideasProgress();
+        if (fill) fill.style.width = (p * 100).toFixed(2) + '%';
+
+        if (reduceMotion) {
+          phrases.forEach(function (el) {
+            el.classList.add('is-lit');
+            el.classList.remove('is-passed');
+          });
+          if (label) label.textContent = String(ideaCount).padStart(2, '0') + ' / ' + String(ideaCount).padStart(2, '0');
+          return;
+        }
+
+        var active = Math.min(ideaCount - 1, Math.floor(p * ideaCount + 0.001));
+        if (p >= 0.98) active = ideaCount - 1;
+
+        phrases.forEach(function (el, i) {
+          var on = i <= active;
+          var passed = i < active;
+          el.classList.toggle('is-lit', on);
+          el.classList.toggle('is-passed', passed);
+        });
+
+        if (label && active !== lastActive) {
+          label.textContent = String(active + 1).padStart(2, '0') + ' / ' + String(ideaCount).padStart(2, '0');
+          lastActive = active;
+        }
+
+        floats.forEach(function (el) {
+          var speed = parseFloat(el.getAttribute('data-parallax') || '0');
+          var y = (p - 0.5) * speed * 220;
+          el.style.transform = 'translate3d(0,' + y.toFixed(1) + 'px,0)';
+          el.style.opacity = String(0.35 + p * 0.45);
+        });
+      }
+
+      var ticking = false;
+      function paintScrollStories() {
+        paintIdeas();
+        paintSteps();
+      }
+      function onScrollStories() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () {
+          paintScrollStories();
+          ticking = false;
+        });
+      }
+      window.__prosScrollPaint = paintScrollStories;
+
+      /* Steps story: chapter scrub */
+      var stepsTrack = document.getElementById('steps-track');
+      var stepsRail = stepsTrack ? Array.prototype.slice.call(document.querySelectorAll('.steps-rail-item')) : [];
+      var stepsRailFill = document.getElementById('steps-rail-fill');
+      var stepsFill = document.getElementById('steps-progress-fill');
+      var stepsLabelEl = document.getElementById('steps-progress-label');
+      var stepsStage = document.getElementById('steps-stage');
+      var stepsNum = document.getElementById('steps-stage-num');
+      var stepsTitle = document.getElementById('steps-stage-label');
+      var stepsCopy = document.getElementById('steps-stage-copy');
+      var stepsData = [
+        {
+          num: '01',
+          label: 'Report',
+          copy: 'Capture progress in plain language and photos from the site — online or offline.'
+        },
+        {
+          num: '02',
+          label: 'AI Match',
+          copy: 'System links notes to plan tasks and scores confidence so review stays focused.'
+        },
+        {
+          num: '03',
+          label: 'Approve',
+          copy: 'Planner accepts, rejects, or flags risk. Human authority stays on every change.'
+        },
+        {
+          num: '04',
+          label: 'Sync',
+          copy: 'Approved progress hits the live dashboard and schedule with a full audit trail.'
+        }
+      ];
+      var stepsCount = stepsData.length;
+      var stepsLast = -1;
+      var stepsPending = -1;
+      var stepsSwapTimer = null;
+
+      function stepsProgress() {
+        if (!stepsTrack || reduceMotion) return 1;
+        var rect = stepsTrack.getBoundingClientRect();
+        var total = Math.max(rect.height - window.innerHeight, 1);
+        return clamp((-rect.top) / total, 0, 1);
+      }
+
+      function applyStep(active, animate) {
+        var data = stepsData[active];
+        if (!data) return;
+
+        stepsRail.forEach(function (el, i) {
+          el.classList.toggle('is-active', i === active);
+          el.classList.toggle('is-done', i < active);
+        });
+
+        if (stepsLabelEl) {
+          stepsLabelEl.textContent = data.num + ' / 0' + stepsCount;
+        }
+
+        if (!animate || !stepsStage || stepsLast < 0) {
+          if (stepsNum) stepsNum.textContent = data.num;
+          if (stepsTitle) stepsTitle.textContent = data.label;
+          if (stepsCopy) stepsCopy.textContent = data.copy;
+          stepsLast = active;
+          stepsPending = -1;
+          return;
+        }
+
+        if (stepsPending === active) return;
+        stepsPending = active;
+        stepsStage.classList.add('is-swap');
+        clearTimeout(stepsSwapTimer);
+        stepsSwapTimer = setTimeout(function () {
+          if (stepsNum) stepsNum.textContent = data.num;
+          if (stepsTitle) stepsTitle.textContent = data.label;
+          if (stepsCopy) stepsCopy.textContent = data.copy;
+          stepsStage.classList.remove('is-swap');
+          stepsLast = active;
+          stepsPending = -1;
+        }, 160);
+      }
+
+      function paintSteps() {
+        if (!stepsTrack) return;
+        var p = stepsProgress();
+        if (stepsFill) stepsFill.style.width = (p * 100).toFixed(2) + '%';
+        if (stepsRailFill) stepsRailFill.style.width = (clamp(p, 0, 1) * 88).toFixed(2) + '%';
+
+        if (reduceMotion) {
+          var fb = document.querySelector('.steps-fallback');
+          if (fb) fb.removeAttribute('aria-hidden');
+          return;
+        }
+
+        var active = Math.min(stepsCount - 1, Math.floor(p * stepsCount + 0.001));
+        if (p >= 0.98) active = stepsCount - 1;
+        if (active !== stepsLast && active !== stepsPending) applyStep(active, true);
+        else if (stepsLast < 0) applyStep(active, false);
+      }
+
+      if (lenis) lenis.on('scroll', onScrollStories);
+      window.addEventListener('scroll', onScrollStories, { passive: true });
+      window.addEventListener('resize', onScrollStories);
+      paintScrollStories();
+
+      /* Soft enter for section heads + major blocks */
+      if (!reduceMotion && 'IntersectionObserver' in window) {
+        var revealNodes = document.querySelectorAll(
+          '.section-head, .pain-card, .role-card, .outcome, .tier, .arch-diagram, .split-feature, .final-cta .card'
+        );
+        revealNodes.forEach(function (el, i) {
+          if (el.closest('#ideas') || el.closest('#steps')) return;
+          el.setAttribute('data-reveal', '');
+          el.style.setProperty('--reveal-delay', ((i % 4) * 60) + 'ms');
+        });
+        var rio = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-in');
+                rio.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.16, rootMargin: '0px 0px -8% 0px' }
+        );
+        document.querySelectorAll('[data-reveal]').forEach(function (el) {
+          rio.observe(el);
+        });
+      }
+    })();
+  </script>
+  <script src="pros-cookies.js"></script>
+  <script>
+    (function () {
+      if (!window.PROS) return;
+      var root = document.getElementById('welcome-tour');
+      if (!root) return;
+
+      var draftStep = PROS.getStep();
+      var hasDraft = draftStep > 0 && !PROS.isOnboarded();
+      var seen;
+      try { seen = sessionStorage.getItem('pros_tour_seen') === '1'; } catch (e) { seen = false; }
+
+      if (PROS.isOnboarded()) return;
+
+      if (hasDraft) {
+        var banner = document.createElement('div');
+        banner.className = 'resume-banner';
+        banner.style.cssText = 'position:fixed;left:16px;right:16px;bottom:16px;z-index:70;max-width:560px;margin:0 auto;';
+        banner.innerHTML =
+          '<p><strong>Resume onboarding.</strong> Finish setup where you left off.</p>' +
+          '<a class="btn btn-primary btn-sm" href="project-reality-os-onboarding.html">Continue</a>';
+        document.body.appendChild(banner);
+        return;
+      }
+
+      if (seen) return;
+
+      root.hidden = false;
+      root.classList.add('is-open');
+
+      function dismiss() {
+        root.classList.remove('is-open');
+        root.hidden = true;
+        try { sessionStorage.setItem('pros_tour_seen', '1'); } catch (e) {}
+      }
+
+      document.getElementById('tour-dismiss').addEventListener('click', dismiss);
+      root.addEventListener('click', function (e) {
+        if (e.target === root) dismiss();
+      });
+    })();
+
+    (function () {
+      var track = document.querySelector('.kit-track');
+      if (!track) return;
+
+      track.addEventListener('click', function (e) {
+        var swatch = e.target.closest('.kit-swatch');
+        if (!swatch) return;
+        e.preventDefault();
+        e.stopPropagation();
+        var card = swatch.closest('.kit-card');
+        if (!card) return;
+        var glyph = card.querySelector('.kit-glyph');
+        var siblings = card.querySelectorAll('.kit-swatch');
+        for (var i = 0; i < siblings.length; i++) siblings[i].classList.remove('is-active');
+        swatch.classList.add('is-active');
+        if (glyph) glyph.style.color = swatch.style.backgroundColor || '#171717';
+      });
+    })();
+  </script>
+</body>
+</html>

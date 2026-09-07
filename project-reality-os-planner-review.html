@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planner Review Queue — Project Reality OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="project-reality-os.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-bar">
+      <a href="project-reality-os-landing.html" class="logo">Project Reality<span> OS</span></a>
+      <div class="app-bar-meta">
+        <span class="project-chip" id="project-chip">NH-42-EAST</span>
+        <span class="role-chip">Planner</span>
+      </div>
+    </header>
+
+    <div class="page-head">
+      <p class="label">PLANNER REVIEW</p>
+      <h1>Decide what enters the schedule</h1>
+      <p>AI proposed. Site engineer confirmed. Your approval writes the live plan — or not.</p>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-tile confirmed"><div class="stat-num">4</div><div class="stat-label">Confirmed</div></div>
+      <div class="stat-tile review"><div class="stat-num">3</div><div class="stat-label">Review Needed</div></div>
+      <div class="stat-tile risk"><div class="stat-num">1</div><div class="stat-label">Possible Risk</div></div>
+    </div>
+
+    <div class="filter-row" role="group" aria-label="Filter queue">
+      <button type="button" class="chip is-active" data-filter="all">All</button>
+      <button type="button" class="chip" data-filter="review">Review Needed</button>
+      <button type="button" class="chip" data-filter="risk">Possible Risk</button>
+      <button type="button" class="chip" data-filter="confirmed">Confirmed</button>
+    </div>
+
+    <div class="card-stack" id="queue">
+      <article class="card card-white queue-item" data-tier="risk">
+        <div class="card-header">
+          <h3>WBS 5.1.0 — Crane utilisation</h3>
+          <span class="badge badge-risk">Possible Risk</span>
+        </div>
+        <div class="meta-row">
+          <span class="caption">From · A. Mehta · Ch. 14+280</span>
+          <span class="caption">Confidence 48%</span>
+        </div>
+        <p>Two-hour crane idle waiting rebar — may conflict with Package C booking window.</p>
+        <div class="btn-row" style="margin-top:12px;">
+          <a href="project-reality-os-delay-conflict.html" class="btn btn-secondary btn-sm">Open conflict</a>
+          <button type="button" class="btn btn-primary btn-sm approve-btn">Approve</button>
+          <button type="button" class="btn btn-danger btn-sm reject-btn">Reject</button>
+        </div>
+      </article>
+
+      <article class="card card-white queue-item" data-tier="review">
+        <div class="card-header">
+          <h3>WBS 4.2.3 — Pier P8 rebar cage</h3>
+          <span class="badge badge-review">Review Needed</span>
+        </div>
+        <div class="meta-row">
+          <span class="caption">From · A. Mehta · Forward note</span>
+          <span class="caption">Confidence 61%</span>
+        </div>
+        <p>Possible 0.5 day slip if rebar truck late tomorrow. Engineer flagged for awareness.</p>
+        <div class="btn-row" style="margin-top:12px;">
+          <a href="project-reality-os-delay-conflict.html" class="btn btn-secondary btn-sm">View detail</a>
+          <button type="button" class="btn btn-primary btn-sm approve-btn">Approve</button>
+          <button type="button" class="btn btn-danger btn-sm reject-btn">Reject</button>
+        </div>
+      </article>
+
+      <article class="card card-white queue-item" data-tier="confirmed">
+        <div class="card-header">
+          <h3>WBS 4.2.1 — Pier P7 pile cap</h3>
+          <span class="badge badge-confirmed">Confirmed</span>
+        </div>
+        <div class="meta-row">
+          <span class="caption">From · A. Mehta · 38 m³ pour</span>
+          <span class="caption">Confidence 92%</span>
+        </div>
+        <p>Pile cap pour completed. Aligns with finish window. Ready to mark progress.</p>
+        <div class="btn-row" style="margin-top:12px;">
+          <button type="button" class="btn btn-primary btn-sm approve-btn">Approve</button>
+          <button type="button" class="btn btn-danger btn-sm reject-btn">Reject</button>
+        </div>
+      </article>
+
+      <article class="card card-white queue-item" data-tier="review">
+        <div class="card-header">
+          <h3>WBS 3.4.2 — Embankment lift 3</h3>
+          <span class="badge badge-review">Review Needed</span>
+        </div>
+        <div class="meta-row">
+          <span class="caption">From · R. Singh · Ch. 13+050</span>
+          <span class="caption">Confidence 74%</span>
+        </div>
+        <p>Lift completed to RL design. Compaction tests pending lab return.</p>
+        <div class="btn-row" style="margin-top:12px;">
+          <button type="button" class="btn btn-primary btn-sm approve-btn">Approve</button>
+          <button type="button" class="btn btn-danger btn-sm reject-btn">Reject</button>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Primary">
+    <div class="bottom-nav-inner">
+      <a class="nav-item" href="project-reality-os-site-report.html">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        Report
+      </a>
+      <a class="nav-item is-active" href="project-reality-os-planner-review.html">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Review
+      </a>
+      <a class="nav-item" href="project-reality-os-dashboard.html">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-item" href="project-reality-os-history.html">
+        <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5M12 7v5l4 2"/></svg>
+        History
+      </a>
+      <a class="nav-item" href="project-reality-os-settings.html">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        Account
+      </a>
+    </div>
+  </nav>
+
+  <script>
+    (function () {
+      try {
+        var p = localStorage.getItem('pros_project');
+        if (p) document.getElementById('project-chip').textContent = p;
+      } catch (e) {}
+
+      document.querySelectorAll('.chip').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          document.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('is-active'); });
+          chip.classList.add('is-active');
+          var f = chip.getAttribute('data-filter');
+          document.querySelectorAll('.queue-item').forEach(function (item) {
+            item.hidden = f !== 'all' && item.getAttribute('data-tier') !== f;
+          });
+        });
+      });
+
+      document.querySelectorAll('.queue-item').forEach(function (item) {
+        var approve = item.querySelector('.approve-btn');
+        var reject = item.querySelector('.reject-btn');
+        if (approve) {
+          approve.addEventListener('click', function () {
+            window.location.href = 'project-reality-os-sync.html';
+          });
+        }
+        if (reject) {
+          reject.addEventListener('click', function () {
+            item.style.opacity = '0.4';
+            approve && (approve.disabled = true);
+            reject.disabled = true;
+            reject.textContent = 'Rejected';
+          });
+        }
+      });
+    })();
+  </script>
+
+  <script>
+    window.PROS_RECOMMENDATION = {
+      labels: {
+        title: "Want me to clear the top queue item?",
+        alternatives: "Alternatives",
+        otherOptions: "Other actions",
+        accepted: "Accepted",
+      },
+      options: [
+        {
+          key: "approve-p7",
+          body: 'Approve <span class="rec-entity">WBS 4.2.1 · Pier P7</span> — confidence <span class="rec-pill is-green">92%</span>',
+          short: "Approve Pier P7 pile cap · 92%",
+          signal: 3,
+          tone: "var(--green)",
+          label: "High confidence",
+          cta: "Approve",
+          ctaVariant: "primary",
+          href: "project-reality-os-sync.html",
+        },
+        {
+          key: "open-crane",
+          body: 'Open crane conflict first — <span class="rec-entity">WBS 5.1.0</span> still at <span class="rec-pill is-orange">48%</span>',
+          short: "Open crane conflict · 48%",
+          signal: 2,
+          tone: "var(--orange)",
+          label: "Needs review",
+          cta: "Open conflict",
+          ctaVariant: "secondary",
+          href: "project-reality-os-delay-conflict.html",
+        },
+        {
+          key: "batch-hold",
+          body: 'Skip auto-clear — keep full queue for <strong>manual review</strong>.',
+          short: "Keep full queue for manual review",
+          signal: 0,
+          tone: "var(--muted)",
+          label: "No signal",
+          cta: "Dismiss",
+          ctaVariant: "secondary",
+        },
+      ],
+    };
+  </script>
+  <script src="recommendation-card.js"></script>
+  <script src="pros-cookies.js"></script>
+  <script>if (window.PROS) PROS.requireOnboarded();</script>
+</body>
+</html>

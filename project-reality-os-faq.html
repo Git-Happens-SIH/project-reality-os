@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Help Centre — Project Reality OS</title>
+  <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FCF9F0',
+            ink: '#171717',
+            mute: '#4F4B45',
+            line: '#1C1C1C',
+            blaze: '#FF8A00',
+            chalk: '#FFF0B8',
+            ash: '#262626',
+          },
+          fontFamily: {
+            display: ['"Instrument Serif"', 'Georgia', 'serif'],
+            sans: ['"IBM Plex Sans"', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            hard: '2px 2px 0 #111',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    details summary::-webkit-details-marker { display: none; }
+    details summary { list-style: none; }
+    .pill-row {
+      scrollbar-width: thin;
+      scrollbar-color: #1C1C1C transparent;
+    }
+    .pill-row::-webkit-scrollbar { height: 4px; }
+    .pill-row::-webkit-scrollbar-thumb { background: #1C1C1C; border-radius: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-cream text-ink font-sans antialiased min-h-screen">
+  <section class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24" aria-labelledby="faq-heading">
+    <header class="text-center mb-10">
+      <p class="text-[10px] font-medium uppercase tracking-[0.08em] text-mute mb-3">Support</p>
+      <h1 id="faq-heading" class="font-display text-4xl sm:text-5xl tracking-tight text-ink">
+        Help Centre
+      </h1>
+      <p class="mt-3 text-sm text-mute max-w-md mx-auto leading-relaxed">
+        Search answers on reports, matching, approvals, and sync.
+      </p>
+    </header>
+
+    <!-- Search -->
+    <div class="relative mb-5">
+      <label for="faq-search" class="sr-only">Search help articles</label>
+      <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-mute" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+          <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+        </svg>
+      </span>
+      <input
+        id="faq-search"
+        type="search"
+        autocomplete="off"
+        placeholder="Search questions…"
+        class="w-full rounded-[5px] border-[1.5px] border-line bg-white py-3.5 pl-11 pr-4 text-[15px] text-ink placeholder:text-mute/60 outline-none transition focus:border-blaze focus:ring-1 focus:ring-blaze"
+      />
+    </div>
+
+    <!-- Topic pills -->
+    <div
+      id="faq-pills"
+      class="pill-row mb-6 flex gap-2 overflow-x-auto pb-1 -mx-1 px-1"
+      role="tablist"
+      aria-label="Filter by topic"
+    >
+      <button type="button" role="tab" aria-selected="true" data-filter="all"
+        class="faq-pill shrink-0 rounded-[4px] border border-line bg-ink px-3.5 py-1.5 text-[12px] font-medium text-cream transition hover:opacity-90">
+        All topics
+      </button>
+      <button type="button" role="tab" aria-selected="false" data-filter="getting-started"
+        class="faq-pill shrink-0 rounded-[4px] border border-line bg-white px-3.5 py-1.5 text-[12px] font-medium text-ink transition hover:bg-chalk/60">
+        Getting started
+      </button>
+      <button type="button" role="tab" aria-selected="false" data-filter="reports"
+        class="faq-pill shrink-0 rounded-[4px] border border-line bg-white px-3.5 py-1.5 text-[12px] font-medium text-ink transition hover:bg-chalk/60">
+        Site reports
+      </button>
+      <button type="button" role="tab" aria-selected="false" data-filter="matching"
+        class="faq-pill shrink-0 rounded-[4px] border border-line bg-white px-3.5 py-1.5 text-[12px] font-medium text-ink transition hover:bg-chalk/60">
+        Matching
+      </button>
+      <button type="button" role="tab" aria-selected="false" data-filter="approvals"
+        class="faq-pill shrink-0 rounded-[4px] border border-line bg-white px-3.5 py-1.5 text-[12px] font-medium text-ink transition hover:bg-chalk/60">
+        Approvals
+      </button>
+      <button type="button" role="tab" aria-selected="false" data-filter="sync"
+        class="faq-pill shrink-0 rounded-[4px] border border-line bg-white px-3.5 py-1.5 text-[12px] font-medium text-ink transition hover:bg-chalk/60">
+        Sync &amp; offline
+      </button>
+      <button type="button" role="tab" aria-selected="false" data-filter="billing"
+        class="faq-pill shrink-0 rounded-[4px] border border-line bg-white px-3.5 py-1.5 text-[12px] font-medium text-ink transition hover:bg-chalk/60">
+        Account
+      </button>
+    </div>
+
+    <!-- Results count -->
+    <p id="faq-count" class="mb-4 text-[12px] text-mute" aria-live="polite">Showing 8 of 8 articles</p>
+
+    <!-- FAQ list -->
+    <div id="faq-list" class="space-y-2">
+      <details data-topic="getting-started" class="faq-item group rounded-[6px] border-[1.5px] border-line bg-white open:bg-white">
+        <summary class="flex cursor-pointer items-center gap-3 px-4 py-3.5">
+          <span class="faq-q flex-1 text-[14px] font-medium text-ink leading-snug pr-2">
+            How do I invite my site engineers and planners?
+          </span>
+          <span class="shrink-0 rounded-[3px] border border-line/40 bg-cream px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-mute">
+            Getting started
+          </span>
+          <svg class="h-4 w-4 shrink-0 text-mute transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div class="border-t border-line/15 px-4 pb-4 pt-3">
+          <p class="faq-a text-[13px] leading-relaxed text-mute">
+            Open Settings → Team, then send email invites with a role: Site Engineer or Planner.
+            Invites expire after 7 days. Engineers submit daily reports; planners review matches and approve schedule updates.
+          </p>
+          <div class="mt-4 flex items-center gap-3 border-t border-line/10 pt-3" data-helpful>
+            <span class="text-[11px] text-mute">Was this helpful?</span>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="Yes, helpful" data-vote="up">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.994a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/></svg>
+            </button>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="No, not helpful" data-vote="down">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.994a2 2 0 00-1.106-1.79l-.05-.025A4 4 0 0011.057 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z"/></svg>
+            </button>
+          </div>
+        </div>
+      </details>
+
+      <details data-topic="reports" class="faq-item group rounded-[6px] border-[1.5px] border-line bg-white">
+        <summary class="flex cursor-pointer items-center gap-3 px-4 py-3.5">
+          <span class="faq-q flex-1 text-[14px] font-medium text-ink leading-snug pr-2">
+            What should a daily site report include?
+          </span>
+          <span class="shrink-0 rounded-[3px] border border-line/40 bg-cream px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-mute">
+            Site reports
+          </span>
+          <svg class="h-4 w-4 shrink-0 text-mute transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div class="border-t border-line/15 px-4 pb-4 pt-3">
+          <p class="faq-a text-[13px] leading-relaxed text-mute">
+            Note work completed, location or zone, crew count, blockers, and any delay risk.
+            Photos and voice notes are optional but improve match confidence. Submit before end of shift so planners see same-day progress.
+          </p>
+          <div class="mt-4 flex items-center gap-3 border-t border-line/10 pt-3" data-helpful>
+            <span class="text-[11px] text-mute">Was this helpful?</span>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="Yes, helpful" data-vote="up">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.994a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/></svg>
+            </button>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="No, not helpful" data-vote="down">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.994a2 2 0 00-1.106-1.79l-.05-.025A4 4 0 0011.057 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z"/></svg>
+            </button>
+          </div>
+        </div>
+      </details>
+
+      <details data-topic="matching" class="faq-item group rounded-[6px] border-[1.5px] border-line bg-white">
+        <summary class="flex cursor-pointer items-center gap-3 px-4 py-3.5">
+          <span class="faq-q flex-1 text-[14px] font-medium text-ink leading-snug pr-2">
+            How does AI task matching work?
+          </span>
+          <span class="shrink-0 rounded-[3px] border border-line/40 bg-cream px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-mute">
+            Matching
+          </span>
+          <svg class="h-4 w-4 shrink-0 text-mute transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div class="border-t border-line/15 px-4 pb-4 pt-3">
+          <p class="faq-a text-[13px] leading-relaxed text-mute">
+            After a report lands, the model proposes links to schedule tasks with a confidence score:
+            Confirmed, Review Needed, or Possible Risk. Low-confidence matches never write to the live plan until a planner decides.
+          </p>
+          <div class="mt-4 flex items-center gap-3 border-t border-line/10 pt-3" data-helpful>
+            <span class="text-[11px] text-mute">Was this helpful?</span>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="Yes, helpful" data-vote="up">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.994a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/></svg>
+            </button>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="No, not helpful" data-vote="down">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.994a2 2 0 00-1.106-1.79l-.05-.025A4 4 0 0011.057 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z"/></svg>
+            </button>
+          </div>
+        </div>
+      </details>
+
+      <details data-topic="approvals" class="faq-item group rounded-[6px] border-[1.5px] border-line bg-white">
+        <summary class="flex cursor-pointer items-center gap-3 px-4 py-3.5">
+          <span class="faq-q flex-1 text-[14px] font-medium text-ink leading-snug pr-2">
+            Who can approve a schedule update?
+          </span>
+          <span class="shrink-0 rounded-[3px] border border-line/40 bg-cream px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-mute">
+            Approvals
+          </span>
+          <svg class="h-4 w-4 shrink-0 text-mute transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div class="border-t border-line/15 px-4 pb-4 pt-3">
+          <p class="faq-a text-[13px] leading-relaxed text-mute">
+            Only users with the Planner role. Site engineers submit and can re-edit drafts, but nothing hits the live schedule
+            until a planner approves or rejects the proposed match. Human sign-off is always required.
+          </p>
+          <div class="mt-4 flex items-center gap-3 border-t border-line/10 pt-3" data-helpful>
+            <span class="text-[11px] text-mute">Was this helpful?</span>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="Yes, helpful" data-vote="up">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.994a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/></svg>
+            </button>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="No, not helpful" data-vote="down">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.994a2 2 0 00-1.106-1.79l-.05-.025A4 4 0 0011.057 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z"/></svg>
+            </button>
+          </div>
+        </div>
+      </details>
+
+      <details data-topic="sync" class="faq-item group rounded-[6px] border-[1.5px] border-line bg-white">
+        <summary class="flex cursor-pointer items-center gap-3 px-4 py-3.5">
+          <span class="faq-q flex-1 text-[14px] font-medium text-ink leading-snug pr-2">
+            Can I submit reports offline?
+          </span>
+          <span class="shrink-0 rounded-[3px] border border-line/40 bg-cream px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-mute">
+            Sync &amp; offline
+          </span>
+          <svg class="h-4 w-4 shrink-0 text-mute transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div class="border-t border-line/15 px-4 pb-4 pt-3">
+          <p class="faq-a text-[13px] leading-relaxed text-mute">
+            Yes. Drafts queue on device when the site has no signal. When connectivity returns, reports sync automatically
+            and enter the matching queue. A pale-yellow banner marks items still waiting to upload.
+          </p>
+          <div class="mt-4 flex items-center gap-3 border-t border-line/10 pt-3" data-helpful>
+            <span class="text-[11px] text-mute">Was this helpful?</span>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="Yes, helpful" data-vote="up">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.994a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/></svg>
+            </button>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="No, not helpful" data-vote="down">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.994a2 2 0 00-1.106-1.79l-.05-.025A4 4 0 0011.057 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z"/></svg>
+            </button>
+          </div>
+        </div>
+      </details>
+
+      <details data-topic="matching" class="faq-item group rounded-[6px] border-[1.5px] border-line bg-white">
+        <summary class="flex cursor-pointer items-center gap-3 px-4 py-3.5">
+          <span class="faq-q flex-1 text-[14px] font-medium text-ink leading-snug pr-2">
+            What happens if a match looks wrong?
+          </span>
+          <span class="shrink-0 rounded-[3px] border border-line/40 bg-cream px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-mute">
+            Matching
+          </span>
+          <svg class="h-4 w-4 shrink-0 text-mute transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div class="border-t border-line/15 px-4 pb-4 pt-3">
+          <p class="faq-a text-[13px] leading-relaxed text-mute">
+            Reject the suggestion and pick the correct task from the schedule, or leave it as Review Needed.
+            Rejected links stay in history for audit but never update programme progress.
+          </p>
+          <div class="mt-4 flex items-center gap-3 border-t border-line/10 pt-3" data-helpful>
+            <span class="text-[11px] text-mute">Was this helpful?</span>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="Yes, helpful" data-vote="up">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.994a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/></svg>
+            </button>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="No, not helpful" data-vote="down">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.994a2 2 0 00-1.106-1.79l-.05-.025A4 4 0 0011.057 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z"/></svg>
+            </button>
+          </div>
+        </div>
+      </details>
+
+      <details data-topic="billing" class="faq-item group rounded-[6px] border-[1.5px] border-line bg-white">
+        <summary class="flex cursor-pointer items-center gap-3 px-4 py-3.5">
+          <span class="faq-q flex-1 text-[14px] font-medium text-ink leading-snug pr-2">
+            How do I change my organisation name or logo?
+          </span>
+          <span class="shrink-0 rounded-[3px] border border-line/40 bg-cream px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-mute">
+            Account
+          </span>
+          <svg class="h-4 w-4 shrink-0 text-mute transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div class="border-t border-line/15 px-4 pb-4 pt-3">
+          <p class="faq-a text-[13px] leading-relaxed text-mute">
+            Go to Settings → Organisation. Admins can edit the display name and upload a square logo (PNG or SVG, max 2&nbsp;MB).
+            Changes appear on reports and the planner dashboard within a few minutes.
+          </p>
+          <div class="mt-4 flex items-center gap-3 border-t border-line/10 pt-3" data-helpful>
+            <span class="text-[11px] text-mute">Was this helpful?</span>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="Yes, helpful" data-vote="up">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.994a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/></svg>
+            </button>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="No, not helpful" data-vote="down">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.994a2 2 0 00-1.106-1.79l-.05-.025A4 4 0 0011.057 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z"/></svg>
+            </button>
+          </div>
+        </div>
+      </details>
+
+      <details data-topic="getting-started" class="faq-item group rounded-[6px] border-[1.5px] border-line bg-white">
+        <summary class="flex cursor-pointer items-center gap-3 px-4 py-3.5">
+          <span class="faq-q flex-1 text-[14px] font-medium text-ink leading-snug pr-2">
+            Do I need to replace my existing schedule tool?
+          </span>
+          <span class="shrink-0 rounded-[3px] border border-line/40 bg-cream px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-mute">
+            Getting started
+          </span>
+          <svg class="h-4 w-4 shrink-0 text-mute transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div class="border-t border-line/15 px-4 pb-4 pt-3">
+          <p class="faq-a text-[13px] leading-relaxed text-mute">
+            No. Project Reality OS sits beside your programme — it closes the gap between field reports and what the plan believes.
+            Connect your schedule export or API, then keep planning where you already work.
+          </p>
+          <div class="mt-4 flex items-center gap-3 border-t border-line/10 pt-3" data-helpful>
+            <span class="text-[11px] text-mute">Was this helpful?</span>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="Yes, helpful" data-vote="up">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.994a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/></svg>
+            </button>
+            <button type="button" class="helpful-btn inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-line text-mute transition hover:bg-chalk" aria-label="No, not helpful" data-vote="down">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.994a2 2 0 00-1.106-1.79l-.05-.025A4 4 0 0011.057 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z"/></svg>
+            </button>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Empty state -->
+    <div id="faq-empty" class="hidden rounded-[6px] border-[1.5px] border-dashed border-line/40 bg-white/60 px-6 py-12 text-center" role="status">
+      <p class="font-display text-2xl text-ink">No articles match</p>
+      <p class="mt-2 text-sm text-mute">Try another keyword, or clear filters to see all topics.</p>
+      <button type="button" id="faq-clear" class="mt-5 rounded-[5px] border-[1.5px] border-line bg-blaze px-4 py-2 text-[13px] font-medium text-ink shadow-hard transition hover:translate-x-px hover:translate-y-px hover:shadow-none">
+        Clear search
+      </button>
+    </div>
+
+    <p class="mt-10 text-center text-[12px] text-mute">
+      Still stuck?
+      <a href="mailto:hello@projectrealityos.ai" class="font-medium text-ink underline decoration-line/30 underline-offset-2 hover:decoration-blaze">hello@projectrealityos.ai</a>
+    </p>
+  </section>
+
+  <script>
+    (function () {
+      const searchInput = document.getElementById('faq-search');
+      const pills = document.querySelectorAll('.faq-pill');
+      const items = document.querySelectorAll('.faq-item');
+      const countEl = document.getElementById('faq-count');
+      const emptyEl = document.getElementById('faq-empty');
+      const listEl = document.getElementById('faq-list');
+      const clearBtn = document.getElementById('faq-clear');
+      const total = items.length;
+      let activeTopic = 'all';
+
+      const pillActive = 'faq-pill shrink-0 rounded-[4px] border border-line bg-ink px-3.5 py-1.5 text-[12px] font-medium text-cream transition hover:opacity-90';
+      const pillIdle = 'faq-pill shrink-0 rounded-[4px] border border-line bg-white px-3.5 py-1.5 text-[12px] font-medium text-ink transition hover:bg-chalk/60';
+
+      function filterFaq() {
+        const q = searchInput.value.trim().toLowerCase();
+        let visible = 0;
+
+        items.forEach((item) => {
+          const topic = item.getAttribute('data-topic');
+          const question = (item.querySelector('.faq-q')?.textContent || '').toLowerCase();
+          const answer = (item.querySelector('.faq-a')?.textContent || '').toLowerCase();
+          const textMatch = !q || question.includes(q) || answer.includes(q);
+          const topicMatch = activeTopic === 'all' || topic === activeTopic;
+          const show = textMatch && topicMatch;
+          item.classList.toggle('hidden', !show);
+          if (show) visible += 1;
+          else item.open = false;
+        });
+
+        countEl.textContent =
+          visible === 0
+            ? 'No articles found'
+            : `Showing ${visible} of ${total} article${total === 1 ? '' : 's'}`;
+
+        const isEmpty = visible === 0;
+        emptyEl.classList.toggle('hidden', !isEmpty);
+        listEl.classList.toggle('hidden', isEmpty);
+      }
+
+      searchInput.addEventListener('input', filterFaq);
+
+      pills.forEach((pill) => {
+        pill.addEventListener('click', () => {
+          activeTopic = pill.getAttribute('data-filter');
+          pills.forEach((p) => {
+            const on = p === pill;
+            p.setAttribute('aria-selected', on ? 'true' : 'false');
+            p.className = on ? pillActive : pillIdle;
+          });
+          filterFaq();
+        });
+      });
+
+      clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        activeTopic = 'all';
+        pills.forEach((p) => {
+          const on = p.getAttribute('data-filter') === 'all';
+          p.setAttribute('aria-selected', on ? 'true' : 'false');
+          p.className = on ? pillActive : pillIdle;
+        });
+        searchInput.focus();
+        filterFaq();
+      });
+
+      document.querySelectorAll('[data-helpful]').forEach((row) => {
+        row.querySelectorAll('.helpful-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            row.querySelectorAll('.helpful-btn').forEach((b) => {
+              b.classList.remove('bg-ink', 'text-cream', 'border-ink');
+              b.classList.add('text-mute');
+              b.disabled = true;
+            });
+            btn.classList.add('bg-ink', 'text-cream', 'border-ink');
+            btn.classList.remove('text-mute');
+            const label = row.querySelector('span');
+            if (label) label.textContent = btn.dataset.vote === 'up' ? 'Thanks for the feedback' : 'Thanks — we will improve this';
+          });
+        });
+      });
+
+      filterFaq();
+    })();
+  </script>
+</body>
+</html>

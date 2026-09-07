@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: project-reality-os
+    runtime: static
+    plan: free
+    buildCommand: echo "static site"
+    staticPublishPath: ./
+    routes:
+      - type: rewrite
+        source: /
+        destination: /index.html

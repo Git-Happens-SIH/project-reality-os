@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" role="img" aria-label="Project Reality OS">
+  <!-- Outer OS frame -->
+  <rect x="1.5" y="1.5" width="29" height="29" rx="3" stroke="#1C1C1C" stroke-width="1.5" fill="#FCF9F0"/>
+  <!-- Plan layer (back) -->
+  <rect x="7" y="7" width="14" height="14" rx="1.5" stroke="#1C1C1C" stroke-width="1.5" fill="none"/>
+  <!-- Site / reality layer (front, offset) -->
+  <rect x="11" y="11" width="14" height="14" rx="1.5" stroke="#1C1C1C" stroke-width="1.5" fill="#FCF9F0"/>
+  <!-- Lock / truth accent  where layers meet -->
+  <rect x="18" y="18" width="7" height="7" rx="1" fill="#FF8A00" stroke="#1C1C1C" stroke-width="1.5"/>
+</svg>

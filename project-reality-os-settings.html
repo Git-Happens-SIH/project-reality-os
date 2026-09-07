@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account / Settings — Project Reality OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="project-reality-os.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-bar">
+      <a href="project-reality-os-landing.html" class="logo">Project Reality<span> OS</span></a>
+      <div class="app-bar-meta">
+        <span class="project-chip" id="project-chip">NH-42-EAST</span>
+        <span class="role-chip" id="role-chip">Account</span>
+      </div>
+    </header>
+
+    <div class="page-head">
+      <p class="label">ACCOUNT / SETTINGS</p>
+      <h1>Keep control tight</h1>
+      <p>Data stays yours. Role-based access. No training on site notes without consent.</p>
+    </div>
+
+    <div class="card card-white" style="margin-bottom:14px;">
+      <div class="card-header">
+        <div>
+          <h3 id="user-name">A. Mehta</h3>
+          <p class="caption" id="user-email">you@company.com</p>
+        </div>
+        <span class="badge badge-muted" id="user-role">Site Engineer</span>
+      </div>
+      <div class="meta-row">
+        <span class="caption">Org · Meridian Infra</span>
+        <span class="caption" id="user-project">Project · NH-42-EAST</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <p class="section-label label">PROJECT</p>
+      <div class="card">
+        <div class="settings-row">
+          <div>
+            <strong>Project code</strong>
+            <span class="caption" id="settings-code">NH-42-EAST</span>
+          </div>
+          <a href="project-reality-os-auth.html" class="btn btn-secondary btn-sm">Switch</a>
+        </div>
+        <div class="settings-row">
+          <div>
+            <strong>Active role</strong>
+            <span class="caption">Determines report vs review paths</span>
+          </div>
+          <select class="select" id="role-select" style="width:auto; min-width:140px; padding:6px 10px; font-size:12px;">
+            <option value="engineer">Site Engineer</option>
+            <option value="planner">Planner</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <p class="section-label label">FIELD &amp; SYNC</p>
+      <div class="card">
+        <div class="settings-row">
+          <div>
+            <strong>Offline-first save</strong>
+            <span class="caption">Always write locally before sync</span>
+          </div>
+          <button type="button" class="toggle is-on" aria-pressed="true" aria-label="Offline-first save"></button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <strong>Sync on reconnect</strong>
+            <span class="caption">Queue reports when signal returns</span>
+          </div>
+          <button type="button" class="toggle is-on" aria-pressed="true" aria-label="Sync on reconnect"></button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <strong>Delay alert emails</strong>
+            <span class="caption">Possible Risk tier notifications</span>
+          </div>
+          <button type="button" class="toggle is-on" aria-pressed="true" aria-label="Delay alert emails"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <p class="section-label label">TRUST &amp; DATA</p>
+      <div class="card">
+        <div class="settings-row">
+          <div>
+            <strong>Allow model training</strong>
+            <span class="caption">Off by default · requires explicit consent</span>
+          </div>
+          <button type="button" class="toggle" aria-pressed="false" aria-label="Allow model training"></button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <strong>Export project audit</strong>
+            <span class="caption">Reports, approvals, timestamps</span>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" id="export-btn">Export</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <a href="mailto:hello@projectrealityos.ai" class="btn btn-secondary">Support</a>
+      <a href="project-reality-os-auth.html" class="btn btn-primary">Sign out</a>
+    </div>
+    <p class="caption" style="text-align:center; margin-top:12px;">Privacy · hello@projectrealityos.ai</p>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Primary">
+    <div class="bottom-nav-inner">
+      <a class="nav-item" href="project-reality-os-site-report.html">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        Report
+      </a>
+      <a class="nav-item" href="project-reality-os-planner-review.html">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Review
+      </a>
+      <a class="nav-item" href="project-reality-os-dashboard.html">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-item" href="project-reality-os-history.html">
+        <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5M12 7v5l4 2"/></svg>
+        History
+      </a>
+      <a class="nav-item is-active" href="project-reality-os-settings.html">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        Account
+      </a>
+    </div>
+  </nav>
+
+  <script>
+    (function () {
+      var role = 'engineer';
+      var project = 'NH-42-EAST';
+      try {
+        role = localStorage.getItem('pros_role') || role;
+        project = localStorage.getItem('pros_project') || project;
+      } catch (e) {}
+
+      document.getElementById('project-chip').textContent = project;
+      document.getElementById('settings-code').textContent = project;
+      document.getElementById('user-project').textContent = 'Project · ' + project;
+      document.getElementById('role-select').value = role;
+      var label = role === 'planner' ? 'Planner' : 'Site Engineer';
+      document.getElementById('user-role').textContent = label;
+      document.getElementById('role-chip').textContent = label;
+
+      document.getElementById('role-select').addEventListener('change', function () {
+        role = this.value;
+        try { localStorage.setItem('pros_role', role); } catch (e) {}
+        label = role === 'planner' ? 'Planner' : 'Site Engineer';
+        document.getElementById('user-role').textContent = label;
+        document.getElementById('role-chip').textContent = label;
+      });
+
+      document.querySelectorAll('.toggle').forEach(function (t) {
+        t.addEventListener('click', function () {
+          var on = !t.classList.contains('is-on');
+          t.classList.toggle('is-on', on);
+          t.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+      });
+
+      document.getElementById('export-btn').addEventListener('click', function () {
+        var btn = this;
+        btn.textContent = 'Queued';
+        setTimeout(function () { btn.textContent = 'Export'; }, 1600);
+      });
+    })();
+  </script>
+  <script src="pros-cookies.js"></script>
+  <script>if (window.PROS) PROS.requireOnboarded();</script>
+</body>
+</html>
