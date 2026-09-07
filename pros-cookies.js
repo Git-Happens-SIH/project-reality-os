@@ -1,22 +1,34 @@
 /**
- * Project Reality OS — cookie + first-run helpers
- * Cookie is source of truth for onboarding gate; localStorage mirrors prefs.
+ * Project Reality OS — consent-aware cookie + first-run helpers
+ * Cookies only written after explicit consent.
+ * Onboarding only after opt-in; users can always escape.
  */
 (function (global) {
   var PREFIX = 'pros_';
   var ONBOARDED = PREFIX + 'onboarded';
   var STEP = PREFIX + 'onboard_step';
   var DRAFT = PREFIX + 'onboard_draft';
+  var COOKIE_CONSENT = PREFIX + 'cookie_consent';
+  var ONBOARD_CONSENT = PREFIX + 'onboard_consent';
   var YEAR = 365 * 24 * 60 * 60;
 
   function safeGet(key) {
     try { return localStorage.getItem(key); } catch (e) { return null; }
   }
   function safeSet(key, value) {
-    try { localStorage.setItem(key, value); } catch (e) {}
+    try { localStorage.setItem(key, String(value)); } catch (e) {}
   }
   function safeRemove(key) {
     try { localStorage.removeItem(key); } catch (e) {}
+  }
+  function sessionGet(key) {
+    try { return sessionStorage.getItem(key); } catch (e) { return null; }
+  }
+  function sessionSet(key, value) {
+    try { sessionStorage.setItem(key, String(value)); } catch (e) {}
+  }
+  function sessionRemove(key) {
+    try { sessionStorage.removeItem(key); } catch (e) {}
   }
 
   function getCookie(name) {
@@ -24,59 +36,132 @@
     return match ? decodeURIComponent(match[1]) : null;
   }
 
-  function setCookie(name, value, maxAgeSec) {
+  function writeCookieRaw(name, value, maxAgeSec) {
     var age = typeof maxAgeSec === 'number' ? maxAgeSec : YEAR;
     var secure = location.protocol === 'https:' ? '; Secure' : '';
     document.cookie =
       name + '=' + encodeURIComponent(value) +
       '; path=/; max-age=' + age +
       '; SameSite=Lax' + secure;
-    safeSet(name, String(value));
   }
 
-  function deleteCookie(name) {
+  function deleteCookieRaw(name) {
     document.cookie = name + '=; path=/; max-age=0; SameSite=Lax';
+  }
+
+  function hasCookieConsent() {
+    return readPref(COOKIE_CONSENT) === '1';
+  }
+
+  function hasAnsweredCookieConsent() {
+    var v = readPref(COOKIE_CONSENT);
+    return v === '1' || v === '0';
+  }
+
+  function hasOnboardConsent() {
+    return readPref(ONBOARD_CONSENT) === '1';
+  }
+
+  function hasDeclinedOnboarding() {
+    return readPref(ONBOARD_CONSENT) === '0';
+  }
+
+  function hasAnsweredOnboardConsent() {
+    var v = readPref(ONBOARD_CONSENT);
+    return v === '1' || v === '0';
+  }
+
+  /** Read preference: cookie (if allowed) → localStorage → sessionStorage */
+  function readPref(name) {
+    return getCookie(name) || safeGet(name) || sessionGet(name);
+  }
+
+  /**
+   * Persist preference. Consent flags always go to localStorage.
+   * Other keys: cookies only if consented; else sessionStorage (this visit only).
+   */
+  function setPref(name, value, maxAgeSec) {
+    var str = String(value);
+    var isConsentFlag = name === COOKIE_CONSENT || name === ONBOARD_CONSENT;
+
+    if (isConsentFlag) {
+      safeSet(name, str);
+      if (hasCookieConsent() || name === COOKIE_CONSENT) {
+        writeCookieRaw(name, str, maxAgeSec);
+      }
+      return;
+    }
+
+    if (hasCookieConsent()) {
+      writeCookieRaw(name, str, maxAgeSec);
+      safeSet(name, str);
+      sessionRemove(name);
+    } else {
+      sessionSet(name, str);
+      safeRemove(name);
+      deleteCookieRaw(name);
+    }
+  }
+
+  function deletePref(name) {
+    deleteCookieRaw(name);
     safeRemove(name);
+    sessionRemove(name);
+  }
+
+  function setCookieConsent(accepted) {
+    var val = accepted ? '1' : '0';
+    safeSet(COOKIE_CONSENT, val);
+    writeCookieRaw(COOKIE_CONSENT, val);
+    if (!accepted) {
+      // Wipe non-consent cookies; keep answers in session only
+      [ONBOARDED, STEP, DRAFT, PREFIX + 'role', PREFIX + 'project'].forEach(function (k) {
+        deleteCookieRaw(k);
+      });
+    }
+  }
+
+  function setOnboardConsent(accepted) {
+    setPref(ONBOARD_CONSENT, accepted ? '1' : '0');
+    if (!accepted) {
+      setPref(ONBOARDED, 'skipped');
+      deletePref(STEP);
+      deletePref(DRAFT);
+    }
   }
 
   function isOnboarded() {
-    return getCookie(ONBOARDED) === '1' || safeGet(ONBOARDED) === '1';
+    var v = readPref(ONBOARDED);
+    return v === '1' || v === 'skipped';
   }
 
   function getStep() {
-    var raw = getCookie(STEP) || safeGet(STEP);
+    var raw = readPref(STEP);
     if (!raw || raw === 'done') return 0;
     var n = parseInt(raw, 10);
     return isNaN(n) ? 0 : Math.max(0, n);
   }
 
   function setStep(n) {
-    setCookie(STEP, String(n));
+    setPref(STEP, String(n));
   }
 
   function getDraft() {
-    var raw = getCookie(DRAFT) || safeGet(DRAFT);
+    var raw = readPref(DRAFT);
     if (!raw) return {};
     try { return JSON.parse(raw); } catch (e) { return {}; }
   }
 
   function setDraft(obj) {
-    var json = JSON.stringify(obj || {});
-    setCookie(DRAFT, json);
+    setPref(DRAFT, JSON.stringify(obj || {}));
   }
 
   function markOnboarded(prefs) {
     prefs = prefs || {};
-    setCookie(ONBOARDED, '1');
-    setCookie(STEP, 'done');
-    if (prefs.role) {
-      setCookie(PREFIX + 'role', prefs.role);
-      safeSet(PREFIX + 'role', prefs.role);
-    }
-    if (prefs.project) {
-      setCookie(PREFIX + 'project', prefs.project);
-      safeSet(PREFIX + 'project', prefs.project);
-    }
+    setPref(ONBOARDED, '1');
+    setPref(STEP, 'done');
+    if (prefs.role) setPref(PREFIX + 'role', prefs.role);
+    if (prefs.project) setPref(PREFIX + 'project', prefs.project);
     if (prefs.name) safeSet(PREFIX + 'name', prefs.name);
     if (prefs.crew) safeSet(PREFIX + 'crew', prefs.crew);
     if (prefs.org) safeSet(PREFIX + 'org', prefs.org);
@@ -84,35 +169,64 @@
     if (prefs.goals) safeSet(PREFIX + 'goals', JSON.stringify(prefs.goals));
     if (prefs.notifications) safeSet(PREFIX + 'notifications', JSON.stringify(prefs.notifications));
     if (prefs.invites) safeSet(PREFIX + 'invites', JSON.stringify(prefs.invites));
-    deleteCookie(DRAFT);
+    deletePref(DRAFT);
+  }
+
+  /** Exit without finishing — user escapes. Never traps again unless they opt in. */
+  function skipOnboarding(dest) {
+    setOnboardConsent(false);
+    setPref(ONBOARDED, 'skipped');
+    deletePref(STEP);
+    deletePref(DRAFT);
+    if (dest) location.href = dest;
   }
 
   function resetOnboarding() {
-    deleteCookie(ONBOARDED);
-    deleteCookie(STEP);
-    deleteCookie(DRAFT);
+    deletePref(ONBOARDED);
+    deletePref(STEP);
+    deletePref(DRAFT);
+    deletePref(ONBOARD_CONSENT);
   }
 
   function homeForRole(role) {
-    role = role || safeGet(PREFIX + 'role') || getCookie(PREFIX + 'role') || 'engineer';
+    role = role || readPref(PREFIX + 'role') || 'engineer';
     if (role === 'planner' || role === 'lead') return 'project-reality-os-dashboard.html';
     return 'project-reality-os-site-report.html';
   }
 
-  /** App pages: bounce first-time / incomplete users into onboarding. */
+  /**
+   * Soft gate only: never force-lock users.
+   * Resume redirect only if they opted into onboarding, have unfinished draft, and cookies/session say so.
+   */
   function requireOnboarded(opts) {
     opts = opts || {};
     if (isOnboarded()) return false;
-    var dest = opts.redirect || 'project-reality-os-onboarding.html';
+    if (!hasOnboardConsent()) return false;
     if (location.pathname.indexOf('onboarding') !== -1) return false;
+    var step = getStep();
+    if (step <= 0) return false;
+    var dest = opts.redirect || 'project-reality-os-onboarding.html';
     location.replace(dest);
     return true;
   }
 
-  /** Onboarding page: skip wizard if already finished. */
   function redirectIfOnboarded() {
     if (!isOnboarded()) return false;
-    location.replace(homeForRole());
+    if (hasDeclinedOnboarding() && readPref(ONBOARDED) === 'skipped') {
+      // Skipped users who open onboarding URL see consent again — don't auto-bounce to app
+      return false;
+    }
+    if (readPref(ONBOARDED) === '1') {
+      location.replace(homeForRole());
+      return true;
+    }
+    return false;
+  }
+
+  /** True when first-run consent dialog should show. */
+  function needsFirstRunConsent() {
+    if (isOnboarded() && hasAnsweredCookieConsent()) return false;
+    if (hasAnsweredOnboardConsent() && hasAnsweredCookieConsent()) return false;
     return true;
   }
 
@@ -120,19 +234,32 @@
     ONBOARDED: ONBOARDED,
     STEP: STEP,
     DRAFT: DRAFT,
+    COOKIE_CONSENT: COOKIE_CONSENT,
+    ONBOARD_CONSENT: ONBOARD_CONSENT,
     getCookie: getCookie,
-    setCookie: setCookie,
-    deleteCookie: deleteCookie,
+    setCookie: setPref,
+    deleteCookie: deletePref,
+    readPref: readPref,
+    setPref: setPref,
+    hasCookieConsent: hasCookieConsent,
+    hasAnsweredCookieConsent: hasAnsweredCookieConsent,
+    hasOnboardConsent: hasOnboardConsent,
+    hasDeclinedOnboarding: hasDeclinedOnboarding,
+    hasAnsweredOnboardConsent: hasAnsweredOnboardConsent,
+    setCookieConsent: setCookieConsent,
+    setOnboardConsent: setOnboardConsent,
     isOnboarded: isOnboarded,
     getStep: getStep,
     setStep: setStep,
     getDraft: getDraft,
     setDraft: setDraft,
     markOnboarded: markOnboarded,
+    skipOnboarding: skipOnboarding,
     resetOnboarding: resetOnboarding,
     homeForRole: homeForRole,
     requireOnboarded: requireOnboarded,
     redirectIfOnboarded: redirectIfOnboarded,
+    needsFirstRunConsent: needsFirstRunConsent,
     safeGet: safeGet,
     safeSet: safeSet
   };

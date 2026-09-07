@@ -826,28 +826,139 @@
     .card h3 { margin-bottom: 8px; color: var(--black); }
     .card p { font-size: 12.5px; line-height: 1.5; }
 
-    /* Pain grid */
-    .pain-grid {
-      display: grid;
-      gap: 12px;
-      margin-top: 14px;
+    /* Gap story — scroll spotlight (alternate L/R) */
+    .gap-story {
+      position: relative;
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+      margin-bottom: 48px;
+      background:
+        radial-gradient(90% 60% at 8% 20%, rgba(255, 138, 0, 0.09), transparent 55%),
+        radial-gradient(70% 50% at 92% 78%, rgba(28, 28, 28, 0.05), transparent 50%),
+        linear-gradient(180deg, #F7F2E6 0%, var(--cream) 50%, #F3EEE2 100%);
+      border-top: 1.5px solid var(--border);
+      border-bottom: 1.5px solid var(--border);
     }
-    .pain-card {
-      border: 1.5px solid var(--border);
-      border-radius: 7px;
-      padding: 16px;
-      background: var(--white);
+    .gap-track {
+      position: relative;
+      height: 320vh;
     }
-    .pain-card h3 {
-      font-size: 17px;
-      margin-bottom: 8px;
+    .gap-pin {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      min-height: 560px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 88px var(--page-pad) 48px;
+      isolation: isolate;
     }
-    .pain-card p {
-      font-size: 12.5px;
+    .gap-head {
+      position: relative;
+      z-index: 2;
+      width: min(920px, 100%);
+      margin: 0 auto 28px;
+      max-width: 42rem;
+      text-align: center;
+    }
+    .gap-eyebrow {
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .gap-head h2 {
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: 500;
+      font-size: clamp(28px, 4.4vw, 46px);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      margin: 0 0 12px;
+    }
+    .gap-intro {
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: clamp(13px, 1.5vw, 15px);
       line-height: 1.5;
-      margin: 0;
+      color: var(--muted);
+      margin: 0 auto;
+      max-width: 48ch;
     }
-    .pain-card .pain-tag {
+    .gap-stage {
+      position: relative;
+      z-index: 1;
+      width: min(980px, 100%);
+      margin: 0 auto;
+      min-height: min(42vh, 320px);
+      height: clamp(280px, 42vh, 360px);
+    }
+    .gap-spot {
+      position: absolute;
+      top: 50%;
+      width: min(420px, 88%);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 0;
+      background: var(--white);
+      overflow: hidden;
+      opacity: 0;
+      transform: translate3d(0, calc(-50% + 48px), 0) scale(0.96);
+      filter: blur(0.4px);
+      pointer-events: none;
+      transition:
+        opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.45s ease,
+        box-shadow 0.45s ease;
+      will-change: opacity, transform, filter;
+    }
+    .gap-spot.is-left {
+      left: 0;
+      right: auto;
+      transform-origin: left center;
+    }
+    .gap-spot.is-right {
+      right: 0;
+      left: auto;
+      transform-origin: right center;
+    }
+    .gap-spot.is-spot {
+      opacity: 1;
+      transform: translate3d(0, -50%, 0) scale(1);
+      filter: none;
+      pointer-events: auto;
+      box-shadow: 5px 5px 0 rgba(28, 28, 28, 0.12);
+      z-index: 3;
+    }
+    .gap-spot.is-past {
+      opacity: 0.18;
+      transform: translate3d(0, calc(-50% - 72px), 0) scale(0.94);
+      filter: blur(1.5px);
+      z-index: 1;
+    }
+    .gap-spot.is-next {
+      opacity: 0.14;
+      transform: translate3d(0, calc(-50% + 64px), 0) scale(0.94);
+      filter: blur(1.5px);
+      z-index: 0;
+    }
+    .gap-spot-media {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-bottom: 1.5px solid var(--border);
+      background: #e8e2d4;
+    }
+    .gap-spot-body {
+      padding: 16px 18px 18px;
+    }
+    .gap-spot .pain-tag {
       display: inline-block;
       font-size: 10px;
       font-weight: 600;
@@ -856,16 +967,146 @@
       color: var(--orange);
       margin-bottom: 8px;
     }
-
-    /* Tech image grid */
-    .tech-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 14px;
+    .gap-spot h3 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: clamp(20px, 2.4vw, 26px);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      margin: 0 0 8px;
+      line-height: 1.15;
     }
-    .tech-grid .img-frame { aspect-ratio: 4/3; }
-    .tech-grid img { height: 100%; object-fit: cover; }
+    .gap-spot p {
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--muted);
+      margin: 0;
+    }
+    .gap-progress {
+      position: relative;
+      z-index: 2;
+      width: min(920px, 100%);
+      margin: 28px auto 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .gap-progress-track {
+      flex: 1;
+      height: 2px;
+      background: rgba(28, 28, 28, 0.12);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .gap-progress-fill {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: var(--orange);
+      will-change: width;
+    }
+    .gap-progress-label {
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+      font-family: 'Inter', Arial, sans-serif;
+      font-weight: 600;
+    }
+    .gap-hint {
+      width: min(920px, 100%);
+      margin: 12px auto 0;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      font-family: 'Inter', Arial, sans-serif;
+      text-align: center;
+    }
+    .gap-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .gap-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(28, 28, 28, 0.35);
+      background: transparent;
+      transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    }
+    .gap-dot.is-active {
+      background: var(--orange);
+      border-color: var(--orange);
+      transform: scale(1.2);
+    }
+    .gap-dot.is-done {
+      background: var(--black);
+      border-color: var(--black);
+    }
+
+    @media (max-width: 720px) {
+      .gap-spot {
+        width: min(100%, 100%);
+        left: 0 !important;
+        right: 0 !important;
+        margin: 0 auto;
+        transform-origin: center center;
+      }
+      .gap-spot.is-spot {
+        transform: translate3d(0, -50%, 0) scale(1);
+      }
+      .gap-spot.is-past {
+        transform: translate3d(0, calc(-50% - 56px), 0) scale(0.96);
+      }
+      .gap-spot.is-next {
+        transform: translate3d(0, calc(-50% + 52px), 0) scale(0.96);
+      }
+      .gap-stage { height: clamp(300px, 48vh, 380px); }
+      .gap-head { text-align: left; max-width: none; }
+      .gap-intro { margin: 0; }
+      .gap-hint { text-align: left; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .gap-track { height: auto; }
+      .gap-pin {
+        position: relative;
+        height: auto;
+        min-height: 0;
+        padding: 56px var(--page-pad);
+      }
+      .gap-stage {
+        height: auto;
+        min-height: 0;
+        display: grid;
+        gap: 14px;
+      }
+      .gap-spot,
+      .gap-spot.is-left,
+      .gap-spot.is-right,
+      .gap-spot.is-spot,
+      .gap-spot.is-past,
+      .gap-spot.is-next {
+        position: relative;
+        top: auto;
+        left: auto !important;
+        right: auto !important;
+        width: 100%;
+        opacity: 1;
+        transform: none;
+        filter: none;
+        pointer-events: auto;
+        box-shadow: none;
+        transition: none;
+      }
+      .gap-progress,
+      .gap-hint,
+      .gap-dots { display: none; }
+    }
 
     /* From site to system — horizontal image marquee */
     .image-marquee {
@@ -1751,6 +1992,7 @@
       width: 174px;
       height: 218px;
       margin: 12px 0 4px;
+      overflow: visible;
     }
     .crew-card {
       position: absolute;
@@ -2180,7 +2422,6 @@
       }
       .trust-card h3 { font-size: 24px; }
       .trust-card-index { font-size: 34px; }
-      .tech-grid { grid-template-columns: 1fr; }
       .arch-paths { grid-template-columns: 1fr; }
       .arch-diagram { padding: 16px 12px 14px; }
       .arch-flow {
@@ -2231,10 +2472,6 @@
       }
       .page { padding-bottom: 100px; }
       .hero-content { padding-bottom: 72px; }
-      .pain-grid { grid-template-columns: 1fr 1fr; }
-      .pain-grid .pain-card:last-child:nth-child(odd) {
-        grid-column: 1 / -1;
-      }
       .role-grid { grid-template-columns: 1fr 1fr; }
       .feature-row { grid-template-columns: 1fr 1.15fr; }
       .feature-row .img-frame { height: 100%; min-height: 220px; }
@@ -2263,8 +2500,6 @@
       .section { margin-bottom: 56px; }
       .hero-content { padding-bottom: 88px; }
       .hero-sub { font-size: 17px; max-width: 42ch; }
-      .pain-grid { grid-template-columns: repeat(3, 1fr); }
-      .pain-grid .pain-card:last-child:nth-child(odd) { grid-column: auto; }
       .role-grid { grid-template-columns: repeat(3, 1fr); }
       .arch-paths { grid-template-columns: 1fr 1fr; gap: 14px; }
       .arch-path { padding: 16px; }
@@ -2611,49 +2846,82 @@
       </div>
     </section>
 
-    <!-- Problem -->
-    <section class="section" id="gap">
-      <div class="section-head">
-        <h2>Planning and execution still live in different worlds</h2>
-        <p class="section-intro">
-          Site engineers write reports in the field. Planners update schedules days later.
-          By the time a delay is visible on the Gantt, cost has already compounded.
-        </p>
-      </div>
-      <div class="pain-grid">
-        <article class="pain-card">
-          <span class="pain-tag">Field</span>
-          <h3>Notes trapped on phones</h3>
-          <p>
-            Daily reports sit in chat threads, PDFs, or paper pads. Photos lack task context.
-            When connectivity fails, yesterday’s progress never leaves the site cabin.
-          </p>
-        </article>
-        <article class="pain-card">
-          <span class="pain-tag">Planning</span>
-          <h3>Manual matching, stale truth</h3>
-          <p>
-            Someone retypes field notes into Primavera, MS Project, or Excel.
-            Matching unstructured text to WBS codes is slow, error-prone, and always behind the site.
-          </p>
-        </article>
-        <article class="pain-card">
-          <span class="pain-tag">Leadership</span>
-          <h3>Decisions on last week’s data</h3>
-          <p>
-            Delay alerts arrive after the window to recover. Stakeholders argue about which spreadsheet
-            is current. The programme looks fine until it suddenly is not.
-          </p>
-        </article>
-      </div>
-      <div class="tech-grid" style="margin-top: 16px;">
-        <div class="img-frame">
-          <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=700&q=80" alt="Construction workers on site with heavy machinery" />
-          <div class="img-caption">Field reality</div>
-        </div>
-        <div class="img-frame">
-          <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=700&q=80" alt="Project manager reviewing schedules on laptop" />
-          <div class="img-caption">Planning desk</div>
+    <!-- Problem — scroll spotlight -->
+    <section class="gap-story" id="gap" aria-label="Planning and execution gap">
+      <div class="gap-track" id="gap-track">
+        <div class="gap-pin">
+          <div class="gap-head">
+            <p class="gap-eyebrow">The gap</p>
+            <h2>Planning and execution still live in different worlds</h2>
+            <p class="gap-intro">
+              Site engineers write reports in the field. Planners update schedules days later.
+              By the time a delay is visible on the Gantt, cost has already compounded.
+            </p>
+          </div>
+
+          <div class="gap-stage" id="gap-stage">
+            <article class="gap-spot is-left is-spot" data-gap="0">
+              <img
+                class="gap-spot-media"
+                src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=900&q=80"
+                alt="Construction workers on site with heavy machinery"
+              />
+              <div class="gap-spot-body">
+                <span class="pain-tag">Field</span>
+                <h3>Notes trapped on phones</h3>
+                <p>
+                  Daily reports sit in chat threads, PDFs, or paper pads. Photos lack task context.
+                  When connectivity fails, yesterday’s progress never leaves the site cabin.
+                </p>
+              </div>
+            </article>
+
+            <article class="gap-spot is-right is-next" data-gap="1">
+              <img
+                class="gap-spot-media"
+                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=900&q=80"
+                alt="Project manager reviewing schedules on laptop"
+              />
+              <div class="gap-spot-body">
+                <span class="pain-tag">Planning</span>
+                <h3>Manual matching, stale truth</h3>
+                <p>
+                  Someone retypes field notes into Primavera, MS Project, or Excel.
+                  Matching unstructured text to WBS codes is slow, error-prone, and always behind the site.
+                </p>
+              </div>
+            </article>
+
+            <article class="gap-spot is-left is-next" data-gap="2">
+              <img
+                class="gap-spot-media"
+                src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=900&q=80"
+                alt="Leadership reviewing project boards in a meeting"
+              />
+              <div class="gap-spot-body">
+                <span class="pain-tag">Leadership</span>
+                <h3>Decisions on last week’s data</h3>
+                <p>
+                  Delay alerts arrive after the window to recover. Stakeholders argue about which spreadsheet
+                  is current. The programme looks fine until it suddenly is not.
+                </p>
+              </div>
+            </article>
+          </div>
+
+          <div class="gap-dots" id="gap-dots" aria-hidden="true">
+            <span class="gap-dot is-active" data-gap-dot="0"></span>
+            <span class="gap-dot" data-gap-dot="1"></span>
+            <span class="gap-dot" data-gap-dot="2"></span>
+          </div>
+
+          <div class="gap-progress" aria-hidden="true">
+            <div class="gap-progress-track">
+              <span class="gap-progress-fill" id="gap-progress-fill"></span>
+            </div>
+            <span class="gap-progress-label" id="gap-progress-label">01 / 03</span>
+          </div>
+          <p class="gap-hint">Scroll — each point takes the spotlight</p>
         </div>
       </div>
     </section>
@@ -3656,7 +3924,7 @@
       <div class="crew" id="crew" aria-label="Team member cards">
         <div class="crew-stage" id="crew-stage" aria-live="polite"></div>
         <div class="crew-dots" id="crew-dots" role="tablist" aria-label="Team members"></div>
-        <div class="crew-hint" id="crew-hint">swipe to browse</div>
+        <div class="crew-hint" id="crew-hint">auto swipe up · drag anytime</div>
         <div class="crew-roster" id="crew-roster"></div>
       </div>
     </section>
@@ -4010,12 +4278,12 @@
       var dismissing = false;
       var dragDelta = 0;
       var pointerId = null;
-      var startX = 0;
-      var currentX = 0;
+      var startY = 0;
+      var currentY = 0;
       var cardNodes = {};
       var rosterButtons = {};
-      var AUTO_MS = 3200;
-      var RESUME_MS = 5000;
+      var AUTO_MS = 2800;
+      var RESUME_MS = 4500;
       var autoTimer = null;
       var resumeTimer = null;
       var autoPaused = false;
@@ -4038,7 +4306,7 @@
       function exitTransition() {
         return reduceMotion
           ? 'none'
-          : 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease';
+          : 'transform 0.42s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.38s ease';
       }
 
       function build() {
@@ -4113,7 +4381,7 @@
         if (!canAutoplay()) return;
         autoTimer = window.setTimeout(function () {
           if (!canAutoplay()) return;
-          dismiss('left');
+          dismiss('up');
         }, AUTO_MS);
       }
 
@@ -4156,8 +4424,8 @@
           if (dismissing || e.button !== 0) return;
           pauseAuto(false);
           pointerId = e.pointerId;
-          startX = e.clientX;
-          currentX = 0;
+          startY = e.clientY;
+          currentY = 0;
           dragDelta = 0;
           card.setPointerCapture(pointerId);
           card.style.transition = 'none';
@@ -4165,11 +4433,13 @@
 
         card.onpointermove = function (e) {
           if (pointerId === null || e.pointerId !== pointerId) return;
-          currentX = e.clientX - startX;
-          dragDelta = currentX;
-          var rot = currentX * 0.04;
+          currentY = e.clientY - startY;
+          dragDelta = currentY;
+          var lift = Math.min(0, currentY);
+          var rot = lift * -0.03;
           card.style.transform =
-            'translate3d(' + currentX + 'px, 0, 0) rotate(' + rot + 'deg) scale(1)';
+            'translate3d(0, ' + lift + 'px, 0) rotate(' + rot + 'deg) scale(1)';
+          card.style.opacity = String(Math.max(0.35, 1 + lift / 320));
         };
 
         card.onpointerup = function (e) {
@@ -4191,11 +4461,12 @@
       function finishDrag(card) {
         try { card.releasePointerCapture(pointerId); } catch (err) {}
         pointerId = null;
-        if (Math.abs(currentX) > 80) {
+        if (currentY < -70) {
           pauseAuto(true);
-          dismiss(currentX < 0 ? 'left' : 'right');
+          dismiss('up');
         } else {
           card.style.transition = springTransition();
+          card.style.opacity = '1';
           render();
           pauseAuto(true);
         }
@@ -4207,7 +4478,7 @@
         clearAuto();
         dismissing = true;
         var frontId = order[0];
-        exiting = { id: frontId, dir: dir };
+        exiting = { id: frontId, dir: dir || 'up' };
         render();
 
         window.setTimeout(function () {
@@ -4217,7 +4488,7 @@
           bindFrontCard();
           render(true);
           if (!autoPaused) startAuto();
-        }, reduceMotion ? 0 : 420);
+        }, reduceMotion ? 0 : 440);
       }
 
       function bringToFront(id) {
@@ -4258,10 +4529,8 @@
 
           if (isExiting) {
             card.style.transition = exitTransition();
-            var flyX = exiting.dir === 'left' ? -420 : 420;
-            var flyRot = exiting.dir === 'left' ? -20 : 20;
             card.style.transform =
-              'translate3d(' + flyX + 'px, 140px, 0) rotate(' + flyRot + 'deg) scale(0.85)';
+              'translate3d(0, -360px, 0) rotate(-8deg) scale(0.88)';
             card.style.opacity = '0';
           } else {
             card.style.transition = instantBack && slotIndex === order.length - 1
@@ -4291,15 +4560,12 @@
           clearBtn.addEventListener('click', function () { selectMember(null); });
           hintEl.appendChild(clearBtn);
         } else {
-          hintEl.textContent = reduceMotion ? 'swipe to browse' : 'auto-scrolling · swipe anytime';
+          hintEl.textContent = reduceMotion ? 'swipe up to browse' : 'auto swipe up · drag anytime';
         }
       }
 
       if (crewRoot) {
-        crewRoot.addEventListener('mouseenter', function () { pauseAuto(false); });
-        crewRoot.addEventListener('mouseleave', function () {
-          if (pointerId === null) resumeAutoSoon();
-        });
+        crewRoot.addEventListener('pointerdown', function () { pauseAuto(false); }, true);
         crewRoot.addEventListener('focusin', function () { pauseAuto(false); });
         crewRoot.addEventListener('focusout', function () {
           window.setTimeout(function () {
@@ -4426,6 +4692,7 @@
       var ticking = false;
       function paintScrollStories() {
         paintIdeas();
+        paintGap();
         paintSteps();
       }
       function onScrollStories() {
@@ -4437,6 +4704,64 @@
         });
       }
       window.__prosScrollPaint = paintScrollStories;
+
+      /* Gap story: alternate L/R spotlight cards */
+      var gapTrack = document.getElementById('gap-track');
+      var gapSpots = gapTrack
+        ? Array.prototype.slice.call(gapTrack.querySelectorAll('.gap-spot'))
+        : [];
+      var gapDots = gapTrack
+        ? Array.prototype.slice.call(gapTrack.querySelectorAll('.gap-dot'))
+        : [];
+      var gapFill = document.getElementById('gap-progress-fill');
+      var gapLabel = document.getElementById('gap-progress-label');
+      var gapCount = gapSpots.length;
+      var gapLast = -1;
+
+      function gapProgress() {
+        if (!gapTrack || reduceMotion) return 1;
+        var rect = gapTrack.getBoundingClientRect();
+        var total = Math.max(rect.height - window.innerHeight, 1);
+        return clamp((-rect.top) / total, 0, 1);
+      }
+
+      function paintGap() {
+        if (!gapTrack || !gapCount) return;
+        var p = gapProgress();
+        if (gapFill) gapFill.style.width = (p * 100).toFixed(2) + '%';
+
+        if (reduceMotion) {
+          gapSpots.forEach(function (el) {
+            el.classList.remove('is-spot', 'is-past', 'is-next');
+            el.classList.add('is-spot');
+          });
+          if (gapLabel) {
+            gapLabel.textContent =
+              String(gapCount).padStart(2, '0') + ' / ' + String(gapCount).padStart(2, '0');
+          }
+          return;
+        }
+
+        var active = Math.min(gapCount - 1, Math.floor(p * gapCount + 0.001));
+        if (p >= 0.98) active = gapCount - 1;
+
+        gapSpots.forEach(function (el, i) {
+          el.classList.toggle('is-spot', i === active);
+          el.classList.toggle('is-past', i < active);
+          el.classList.toggle('is-next', i > active);
+        });
+
+        gapDots.forEach(function (el, i) {
+          el.classList.toggle('is-active', i === active);
+          el.classList.toggle('is-done', i < active);
+        });
+
+        if (gapLabel && active !== gapLast) {
+          gapLabel.textContent =
+            String(active + 1).padStart(2, '0') + ' / ' + String(gapCount).padStart(2, '0');
+          gapLast = active;
+        }
+      }
 
       /* Steps story: chapter scrub */
       var stepsTrack = document.getElementById('steps-track');
@@ -4544,10 +4869,10 @@
       /* Soft enter for section heads + major blocks */
       if (!reduceMotion && 'IntersectionObserver' in window) {
         var revealNodes = document.querySelectorAll(
-          '.section-head, .pain-card, .role-card, .outcome, .tier, .arch-diagram, .split-feature, .final-cta .card'
+          '.section-head, .role-card, .outcome, .tier, .arch-diagram, .split-feature, .final-cta .card'
         );
         revealNodes.forEach(function (el, i) {
-          if (el.closest('#ideas') || el.closest('#steps')) return;
+          if (el.closest('#ideas') || el.closest('#steps') || el.closest('#gap')) return;
           el.setAttribute('data-reveal', '');
           el.style.setProperty('--reveal-delay', ((i % 4) * 60) + 'ms');
         });
@@ -4574,37 +4899,49 @@
       if (!window.PROS) return;
       var root = document.getElementById('welcome-tour');
       if (!root) return;
+      var cookieCheck = document.getElementById('landing-cookie-consent');
 
-      var draftStep = PROS.getStep();
-      var hasDraft = draftStep > 0 && !PROS.isOnboarded();
-      var seen;
-      try { seen = sessionStorage.getItem('pros_tour_seen') === '1'; } catch (e) { seen = false; }
-
-      if (PROS.isOnboarded()) return;
-
-      if (hasDraft) {
+      // Soft resume only if user opted into tour and left mid-flow
+      if (PROS.hasOnboardConsent() && !PROS.isOnboarded() && PROS.getStep() > 0) {
         var banner = document.createElement('div');
         banner.className = 'resume-banner';
         banner.style.cssText = 'position:fixed;left:16px;right:16px;bottom:16px;z-index:70;max-width:560px;margin:0 auto;';
         banner.innerHTML =
-          '<p><strong>Resume onboarding.</strong> Finish setup where you left off.</p>' +
-          '<a class="btn btn-primary btn-sm" href="project-reality-os-onboarding.html">Continue</a>';
+          '<p><strong>Resume setup?</strong> Optional — finish where you left off, or dismiss.</p>' +
+          '<div style="display:flex;gap:8px;">' +
+          '<button type="button" class="btn btn-secondary btn-sm" id="resume-dismiss">Dismiss</button>' +
+          '<a class="btn btn-primary btn-sm" href="project-reality-os-onboarding.html">Continue</a>' +
+          '</div>';
         document.body.appendChild(banner);
+        document.getElementById('resume-dismiss').addEventListener('click', function () {
+          banner.remove();
+        });
         return;
       }
 
-      if (seen) return;
+      if (!PROS.needsFirstRunConsent()) return;
 
       root.hidden = false;
       root.classList.add('is-open');
+      if (PROS.hasCookieConsent() && cookieCheck) cookieCheck.checked = true;
+
+      function applyCookieChoice() {
+        PROS.setCookieConsent(!!(cookieCheck && cookieCheck.checked));
+      }
 
       function dismiss() {
+        applyCookieChoice();
+        PROS.setOnboardConsent(false);
         root.classList.remove('is-open');
         root.hidden = true;
-        try { sessionStorage.setItem('pros_tour_seen', '1'); } catch (e) {}
       }
 
       document.getElementById('tour-dismiss').addEventListener('click', dismiss);
+      document.getElementById('tour-start').addEventListener('click', function () {
+        applyCookieChoice();
+        PROS.setOnboardConsent(true);
+        window.location.href = 'project-reality-os-onboarding.html';
+      });
       root.addEventListener('click', function (e) {
         if (e.target === root) dismiss();
       });

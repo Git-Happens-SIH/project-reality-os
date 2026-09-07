@@ -955,6 +955,64 @@ body.onboard-page {
 }
 .onboard-modal-footer[hidden] { display: none !important; }
 
+.onboard-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.onboard-exit {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  padding: 6px 10px;
+  cursor: pointer;
+  min-height: 32px;
+}
+.onboard-exit:hover { color: var(--black); background: var(--cream); }
+
+.onboard-consent-modal {
+  max-height: min(70vh, 560px);
+}
+.consent-check {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 7px;
+  background: var(--white);
+  cursor: pointer;
+}
+.consent-check input {
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  accent-color: var(--orange);
+}
+.consent-check strong {
+  display: block;
+  font-size: 13px;
+  color: var(--black);
+  margin-bottom: 4px;
+}
+.consent-check em {
+  display: block;
+  font-style: normal;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.onboard-consent-stage:not([hidden]) ~ .onboard-stage#wizard-stage[hidden] {
+  display: none;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

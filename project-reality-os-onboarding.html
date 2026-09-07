@@ -60,17 +60,52 @@
   </div>
   <div class="onboard-veil" aria-hidden="true"></div>
 
-  <div class="onboard-stage" role="dialog" aria-modal="true" aria-labelledby="onboard-dialog-title">
+  <!-- Consent gate — ask before tour + cookies -->
+  <div class="onboard-stage onboard-consent-stage" id="consent-stage" role="dialog" aria-modal="true" aria-labelledby="consent-title" hidden>
+    <div class="onboard-modal onboard-consent-modal">
+      <header class="onboard-modal-bar">
+        <a href="project-reality-os-landing.html" class="logo">Project Reality<span> OS</span></a>
+        <button type="button" class="onboard-exit" id="consent-exit" aria-label="Close and skip setup">✕</button>
+      </header>
+      <div class="onboard-modal-body">
+        <p class="label">BEFORE YOU CONTINUE</p>
+        <h1 id="consent-title">Quick setup tour?</h1>
+        <p>Optional walkthrough of reports, AI match, and the live dashboard. You can skip and enter the product anytime.</p>
+
+        <label class="consent-check">
+          <input type="checkbox" id="cookie-consent-check" />
+          <span>
+            <strong>Save preferences with cookies</strong>
+            <em>Stores role, project code, and setup progress on this device. Turn off to keep settings for this visit only.</em>
+          </span>
+        </label>
+
+        <div class="feature-explain" style="margin-top:12px;">
+          <p class="label">Your choice</p>
+          <p>Declining the tour never blocks the app. Declining cookies means we will not write long-lived cookies.</p>
+        </div>
+      </div>
+      <div class="btn-row onboard-modal-footer">
+        <button type="button" class="btn btn-secondary" id="consent-skip">Skip — enter site</button>
+        <button type="button" class="btn btn-primary" id="consent-start">Start setup</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="onboard-stage" id="wizard-stage" role="dialog" aria-modal="true" aria-labelledby="onboard-dialog-title" hidden>
     <div class="onboard-modal">
       <header class="onboard-modal-bar">
         <a href="project-reality-os-landing.html" class="logo">Project Reality<span> OS</span></a>
-        <span class="project-chip" id="project-chip">Setup</span>
+        <div class="onboard-modal-actions">
+          <span class="project-chip" id="project-chip">Setup</span>
+          <button type="button" class="onboard-exit" id="wizard-exit" aria-label="Exit setup">Exit</button>
+        </div>
       </header>
 
       <div class="onboard-modal-body">
         <div class="onboard-top">
           <p class="label" id="step-label">STEP 01 · WELCOME</p>
-          <button type="button" class="onboard-skip" id="skip-btn">Skip for now →</button>
+          <button type="button" class="onboard-skip" id="skip-btn">Skip step →</button>
         </div>
 
         <div class="stepper-labelled" id="stepper" aria-label="Onboarding progress"></div>
@@ -404,7 +439,56 @@
 
   <script>
     (function () {
-      if (window.PROS && PROS.redirectIfOnboarded()) return;
+      if (!window.PROS) return;
+
+      var consentStage = document.getElementById('consent-stage');
+      var wizardStage = document.getElementById('wizard-stage');
+      var cookieCheck = document.getElementById('cookie-consent-check');
+      var ESCAPE_DEST = 'project-reality-os-landing.html';
+
+      function escapeSetup() {
+        PROS.skipOnboarding(ESCAPE_DEST);
+      }
+
+      function showConsent() {
+        consentStage.hidden = false;
+        wizardStage.hidden = true;
+        if (PROS.hasCookieConsent()) cookieCheck.checked = true;
+      }
+
+      function showWizard() {
+        consentStage.hidden = true;
+        wizardStage.hidden = false;
+        startWizard();
+      }
+
+      // Already finished setup → app home
+      if (PROS.readPref(PROS.ONBOARDED) === '1') {
+        location.replace(PROS.homeForRole());
+        return;
+      }
+
+      // Opted into tour previously and returning mid-flow
+      if (PROS.hasOnboardConsent() && !PROS.needsFirstRunConsent()) {
+        showWizard();
+      } else {
+        showConsent();
+      }
+
+      document.getElementById('consent-exit').addEventListener('click', escapeSetup);
+      document.getElementById('consent-skip').addEventListener('click', function () {
+        PROS.setCookieConsent(!!cookieCheck.checked);
+        PROS.skipOnboarding(ESCAPE_DEST);
+      });
+      document.getElementById('consent-start').addEventListener('click', function () {
+        PROS.setCookieConsent(!!cookieCheck.checked);
+        PROS.setOnboardConsent(true);
+        showWizard();
+      });
+
+      function startWizard() {
+      if (window.__prosWizardStarted) return;
+      window.__prosWizardStarted = true;
 
       var STEPS = [
         { id: 'welcome', label: 'Welcome', chip: 'STEP 01 · WELCOME' },
@@ -474,8 +558,8 @@
       });
 
       try {
-        var existingRole = PROS.safeGet('pros_role') || PROS.getCookie('pros_role');
-        var existingProject = PROS.safeGet('pros_project') || PROS.getCookie('pros_project');
+        var existingRole = PROS.readPref('pros_role');
+        var existingProject = PROS.readPref('pros_project');
         if (existingRole) state.role = existingRole;
         if (existingProject) state.project = existingProject;
       } catch (e) {}
@@ -494,6 +578,8 @@
       var projectChip = document.getElementById('project-chip');
       var navRow = document.getElementById('nav-row');
       var resumeSlot = document.getElementById('resume-slot');
+
+      document.getElementById('wizard-exit').addEventListener('click', escapeSetup);
 
       STEPS.forEach(function (s, i) {
         var seg = document.createElement('div');
@@ -834,6 +920,7 @@
       });
 
       render();
+      } // end startWizard
     })();
   </script>
 </body>
