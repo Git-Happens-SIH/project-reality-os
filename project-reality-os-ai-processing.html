@@ -72,55 +72,10 @@
     </p>
   </div>
 
-  <script>
-    (function () {
-      try {
-        var p = localStorage.getItem('pros_project');
-        if (p) document.getElementById('project-chip').textContent = p;
-      } catch (e) {}
 
-      var titles = [
-        'Reading site note…',
-        'Extracting work signals…',
-        'Linking to plan tasks…',
-        'Preparing confirmation…'
-      ];
-      var subs = [
-        'Plain text + photos · Offline sync complete',
-        'Location, quantities, blockers',
-        'Scoring candidates against WBS',
-        'Almost ready'
-      ];
-      var stepEls = document.querySelectorAll('.progress-step');
-      var i = 1;
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var delay = reduce ? 200 : 900;
-
-      function paint(n) {
-        stepEls.forEach(function (el, idx) {
-          el.classList.remove('is-done', 'is-active', 'is-pending');
-          if (idx < n) el.classList.add('is-done');
-          else if (idx === n) el.classList.add('is-active');
-          else el.classList.add('is-pending');
-          if (idx < n) el.querySelector('.step-mark').textContent = '✓';
-        });
-        document.getElementById('status-title').textContent = titles[Math.min(n, titles.length - 1)];
-        document.getElementById('status-sub').textContent = subs[Math.min(n, subs.length - 1)];
-      }
-
-      paint(1);
-      var timer = setInterval(function () {
-        i += 1;
-        if (i > 3) {
-          clearInterval(timer);
-          window.location.href = 'project-reality-os-match-confirmation.html';
-          return;
-        }
-        paint(i);
-      }, delay);
-    })();
-  </script>
   <script src="pros-cookies.js"></script>
-  <script>if (window.PROS) PROS.requireOnboarded();</script>
+
+  <script src="pros-demo-core.js"></script>
+  <script src="pros-demo.js"></script>
 </body>
 </html>

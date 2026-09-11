@@ -113,88 +113,13 @@
     </div>
   </nav>
 
-  <script>
-    (function () {
-      try {
-        var p = localStorage.getItem('pros_project');
-        if (p) document.getElementById('project-chip').textContent = p;
-        var r = JSON.parse(localStorage.getItem('pros_last_report') || 'null');
-        if (r) {
-          if (r.location) document.getElementById('report-meta').textContent = (r.date || 'Today') + ' · ' + r.location;
-          if (r.body) document.getElementById('report-body').textContent = r.body;
-        }
-      } catch (e) {}
 
-      document.querySelectorAll('.match-card').forEach(function (card) {
-        var confirmBtn = card.querySelector('.confirm-btn');
-        var rejectBtn = card.querySelector('.reject-btn');
-        confirmBtn.addEventListener('click', function () {
-          card.style.borderColor = '#3A9A40';
-          card.style.background = '#E8F6E9';
-          confirmBtn.textContent = 'Confirmed';
-          confirmBtn.disabled = true;
-          rejectBtn.disabled = true;
-        });
-        rejectBtn.addEventListener('click', function () {
-          card.style.opacity = '0.45';
-          rejectBtn.textContent = 'Rejected';
-          confirmBtn.disabled = true;
-          rejectBtn.disabled = true;
-        });
-      });
 
-      document.getElementById('send-planner').addEventListener('click', function () {
-        window.location.href = 'project-reality-os-planner-review.html';
-      });
-    })();
-  </script>
 
-  <script>
-    window.PROS_RECOMMENDATION = {
-      labels: {
-        title: "Want me to confirm these task links?",
-        alternatives: "Alternatives",
-        otherOptions: "Other options",
-        accepted: "Accepted",
-      },
-      options: [
-        {
-          key: "confirm-all",
-          body: 'Confirm all high-confidence matches and forward to planner <span class="rec-pill is-green">ready</span>',
-          short: "Confirm all high-confidence matches",
-          signal: 3,
-          tone: "var(--green)",
-          label: "High confidence",
-          cta: "Confirm & send",
-          ctaVariant: "primary",
-          href: "project-reality-os-planner-review.html",
-        },
-        {
-          key: "confirm-top",
-          body: 'Confirm only <span class="rec-entity">WBS 4.2.1</span> — leave weaker matches for later.',
-          short: "Confirm WBS 4.2.1 only",
-          signal: 2,
-          tone: "var(--orange)",
-          label: "Needs review",
-          cta: "Confirm one",
-          ctaVariant: "secondary",
-        },
-        {
-          key: "reject-all",
-          body: 'Reject suggestions — <strong>edit report</strong> and re-run AI match.',
-          short: "Reject and re-run match",
-          signal: 0,
-          tone: "var(--muted)",
-          label: "No signal",
-          cta: "Reject all",
-          ctaVariant: "secondary",
-          href: "project-reality-os-site-report.html",
-        },
-      ],
-    };
-  </script>
-  <script src="recommendation-card.js"></script>
+
   <script src="pros-cookies.js"></script>
-  <script>if (window.PROS) PROS.requireOnboarded();</script>
+
+  <script src="pros-demo-core.js"></script>
+  <script src="pros-demo.js"></script>
 </body>
 </html>

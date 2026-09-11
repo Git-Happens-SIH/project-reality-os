@@ -117,39 +117,10 @@
     </div>
   </nav>
 
-  <script>
-    (function () {
-      try {
-        var p = localStorage.getItem('pros_project');
-        if (p) document.getElementById('project-chip').textContent = p;
-      } catch (e) {}
 
-      var filter = 'all';
-      var search = document.getElementById('search');
-      var items = document.querySelectorAll('.hist-item');
-
-      function apply() {
-        var q = (search.value || '').toLowerCase().trim();
-        items.forEach(function (item) {
-          var typeOk = filter === 'all' || item.getAttribute('data-type') === filter;
-          var textOk = !q || (item.getAttribute('data-text') || '').indexOf(q) !== -1
-            || item.textContent.toLowerCase().indexOf(q) !== -1;
-          item.hidden = !(typeOk && textOk);
-        });
-      }
-
-      document.querySelectorAll('.chip').forEach(function (chip) {
-        chip.addEventListener('click', function () {
-          document.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('is-active'); });
-          chip.classList.add('is-active');
-          filter = chip.getAttribute('data-filter');
-          apply();
-        });
-      });
-      search.addEventListener('input', apply);
-    })();
-  </script>
   <script src="pros-cookies.js"></script>
-  <script>if (window.PROS) PROS.requireOnboarded();</script>
+
+  <script src="pros-demo-core.js"></script>
+  <script src="pros-demo.js"></script>
 </body>
 </html>

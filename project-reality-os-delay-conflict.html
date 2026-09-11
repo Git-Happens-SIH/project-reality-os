@@ -114,62 +114,13 @@
     </div>
   </nav>
 
-  <script>
-    (function () {
-      try {
-        var p = localStorage.getItem('pros_project');
-        if (p) document.getElementById('project-chip').textContent = p;
-      } catch (e) {}
-      document.getElementById('reject').addEventListener('click', function () {
-        window.location.href = 'project-reality-os-planner-review.html';
-      });
-    })();
-  </script>
 
-  <script>
-    window.PROS_RECOMMENDATION = {
-      labels: {
-        title: "Want me to resolve this conflict?",
-        alternatives: "Alternatives",
-        otherOptions: "Other resolutions",
-        accepted: "Accepted",
-      },
-      options: [
-        {
-          key: "rebook",
-          body: 'Rebook crane to <span class="rec-entity">Package C · 14:00–16:00</span> and clear idle flag <span class="rec-pill is-green">preferred</span>',
-          short: "Rebook Package C window · clear idle",
-          signal: 3,
-          tone: "var(--green)",
-          label: "High confidence",
-          cta: "Accept rebook",
-          ctaVariant: "primary",
-        },
-        {
-          key: "split",
-          body: 'Split booking — keep Structures morning, give <span class="rec-entity">Package C</span> afternoon only.',
-          short: "Split morning / afternoon booking",
-          signal: 2,
-          tone: "var(--orange)",
-          label: "Needs review",
-          cta: "Configure split",
-          ctaVariant: "secondary",
-        },
-        {
-          key: "hold",
-          body: 'Leave conflict open — <strong>no schedule write</strong> until site confirms availability.',
-          short: "Hold — no schedule write",
-          signal: 0,
-          tone: "var(--muted)",
-          label: "No signal",
-          cta: "Keep open",
-          ctaVariant: "secondary",
-        },
-      ],
-    };
-  </script>
-  <script src="recommendation-card.js"></script>
+
+
+
   <script src="pros-cookies.js"></script>
-  <script>if (window.PROS) PROS.requireOnboarded();</script>
+
+  <script src="pros-demo-core.js"></script>
+  <script src="pros-demo.js"></script>
 </body>
 </html>
