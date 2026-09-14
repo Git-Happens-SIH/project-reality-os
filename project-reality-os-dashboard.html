@@ -117,17 +117,12 @@
     </div>
   </nav>
 
-  <script>
-    try {
-      var p = localStorage.getItem('pros_project');
-      var r = localStorage.getItem('pros_role');
-      if (p) document.getElementById('project-chip').textContent = p;
-      if (r) document.getElementById('role-chip').textContent = r === 'planner' ? 'Planner' : 'Site Engineer';
-    } catch (e) {}
-  </script>
 
-  <script src="recommendation-card.js"></script>
+
+
   <script src="pros-cookies.js"></script>
-  <script>if (window.PROS) PROS.requireOnboarded();</script>
+
+  <script src="pros-demo-core.js"></script>
+  <script src="pros-demo.js"></script>
 </body>
 </html>

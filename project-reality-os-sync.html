@@ -109,13 +109,10 @@
     </div>
   </nav>
 
-  <script>
-    try {
-      var p = localStorage.getItem('pros_project');
-      if (p) document.getElementById('project-chip').textContent = p;
-    } catch (e) {}
-  </script>
+
   <script src="pros-cookies.js"></script>
-  <script>if (window.PROS) PROS.requireOnboarded();</script>
+
+  <script src="pros-demo-core.js"></script>
+  <script src="pros-demo.js"></script>
 </body>
 </html>

@@ -132,90 +132,13 @@
     </div>
   </nav>
 
-  <script>
-    (function () {
-      try {
-        var p = localStorage.getItem('pros_project');
-        if (p) document.getElementById('project-chip').textContent = p;
-      } catch (e) {}
 
-      document.querySelectorAll('.chip').forEach(function (chip) {
-        chip.addEventListener('click', function () {
-          document.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('is-active'); });
-          chip.classList.add('is-active');
-          var f = chip.getAttribute('data-filter');
-          document.querySelectorAll('.queue-item').forEach(function (item) {
-            item.hidden = f !== 'all' && item.getAttribute('data-tier') !== f;
-          });
-        });
-      });
 
-      document.querySelectorAll('.queue-item').forEach(function (item) {
-        var approve = item.querySelector('.approve-btn');
-        var reject = item.querySelector('.reject-btn');
-        if (approve) {
-          approve.addEventListener('click', function () {
-            window.location.href = 'project-reality-os-sync.html';
-          });
-        }
-        if (reject) {
-          reject.addEventListener('click', function () {
-            item.style.opacity = '0.4';
-            approve && (approve.disabled = true);
-            reject.disabled = true;
-            reject.textContent = 'Rejected';
-          });
-        }
-      });
-    })();
-  </script>
 
-  <script>
-    window.PROS_RECOMMENDATION = {
-      labels: {
-        title: "Want me to clear the top queue item?",
-        alternatives: "Alternatives",
-        otherOptions: "Other actions",
-        accepted: "Accepted",
-      },
-      options: [
-        {
-          key: "approve-p7",
-          body: 'Approve <span class="rec-entity">WBS 4.2.1 · Pier P7</span> — confidence <span class="rec-pill is-green">92%</span>',
-          short: "Approve Pier P7 pile cap · 92%",
-          signal: 3,
-          tone: "var(--green)",
-          label: "High confidence",
-          cta: "Approve",
-          ctaVariant: "primary",
-          href: "project-reality-os-sync.html",
-        },
-        {
-          key: "open-crane",
-          body: 'Open crane conflict first — <span class="rec-entity">WBS 5.1.0</span> still at <span class="rec-pill is-orange">48%</span>',
-          short: "Open crane conflict · 48%",
-          signal: 2,
-          tone: "var(--orange)",
-          label: "Needs review",
-          cta: "Open conflict",
-          ctaVariant: "secondary",
-          href: "project-reality-os-delay-conflict.html",
-        },
-        {
-          key: "batch-hold",
-          body: 'Skip auto-clear — keep full queue for <strong>manual review</strong>.',
-          short: "Keep full queue for manual review",
-          signal: 0,
-          tone: "var(--muted)",
-          label: "No signal",
-          cta: "Dismiss",
-          ctaVariant: "secondary",
-        },
-      ],
-    };
-  </script>
-  <script src="recommendation-card.js"></script>
+
   <script src="pros-cookies.js"></script>
-  <script>if (window.PROS) PROS.requireOnboarded();</script>
+
+  <script src="pros-demo-core.js"></script>
+  <script src="pros-demo.js"></script>
 </body>
 </html>

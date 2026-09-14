@@ -1453,3 +1453,12 @@ body.onboard-page {
   margin-bottom: 6px;
 }
 .tour-modal > p { margin-bottom: 14px; }
+
+/* Shared local demo controls. */
+[hidden] { display: none !important; }
+.demo-toolbar { padding: 14px; margin: 8px 0 20px; border: 1px solid var(--line, #ddd); border-radius: 12px; background: #f4f8f3; }
+.demo-toolbar > button { float: right; }
+.demo-toolbar > .caption { clear: both; padding-top: 10px; }
+#demo-status { font-size: 13px; font-weight: 600; }
+#demo-message:not(:empty) { margin-top: 8px; font-size: 13px; }
+.task-choice { accent-color: #3a9a40; width: 18px; height: 18px; vertical-align: middle; }
