@@ -460,39 +460,38 @@
       background: var(--page);
       padding: 64px clamp(24px, 5vw, 80px) 28px;
     }
-    .dream-title {
-      display: contents;
+    .dream-stage {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      margin-top: 4px;
     }
-    .dream-kicker {
-      grid-column: 1 / -1;
-      grid-row: 1;
-      display: block;
+    .dream-title {
+      margin: 0 0 20px;
+      text-align: center;
       font-family: var(--font-serif);
       font-size: clamp(36px, 6vw, 54px);
       font-weight: 500;
       letter-spacing: -0.03em;
-      line-height: 1.05;
-      text-align: center;
-      margin: 0;
+      line-height: 1.08;
+      color: var(--ink);
     }
-    .dream-stage {
-      position: relative;
-      display: grid;
-      grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
-      grid-template-rows: auto auto auto;
-      align-items: center;
-      column-gap: clamp(12px, 2vw, 28px);
-      margin-top: 4px;
+    .dream-title .dream-line {
+      display: block;
+      margin-top: 0.08em;
+    }
+    .dream-title .dream-em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--dream);
     }
     .dream-photo {
-      grid-column: 2;
-      grid-row: 2;
-      width: min(720px, 100%);
-      justify-self: center;
+      width: 100%;
       margin: 0;
       border-radius: 22px;
       overflow: hidden;
-      aspect-ratio: 16 / 10;
+      aspect-ratio: 16 / 9;
       z-index: 0;
     }
     .dream-photo video {
@@ -503,33 +502,7 @@
       transform-origin: center center;
       animation: hero-drift 32s ease-in-out infinite alternate;
     }
-    .dream-em, .dream-house {
-      grid-row: 2;
-      font-family: var(--font-serif);
-      font-size: clamp(32px, 5.2vw, 50px);
-      line-height: 1;
-      letter-spacing: -0.03em;
-      z-index: 2;
-      align-self: center;
-      margin: 0;
-      white-space: nowrap;
-    }
-    .dream-em {
-      grid-column: 1;
-      font-style: italic;
-      font-weight: 500;
-      color: var(--dream);
-      justify-self: end;
-    }
-    .dream-house {
-      grid-column: 3;
-      font-weight: 500;
-      color: var(--ink);
-      justify-self: start;
-    }
     .feat-row {
-      grid-column: 1 / -1;
-      grid-row: 3;
       position: relative;
       z-index: 3;
       display: flex;
@@ -1229,10 +1202,8 @@
       }
       .tile { min-height: 200px; }
       .tile-smart { min-height: 220px; grid-column: span 2; }
-      .dream-photo { width: min(520px, 100%); }
-      .dream-em, .dream-house {
-        font-size: clamp(28px, 4.2vw, 40px);
-      }
+      .dream-photo { width: 100%; }
+      .dream-title { font-size: clamp(32px, 5vw, 46px); }
       .feat-row {
         margin-top: 32px;
         --feat-pin: 88px;
@@ -1248,45 +1219,14 @@
       .feat h3 { font-size: clamp(22px, 3.5vw, 28px); }
     }
 
-    /* Narrow tablet / large phone landscape: stack headline + photo, keep feat cards readable */
+    /* Narrow tablet / large phone landscape */
     @media (max-width: 860px) {
-      .dream-stage {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0;
-      }
-      .dream-title { display: contents; }
-      .dream-kicker {
-        order: 0;
-        text-align: center;
-        font-size: clamp(30px, 6vw, 42px);
-      }
-      .dream-em, .dream-house {
-        position: static;
-        white-space: normal;
-        z-index: auto;
-        align-self: auto;
-        justify-self: auto;
-      }
-      .dream-em {
-        order: 1;
-        align-self: flex-start;
-        margin: 4px 0 8px;
-      }
+      .dream-title { font-size: clamp(30px, 6vw, 42px); margin-bottom: 16px; }
       .dream-photo {
-        order: 2;
         width: 100%;
-        grid-column: auto;
-        grid-row: auto;
-      }
-      .dream-house {
-        order: 3;
-        align-self: flex-end;
-        margin: 8px 0 0;
+        aspect-ratio: 16 / 10;
       }
       .feat-row {
-        order: 4;
         margin-top: 28px;
         padding-bottom: 0;
         gap: 16px;
@@ -1306,7 +1246,10 @@
 
     /* Phone */
     @media (max-width: 700px) {
-      body { overflow-x: clip; }
+      body {
+        overflow-x: clip;
+        padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+      }
 
       .shell { width: 100%; margin: 0; border-radius: 0; }
 
@@ -1320,10 +1263,19 @@
         height: min(62svh, 480px);
         min-height: 360px;
       }
-      .hero-media video,
-      .hero-grade {
+      .hero-media video {
         position: absolute;
         inset: 0;
+      }
+      /* Clip grade to media height only — not over widgets below */
+      .hero-grade {
+        position: absolute;
+        inset: auto;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: min(62svh, 480px);
+        min-height: 360px;
       }
       .hero-inner {
         position: absolute;
@@ -1344,7 +1296,7 @@
         line-height: 1.18;
       }
       .hero-cta {
-        margin-top: 16px;
+        margin-top: 14px;
         min-height: 44px;
         align-items: center;
         padding: 12px 22px;
@@ -1397,12 +1349,12 @@
       .widgets {
         position: relative;
         inset: auto;
-        margin: -56px 14px 0;
-        padding-bottom: 8px;
+        margin: 20px 14px 16px;
+        padding-bottom: 4px;
         z-index: 4;
         flex-direction: column;
         flex-wrap: nowrap;
-        gap: 10px;
+        gap: 14px;
         align-items: stretch;
       }
       .occ, .index { flex: none; width: 100%; }
@@ -1441,37 +1393,16 @@
       .band, .omni {
         padding: 32px max(16px, env(safe-area-inset-right)) 32px max(16px, env(safe-area-inset-left));
       }
-      .dream-kicker { font-size: clamp(28px, 8vw, 36px); order: 0; }
-      .dream-stage {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0;
-      }
-      .dream-title { display: contents; }
-      .dream-em, .dream-house {
-        position: static;
-        display: block;
-        margin: 0;
-        font-size: clamp(28px, 8vw, 34px);
-        line-height: 1.05;
-        z-index: auto;
-        white-space: normal;
-      }
-      .dream-em { align-self: flex-start; margin-bottom: 6px; order: 1; }
+      .dream-title { font-size: clamp(28px, 8vw, 36px); margin-bottom: 14px; }
       .dream-photo {
         width: 100%;
         margin: 0;
         border-radius: 18px;
         aspect-ratio: 4 / 3;
-        z-index: auto;
-        order: 2;
       }
-      .dream-house { align-self: flex-end; margin-top: 6px; margin-bottom: 0; order: 3; }
-      .feat-row { order: 4; }
       /* Mobile: normal stack — no sticky overlap */
       .feat-row {
-        margin-top: 24px;
+        margin-top: 20px;
         padding-bottom: 0;
         gap: 14px;
         display: flex;
@@ -2248,23 +2179,64 @@
       .ns-block {
         padding: 36px max(16px, env(safe-area-inset-right)) 40px max(16px, env(safe-area-inset-left));
       }
-      #trust {
-        --trust-pin: 72px;
-        --trust-peek: 22px;
-        --trust-card-h: clamp(460px, 72svh, 640px);
+      /* Mobile: plain stack — kill sticky pin / huge runway / overlap */
+      #trust .section-head {
+        position: relative;
+        top: auto;
+        z-index: auto;
+        margin-bottom: 18px;
+        padding: 0 0 8px;
+        background: none;
+        backdrop-filter: none;
+      }
+      .trust-stack {
+        margin-top: 0;
+        padding-bottom: 0;
+        gap: 16px;
+        perspective: none;
       }
       .trust-card {
-        padding: 22px 18px 18px;
-        margin-bottom: clamp(48vh, 62vh, 560px);
+        position: relative;
+        top: auto;
+        padding: 20px 16px 16px;
+        margin-bottom: 0;
         height: auto;
-        min-height: var(--trust-card-h);
-        grid-template-rows: auto minmax(160px, 0.9fr) auto auto;
+        min-height: 0;
+        grid-template-rows: auto minmax(140px, auto) auto auto;
+        transform: none !important;
+        opacity: 1 !important;
+        filter: none !important;
+        will-change: auto;
+        animation: none !important;
+        contain: none;
       }
-      .trust-card-media { min-height: 160px; }
-      .trust-card h3 { font-size: clamp(28px, 7vw, 34px); }
-      .trust-card-index { font-size: 44px; }
-      .team-banner { aspect-ratio: 16 / 9; }
-      .crew-roster { grid-template-columns: 1fr; }
+      .trust-card-media { min-height: 140px; height: auto; aspect-ratio: 16 / 10; }
+      .trust-card h3 {
+        font-size: clamp(26px, 7vw, 32px);
+        max-width: none;
+        margin-bottom: 8px;
+      }
+      .trust-card p { font-size: 14.5px; max-width: none; }
+      .trust-card-index { font-size: 40px; }
+      .trust-card-foot { flex-wrap: wrap; gap: 8px; }
+      .team-banner { aspect-ratio: 16 / 9; margin-bottom: 16px; }
+      .crew-roster { grid-template-columns: 1fr; gap: 10px; }
+      .crew-stage {
+        width: min(174px, 46vw);
+        height: auto;
+        aspect-ratio: 174 / 218;
+      }
+      .final-cta {
+        padding: 36px max(16px, env(safe-area-inset-right)) 40px max(16px, env(safe-area-inset-left));
+      }
+      .final-cta-card {
+        padding: 28px 20px 0;
+        border-radius: 28px;
+      }
+      .final-cta-visual {
+        min-height: 180px;
+        margin: 4px -8px 0;
+      }
     }
 
     @media (min-width: 901px) {
@@ -2465,6 +2437,9 @@
       .roles {
         padding: 40px max(16px, env(safe-area-inset-right)) 48px max(16px, env(safe-area-inset-left));
       }
+      .roles-lead { margin-bottom: 24px; }
+      .roles-stage { padding: 8px 0 4px; }
+      .roles-track { gap: 14px; }
       .truth-card {
         flex-basis: min(280px, 84vw);
         transform: none;
@@ -2613,9 +2588,8 @@
     <section class="band" id="features">
       <div class="dream-stage">
         <h2 class="dream-title">
-          <span class="dream-kicker">See Today in</span>
-          <span class="dream-em">a Live</span>
-          <span class="dream-house">Plan</span>
+          See Today in
+          <span class="dream-line"><em class="dream-em">a Live</em> Plan</span>
         </h2>
         <figure class="dream-photo">
           <video autoplay muted loop playsinline preload="metadata" aria-label="Site field footage">
@@ -3534,7 +3508,7 @@
 
       if (!reduceMotion && 'IntersectionObserver' in window) {
         var revealNodes = document.querySelectorAll(
-          '.insights-head, .badges, .step, .tile, .dream-kicker, .dream-em, .dream-house, .dream-photo, .roles-label, .roles h2, .roles-lead, .omni-label, .omni h2, .omni-lead, .ns-block .section-head, .team-banner, #crew, .crew-roster, .final-cta-card'
+          '.insights-head, .badges, .step, .tile, .dream-title, .dream-photo, .roles-label, .roles h2, .roles-lead, .omni-label, .omni h2, .omni-lead, .ns-block .section-head, .team-banner, #crew, .crew-roster, .final-cta-card'
         );
         revealNodes.forEach(function (el, i) {
           if (el.closest('#roles-track') || el.closest('#feat-stack') || el.closest('#trust-stack')) return;
@@ -3550,7 +3524,13 @@
               }
             });
           },
-          { threshold: 0.16, rootMargin: '0px 0px -8% 0px' }
+          /* Positive bottom margin reveals early — avoids blank stacked gaps on phones */
+          {
+            threshold: window.matchMedia('(max-width: 700px)').matches ? 0.05 : 0.16,
+            rootMargin: window.matchMedia('(max-width: 700px)').matches
+              ? '48px 0px 24% 0px'
+              : '0px 0px -8% 0px'
+          }
         );
         document.querySelectorAll('[data-reveal]').forEach(function (el) {
           rio.observe(el);
@@ -3918,6 +3898,16 @@
         return easeOutCubic(raw);
       }
 
+      function clearTrustStyles() {
+        cards.forEach(function (card) {
+          card.style.transform = '';
+          card.style.opacity = '';
+          card.style.filter = '';
+        });
+        currents = cards.map(function () { return 0; });
+        targets = cards.map(function () { return 0; });
+      }
+
       function paintCard(card, p) {
         if (p <= 0.001) {
           card.style.transform = 'translate3d(0,0,0) scale(1)';
@@ -3941,6 +3931,11 @@
       }
 
       function sampleTargets() {
+        /* Mobile: plain stacked cards — no sticky slide transforms */
+        if (mqMobile.matches) {
+          clearTrustStyles();
+          return;
+        }
         for (var i = 0; i < cards.length - 1; i++) {
           targets[i] = progressFor(i);
         }
@@ -3948,6 +3943,11 @@
 
       function tick() {
         raf = 0;
+        if (mqMobile.matches) {
+          clearTrustStyles();
+          ticking = false;
+          return;
+        }
         sampleTargets();
         var still = false;
         var lerp = 0.16;
@@ -3971,6 +3971,7 @@
       }
 
       function onScroll() {
+        if (mqMobile.matches) return;
         if (ticking) return;
         ticking = true;
         raf = window.requestAnimationFrame(tick);
@@ -3980,6 +3981,10 @@
         measureHead();
         targets = cards.map(function () { return 0; });
         currents = cards.map(function () { return 0; });
+        if (mqMobile.matches) {
+          clearTrustStyles();
+          return;
+        }
         onScroll();
       }
 
@@ -3987,6 +3992,10 @@
       tick();
       window.__nsTrustPaint = onScroll;
       window.__prosUpdateTrust = function () {
+        if (mqMobile.matches) {
+          clearTrustStyles();
+          return;
+        }
         sampleTargets();
         for (var i = 0; i < cards.length - 1; i++) {
           currents[i] = targets[i];
