@@ -1,10 +1,12 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
-  "rewrites": [
-    { "source": "/", "destination": "/nirmaan-setu-landing.html" }
-  ],
   "redirects": [
+    {
+      "source": "/",
+      "destination": "/nirmaan-setu-landing",
+      "permanent": false
+    },
     {
       "source": "/index",
       "destination": "/nirmaan-setu-landing",
