@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: project-reality-os
+    name: nirmaan-setu
     runtime: static
     plan: free
     buildCommand: echo "static site"

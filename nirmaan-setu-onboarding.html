@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Get set up — Project Reality OS</title>
+  <title>Get set up — Nirmaan Setu</title>
   <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="project-reality-os.css" />
-  <script src="pros-cookies.js"></script>
+  <link rel="stylesheet" href="nirmaan-setu.css" />
+  <script src="ns-cookies.js"></script>
 </head>
 <body class="onboard-page">
   <!-- Faded product preview behind the wizard -->
   <div class="onboard-backdrop" aria-hidden="true">
     <div class="onboard-backdrop-inner">
       <header class="app-bar">
-        <span class="logo">Project Reality<span> OS</span></span>
+        <span class="logo">Nirmaan<span> Setu</span></span>
         <div class="app-bar-meta">
           <span class="project-chip">NH-42-EAST</span>
           <span class="role-chip">Team</span>
@@ -64,7 +64,7 @@
   <div class="onboard-stage onboard-consent-stage" id="consent-stage" role="dialog" aria-modal="true" aria-labelledby="consent-title" hidden>
     <div class="onboard-modal onboard-consent-modal">
       <header class="onboard-modal-bar">
-        <a href="project-reality-os-landing.html" class="logo">Project Reality<span> OS</span></a>
+        <a href="nirmaan-setu-landing.html" class="logo">Nirmaan<span> Setu</span></a>
         <button type="button" class="onboard-exit" id="consent-exit" aria-label="Close and skip setup">✕</button>
       </header>
       <div class="onboard-modal-body">
@@ -95,7 +95,7 @@
   <div class="onboard-stage" id="wizard-stage" role="dialog" aria-modal="true" aria-labelledby="onboard-dialog-title" hidden>
     <div class="onboard-modal">
       <header class="onboard-modal-bar">
-        <a href="project-reality-os-landing.html" class="logo">Project Reality<span> OS</span></a>
+        <a href="nirmaan-setu-landing.html" class="logo">Nirmaan<span> Setu</span></a>
         <div class="onboard-modal-actions">
           <span class="project-chip" id="project-chip">Setup</span>
           <button type="button" class="onboard-exit" id="wizard-exit" aria-label="Exit setup">Exit</button>
@@ -117,7 +117,7 @@
         <!-- 0 Welcome tour -->
         <section class="onboard-screen" data-screen="0">
           <div class="page-head">
-            <h1>What Project Reality OS does</h1>
+            <h1>What Nirmaan Setu does</h1>
             <p>Turns daily site reports into live schedule truth. Three core features — what each one does:</p>
           </div>
           <ul class="welcome-points">
@@ -407,7 +407,7 @@
       </div>
 
       <div class="next-actions">
-        <a class="next-action" id="cta-primary" href="project-reality-os-site-report.html">
+        <a class="next-action" id="cta-primary" href="nirmaan-setu-site-report.html">
           <span class="icon-box" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
           </span>
@@ -416,7 +416,7 @@
             <span>Start the daily loop task</span>
           </div>
         </a>
-        <a class="next-action" href="project-reality-os-dashboard.html">
+        <a class="next-action" href="nirmaan-setu-dashboard.html">
           <span class="icon-box" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg>
           </span>
@@ -439,21 +439,21 @@
 
   <script>
     (function () {
-      if (!window.PROS) return;
+      if (!window.NS) return;
 
       var consentStage = document.getElementById('consent-stage');
       var wizardStage = document.getElementById('wizard-stage');
       var cookieCheck = document.getElementById('cookie-consent-check');
-      var ESCAPE_DEST = 'project-reality-os-landing.html';
+      var ESCAPE_DEST = 'nirmaan-setu-landing.html';
 
       function escapeSetup() {
-        PROS.skipOnboarding(ESCAPE_DEST);
+        NS.skipOnboarding(ESCAPE_DEST);
       }
 
       function showConsent() {
         consentStage.hidden = false;
         wizardStage.hidden = true;
-        if (PROS.hasCookieConsent()) cookieCheck.checked = true;
+        if (NS.hasCookieConsent()) cookieCheck.checked = true;
       }
 
       function showWizard() {
@@ -463,13 +463,13 @@
       }
 
       // Already finished setup → app home
-      if (PROS.readPref(PROS.ONBOARDED) === '1') {
-        location.replace(PROS.homeForRole());
+      if (NS.readPref(NS.ONBOARDED) === '1') {
+        location.replace(NS.homeForRole());
         return;
       }
 
       // Opted into tour previously and returning mid-flow
-      if (PROS.hasOnboardConsent() && !PROS.needsFirstRunConsent()) {
+      if (NS.hasOnboardConsent() && !NS.needsFirstRunConsent()) {
         showWizard();
       } else {
         showConsent();
@@ -477,12 +477,12 @@
 
       document.getElementById('consent-exit').addEventListener('click', escapeSetup);
       document.getElementById('consent-skip').addEventListener('click', function () {
-        PROS.setCookieConsent(!!cookieCheck.checked);
-        PROS.skipOnboarding(ESCAPE_DEST);
+        NS.setCookieConsent(!!cookieCheck.checked);
+        NS.skipOnboarding(ESCAPE_DEST);
       });
       document.getElementById('consent-start').addEventListener('click', function () {
-        PROS.setCookieConsent(!!cookieCheck.checked);
-        PROS.setOnboardConsent(true);
+        NS.setCookieConsent(!!cookieCheck.checked);
+        NS.setOnboardConsent(true);
         showWizard();
       });
 
@@ -552,19 +552,19 @@
         }
       };
 
-      var draft = PROS.getDraft();
+      var draft = NS.getDraft();
       Object.keys(draft).forEach(function (k) {
         if (draft[k] !== undefined && draft[k] !== null) state[k] = draft[k];
       });
 
       try {
-        var existingRole = PROS.readPref('pros_role');
-        var existingProject = PROS.readPref('pros_project');
+        var existingRole = NS.readPref('ns_role');
+        var existingProject = NS.readPref('ns_project');
         if (existingRole) state.role = existingRole;
         if (existingProject) state.project = existingProject;
       } catch (e) {}
 
-      var savedStep = PROS.getStep();
+      var savedStep = NS.getStep();
       if (typeof savedStep === 'number' && savedStep > 0 && savedStep < STEPS.length) {
         state.step = savedStep;
       }
@@ -600,7 +600,7 @@
         if (restart) {
           restart.addEventListener('click', function () {
             state.step = 0;
-            PROS.setStep(0);
+            NS.setStep(0);
             resumeSlot.hidden = true;
             render();
           });
@@ -608,8 +608,8 @@
       }
 
       function persist() {
-        PROS.setStep(state.step);
-        PROS.setDraft({
+        NS.setStep(state.step);
+        NS.setDraft({
           path: state.path,
           role: state.role,
           goals: state.goals,
@@ -665,7 +665,7 @@
       function finish(opts) {
         opts = opts || {};
         syncFormIntoState();
-        PROS.markOnboarded({
+        NS.markOnboarded({
           role: state.role,
           project: state.project,
           name: state.name,
@@ -676,7 +676,7 @@
           notifications: state.notifications,
           invites: state.invites
         });
-        var dest = opts.dest || PROS.homeForRole(state.role);
+        var dest = opts.dest || NS.homeForRole(state.role);
         window.location.href = dest;
       }
 
@@ -773,10 +773,10 @@
         var primary = document.getElementById('cta-primary');
         var primaryLabel = document.getElementById('cta-primary-label');
         if (state.role === 'planner' || state.role === 'lead') {
-          primary.href = 'project-reality-os-planner-review.html';
+          primary.href = 'nirmaan-setu-planner-review.html';
           primaryLabel.textContent = 'Open review queue';
         } else {
-          primary.href = 'project-reality-os-site-report.html';
+          primary.href = 'nirmaan-setu-site-report.html';
           primaryLabel.textContent = 'Write a site report';
         }
 
@@ -872,9 +872,9 @@
         e.preventDefault();
         finish({ dest: this.getAttribute('href') });
       });
-      document.querySelector('.next-action[href="project-reality-os-dashboard.html"]').addEventListener('click', function (e) {
+      document.querySelector('.next-action[href="nirmaan-setu-dashboard.html"]').addEventListener('click', function (e) {
         e.preventDefault();
-        finish({ dest: 'project-reality-os-dashboard.html' });
+        finish({ dest: 'nirmaan-setu-dashboard.html' });
       });
 
       nextBtn.addEventListener('click', function () {

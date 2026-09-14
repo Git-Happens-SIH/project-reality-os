@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Create account — Project Reality OS</title>
+  <title>Create account — Nirmaan Setu</title>
   <link rel="preload" href="assets/circle-loader.svg" as="image" type="image/svg+xml" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="pros-loader.js" defer></script>
+  <script src="ns-loader.js" defer></script>
 </head>
 <body>
   <div class="flex min-h-screen items-center justify-center bg-neutral-100 p-6">
     <div class="w-full max-w-md rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm">
       <h1 class="text-xl font-semibold text-neutral-900">Create your account</h1>
       <p class="mt-1 text-sm text-neutral-500">
-        Already have one? <a href="project-reality-os-auth-chooser.html" class="font-medium text-neutral-900 hover:underline">Sign in</a>
+        Already have one? <a href="nirmaan-setu-auth-chooser.html" class="font-medium text-neutral-900 hover:underline">Sign in</a>
       </p>
-      <form id="signup-form" class="mt-6 space-y-4" action="project-reality-os-auth-otp.html" method="get">
+      <form id="signup-form" class="mt-6 space-y-4" action="nirmaan-setu-auth-otp.html" method="get">
         <input
           name="name"
           placeholder="Full name"
@@ -52,7 +52,7 @@
         By continuing you agree to our <a href="#" class="underline">Terms</a> and <a href="#" class="underline">Privacy Policy</a>.
       </p>
       <p class="mt-4 text-center text-xs text-neutral-400">
-        <a href="project-reality-os-auth-reset.html" class="underline-offset-4 hover:text-neutral-700 hover:underline">Forgot password?</a>
+        <a href="nirmaan-setu-auth-reset.html" class="underline-offset-4 hover:text-neutral-700 hover:underline">Forgot password?</a>
       </p>
     </div>
   </div>
@@ -61,9 +61,9 @@
       e.preventDefault();
       var email = document.getElementById('email').value.trim();
       try {
-        if (email) sessionStorage.setItem('pros_otp_email', email);
+        if (email) sessionStorage.setItem('ns_otp_email', email);
       } catch (err) {}
-      window.location.href = 'project-reality-os-auth-otp.html';
+      window.location.href = 'nirmaan-setu-auth-otp.html';
     });
   </script>
 </body>

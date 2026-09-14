@@ -1,7 +1,7 @@
 # Dhairya-jindal — SIH working demo
 
 ## What the project does
-Project Reality OS is a construction field-report / planner-review prototype. Engineers write unstructured site notes, propose WBS task links, and confirm them. Planners approve reported progress, retain risk flags, and inspect the audit history. The existing repo is static HTML/CSS/JS, with no backend or real authentication enforcement.
+Nirmaan Setu is a construction field-report / planner-review prototype. Engineers write unstructured site notes, propose WBS task links, and confirm them. Planners approve reported progress, retain risk flags, and inspect the audit history. The existing repo is static HTML/CSS/JS, with no backend or real authentication enforcement.
 
 ## Run
 From the repository folder:
@@ -10,11 +10,11 @@ From the repository folder:
 python -m http.server 8000
 ```
 
-Open http://localhost:8000/project-reality-os-site-report.html in Chrome/Edge. Use localhost or HTTPS, not file://: the offline service worker requires a secure context. Load the page online first and let its service worker finish installing before disconnecting. The landing and onboarding pages are unchanged.
+Open http://localhost:8000/nirmaan-setu-site-report.html in Chrome/Edge. Use localhost or HTTPS, not file://: the offline service worker requires a secure context. Load the page online first and let its service worker finish installing before disconnecting. The landing and onboarding pages are unchanged.
 
 ## Film a take
 1. Click **Reset demo** (immediate: clears demo reports, draft, progress and audit; retains onboarding/preferences).
-2. Open `project-reality-os-dashboard.html` in another tab in the same browser/profile/origin. Confirmed starts at **18**.
+2. Open `nirmaan-setu-dashboard.html` in another tab in the same browser/profile/origin. Confirmed starts at **18**.
 3. On Site Report, enter date, location and your own note. Example: “P7 pile cap concrete pour completed. Crane idle for two hours.” Watch the live matcher change with your words.
 4. Disconnect Wi-Fi, or use browser offline emulation. Click **Save locally**; reload to demonstrate draft restoration.
 5. Click **Submit for matching** offline. The badge reads **1 pending sync**. Reload also works offline after the app shell was cached.
@@ -27,7 +27,7 @@ Open http://localhost:8000/project-reality-os-site-report.html in Chrome/Edge. U
 ## Implemented
 - Versioned localStorage state, restored text drafts, errors shown instead of false “saved” success.
 - Durable pending reports and idempotent reconnect processing; cached app pages for offline navigation.
-- Live explainable matcher over six task categories. Scores depend on words in the actual report; unrelated input returns no match. Score = min(96, 48 + 12 × distinct matching terms). Terms and tasks are in `pros-demo-core.js`.
+- Live explainable matcher over six task categories. Scores depend on words in the actual report; unrelated input returns no match. Score = min(96, 48 + 12 × distinct matching terms). Terms and tasks are in `ns-demo-core.js`.
 - Explicit engineer confirmation before queue entry; seeded crane fixture only enters the flow with a confirmed crane task.
 - Approve/reject transitions, progress records, audit entries and live cross-tab counts.
 - One-click isolated demo reset.

@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Choose your role — Project Reality OS</title>
+  <title>Choose your role — Nirmaan Setu</title>
   <link rel="preload" href="assets/circle-loader.svg" as="image" type="image/svg+xml" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="pros-loader.js" defer></script>
+  <script src="ns-loader.js" defer></script>
 </head>
 <body>
   <div class="flex min-h-screen items-center justify-center bg-neutral-100 px-6 py-14">
@@ -20,7 +20,7 @@
         </p>
       </div>
 
-      <form id="role-form" class="mt-8" action="project-reality-os-auth-signup.html" method="get">
+      <form id="role-form" class="mt-8" action="nirmaan-setu-auth-signup.html" method="get">
         <div class="grid gap-3 sm:grid-cols-3" role="radiogroup" aria-label="Your role">
 
           <label class="relative block cursor-pointer">
@@ -84,7 +84,7 @@
         </div>
 
         <div class="mt-8 flex items-center justify-between gap-4">
-          <a href="project-reality-os-auth-signup.html" class="text-sm font-medium text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline">
+          <a href="nirmaan-setu-auth-signup.html" class="text-sm font-medium text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline">
             Skip for now
           </a>
           <button
@@ -120,9 +120,9 @@
         if (!selected) return;
         var role = selected.value === 'lead' ? 'planner' : selected.value;
         try {
-          localStorage.setItem('pros_role', role);
+          localStorage.setItem('ns_role', role);
         } catch (err) {}
-        window.location.href = 'project-reality-os-auth-signup.html';
+        window.location.href = 'nirmaan-setu-auth-signup.html';
       });
 
       syncContinue();

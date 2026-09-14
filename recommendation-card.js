@@ -1,6 +1,6 @@
 /**
  * Recommendation dock — fixed lower-right dynamic suggestions.
- * Mount: include this script; optionally set window.PROS_RECOMMENDATION first.
+ * Mount: include this script; optionally set window.NS_RECOMMENDATION first.
  *
  * Pattern: primary option shown; Alternatives opens drawer; pick promotes;
  * CTA confirms. Options are page-configurable.
@@ -37,7 +37,7 @@
       label: "Needs review",
       cta: "Open conflict",
       ctaVariant: "secondary",
-      href: "project-reality-os-delay-conflict.html",
+      href: "nirmaan-setu-delay-conflict.html",
     },
     {
       key: "none",
@@ -190,13 +190,13 @@
     return dock;
   }
 
-  window.PROSRecommendation = { mount: mount, defaults: DEFAULT_OPTIONS };
+  window.NSRecommendation = { mount: mount, defaults: DEFAULT_OPTIONS };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
-      mount(window.PROS_RECOMMENDATION || {});
+      mount(window.NS_RECOMMENDATION || {});
     });
   } else {
-    mount(window.PROS_RECOMMENDATION || {});
+    mount(window.NS_RECOMMENDATION || {});
   }
 })();

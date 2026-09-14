@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Verify code — Project Reality OS</title>
+  <title>Verify code — Nirmaan Setu</title>
   <link rel="preload" href="assets/circle-loader.svg" as="image" type="image/svg+xml" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="pros-loader.js" defer></script>
+  <script src="ns-loader.js" defer></script>
 </head>
 <body>
   <div class="flex min-h-screen items-center justify-center bg-neutral-100 p-6">
@@ -17,7 +17,7 @@
         <span id="email-display" class="font-medium text-neutral-700">you@company.com</span>
       </p>
 
-      <form id="otp-form" class="mt-6" action="project-reality-os-onboarding.html" method="get">
+      <form id="otp-form" class="mt-6" action="nirmaan-setu-onboarding.html" method="get">
         <div class="flex justify-between gap-2" id="otp-inputs" role="group" aria-label="One-time code">
           <input type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" aria-label="Digit 1"
             class="otp-digit size-12 rounded-xl border border-neutral-200 text-center text-lg font-semibold text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-4 focus:ring-neutral-900/10" />
@@ -47,7 +47,7 @@
         Didn't get it? Resend in <span id="resend-timer">0:30</span>
       </p>
       <p class="mt-4 text-center">
-        <a href="project-reality-os-auth-signup.html" class="text-xs font-medium text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline">Back</a>
+        <a href="nirmaan-setu-auth-signup.html" class="text-xs font-medium text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline">Back</a>
       </p>
     </div>
   </div>
@@ -62,7 +62,7 @@
       var timerId = null;
 
       try {
-        var stored = sessionStorage.getItem('pros_otp_email');
+        var stored = sessionStorage.getItem('ns_otp_email');
         if (stored) emailDisplay.textContent = stored;
       } catch (err) {}
 
@@ -181,7 +181,7 @@
       document.getElementById('otp-form').addEventListener('submit', function (e) {
         e.preventDefault();
         if (codeValue().length !== 6) return;
-        window.location.href = 'project-reality-os-onboarding.html';
+        window.location.href = 'nirmaan-setu-onboarding.html';
       });
 
       syncVerify();

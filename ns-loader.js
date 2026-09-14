@@ -1,13 +1,13 @@
 /**
- * Project Reality OS — circle loader overlay
+ * Nirmaan Setu — circle loader overlay
  * Cached SVG: assets/circle-loader.svg (Aperture, circleloaders.dominikakissi.com)
  */
 (function (global) {
   var SVG_URL = 'assets/circle-loader.svg';
-  var CACHE_NAME = 'pros-circle-loader-v1';
+  var CACHE_NAME = 'ns-circle-loader-v1';
   var TRANSITION_MS = 2000;
   var SLOW_LOAD_MS = 280;
-  var AUTH_RE = /project-reality-os-auth/i;
+  var AUTH_RE = /nirmaan-setu-auth/i;
   var overlay = null;
   var shownAt = 0;
   var navigating = false;
@@ -35,26 +35,26 @@
   }
 
   function ensureStyles() {
-    if (document.getElementById('pros-loader-style')) return;
+    if (document.getElementById('ns-loader-style')) return;
     var style = document.createElement('style');
-    style.id = 'pros-loader-style';
+    style.id = 'ns-loader-style';
     style.textContent =
-      '#pros-loader-overlay{' +
+      '#ns-loader-overlay{' +
         'position:fixed;inset:0;z-index:99999;' +
         'display:flex;align-items:center;justify-content:center;' +
         'background:#FCF9F0;' +
         'opacity:0;visibility:hidden;pointer-events:none;' +
         'transition:opacity .22s ease,visibility .22s ease;' +
       '}' +
-      '#pros-loader-overlay.is-on{' +
+      '#ns-loader-overlay.is-on{' +
         'opacity:1;visibility:visible;pointer-events:auto;' +
       '}' +
-      '#pros-loader-overlay img,' +
-      '#pros-loader-overlay .pros-loader-svg svg{' +
+      '#ns-loader-overlay img,' +
+      '#ns-loader-overlay .ns-loader-svg svg{' +
         'width:96px;height:96px;display:block;' +
       '}' +
       '@media (prefers-reduced-motion:reduce){' +
-        '#pros-loader-overlay{transition:none}' +
+        '#ns-loader-overlay{transition:none}' +
       '}';
     document.head.appendChild(style);
   }
@@ -99,7 +99,7 @@
     loadSvgMarkup().then(function (markup) {
       if (!el) return;
       if (markup) {
-        el.innerHTML = '<div class="pros-loader-svg" aria-hidden="true">' + markup + '</div>';
+        el.innerHTML = '<div class="ns-loader-svg" aria-hidden="true">' + markup + '</div>';
       } else if (!el.querySelector('img, svg')) {
         el.innerHTML =
           '<img src="' + SVG_URL + '" width="96" height="96" alt="Loading" decoding="async" />';
@@ -110,10 +110,10 @@
   function ensureOverlay() {
     ensureStyles();
     if (overlay) return overlay;
-    overlay = document.getElementById('pros-loader-overlay');
+    overlay = document.getElementById('ns-loader-overlay');
     if (!overlay) {
       overlay = document.createElement('div');
-      overlay.id = 'pros-loader-overlay';
+      overlay.id = 'ns-loader-overlay';
       overlay.setAttribute('role', 'status');
       overlay.setAttribute('aria-live', 'polite');
       overlay.setAttribute('aria-busy', 'false');
@@ -232,8 +232,8 @@
     // Landing → auth: hold ~2s when coming from transition flag
     if (opts.holdOnEntry) {
       var params = new URLSearchParams(global.location.search);
-      if (params.get('pros_loading') === '1' || sessionStorage.getItem('pros_show_loader') === '1') {
-        try { sessionStorage.removeItem('pros_show_loader'); } catch (e) {}
+      if (params.get('ns_loading') === '1' || sessionStorage.getItem('ns_show_loader') === '1') {
+        try { sessionStorage.removeItem('ns_show_loader'); } catch (e) {}
         show();
         hideAfterMin(TRANSITION_MS);
       }
@@ -253,10 +253,10 @@
   var path = (global.location.pathname || '').toLowerCase();
   var isLanding = /landing\.html$/.test(path) || path.endsWith('/') || /index\.html$/.test(path);
   var isAuth = AUTH_RE.test(path);
-  if (isLanding || isAuth || document.documentElement.hasAttribute('data-pros-loader')) {
+  if (isLanding || isAuth || document.documentElement.hasAttribute('data-ns-loader')) {
     init({
       pageLoad: true,
-      authTransition: isLanding || document.documentElement.hasAttribute('data-pros-loader-auth'),
+      authTransition: isLanding || document.documentElement.hasAttribute('data-ns-loader-auth'),
       holdOnEntry: isAuth
     });
   }

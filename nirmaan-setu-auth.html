@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sign in — Project Reality OS</title>
+  <title>Sign in — Nirmaan Setu</title>
   <link rel="preload" href="assets/circle-loader.svg" as="image" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="project-reality-os.css" />
-  <script src="pros-cookies.js"></script>
-  <script src="pros-loader.js" defer></script>
+  <link rel="stylesheet" href="nirmaan-setu.css" />
+  <script src="ns-cookies.js"></script>
+  <script src="ns-loader.js" defer></script>
 </head>
 <body>
   <div class="app auth-shell">
     <header class="app-bar">
-      <a href="project-reality-os-landing.html" class="logo">Project Reality<span> OS</span></a>
-      <a href="project-reality-os-landing.html" class="caption" style="text-decoration:none;">Back</a>
+      <a href="nirmaan-setu-landing.html" class="logo">Nirmaan<span> Setu</span></a>
+      <a href="nirmaan-setu-landing.html" class="caption" style="text-decoration:none;">Back</a>
     </header>
 
     <div class="page-head">
@@ -30,7 +30,7 @@
       <button type="button" class="tab" data-tab="login" role="tab" aria-selected="false">Log in</button>
     </div>
 
-    <form id="auth-form" class="card card-white" action="project-reality-os-onboarding.html" method="get">
+    <form id="auth-form" class="card card-white" action="nirmaan-setu-onboarding.html" method="get">
       <div class="form-group">
         <label>Your role</label>
         <div class="role-grid">
@@ -98,8 +98,8 @@
           password.autocomplete = mode === 'signup' ? 'new-password' : 'current-password';
           submitBtn.textContent = mode === 'signup' ? 'Create account & continue' : 'Log in';
           form.action = mode === 'signup'
-            ? 'project-reality-os-onboarding.html'
-            : 'project-reality-os-dashboard.html';
+            ? 'nirmaan-setu-onboarding.html'
+            : 'nirmaan-setu-dashboard.html';
         });
       });
 
@@ -117,19 +117,19 @@
         var role = form.querySelector('input[name="role"]:checked').value;
         var project = document.getElementById('project-code').value.trim() || 'NH-42-EAST';
         try {
-          localStorage.setItem('pros_role', role);
-          localStorage.setItem('pros_project', project);
+          localStorage.setItem('ns_role', role);
+          localStorage.setItem('ns_project', project);
         } catch (err) {}
         if (mode === 'login') {
-          if (window.PROS && !PROS.isOnboarded()) {
-            window.location.href = 'project-reality-os-onboarding.html';
+          if (window.NS && !NS.isOnboarded()) {
+            window.location.href = 'nirmaan-setu-onboarding.html';
             return;
           }
           window.location.href = role === 'planner'
-            ? 'project-reality-os-planner-review.html'
-            : 'project-reality-os-site-report.html';
+            ? 'nirmaan-setu-planner-review.html'
+            : 'nirmaan-setu-site-report.html';
         } else {
-          window.location.href = 'project-reality-os-onboarding.html';
+          window.location.href = 'nirmaan-setu-onboarding.html';
         }
       });
     })();

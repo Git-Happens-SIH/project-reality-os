@@ -1,4 +1,4 @@
-# Project Reality OS — Design System & Content Spec
+# Nirmaan Setu — Design System & Content Spec
 
 > Single source of truth for Cursor / AI coding agents.  
 > Use this file to implement the Landing Page (Phase I) and all subsequent screens.  
@@ -10,10 +10,10 @@
 
 | Field | Value |
 |-------|-------|
-| Product name | **Project Reality OS** |
+| Product name | **Nirmaan Setu** |
 | Tagline | Turn daily site reports into real-time project truth |
-| Domain (placeholder) | projectrealityos.ai |
-| Support email | hello@projectrealityos.ai |
+| Domain (placeholder) | nirmaansetu.ai |
+| Support email | hello@nirmaansetu.ai |
 | Tone | Calm, operational, editorial, craft-like. Never flashy SaaS hype. |
 | Audience | Site Engineers + Planners / Managers in infrastructure & construction |
 
@@ -125,21 +125,21 @@ padding: 18–20px
 | Mark (light) | `assets/logo-mark.svg` | Favicon, nav, app icon on cream |
 | Mark (dark) | `assets/logo-mark-dark.svg` | Charcoal / dark surfaces |
 | Wordmark | `assets/logo-wordmark.svg` | Docs, decks, lockups |
-| Raster preview | `assets/project-reality-os-logo.png` | Social / mockups |
+| Raster preview | `assets/nirmaan-setu-logo.png` | Social / mockups |
 
 **Construction**
 - Outer frame: 32×32, cream fill `#FCF9F0`, 1.5px `#1C1C1C` stroke, ~3px radius
 - Back square (plan) + offset front square (site/reality), same stroke language
 - Orange lock tile `#FF8A00` at lower-right intersection (only brand accent)
-- Wordmark: Georgia / Times — `Project Reality` in `#171717` + `OS` in `#FF8A00`
+- Wordmark: Georgia / Times — `Nirmaan` in `#171717` + `Setu` in `#FF8A00`
 - Nav lockup: mark 22×22 + 8px gap + wordmark text
 - No gradients, glow, soft shadow, or illustrated mascots
 
 **HTML lockup**
 ```html
-<a class="logo" aria-label="Project Reality OS">
+<a class="logo" aria-label="Nirmaan Setu">
   <!-- inline logo-mark.svg -->
-  <span class="logo-text">Project Reality<span class="logo-os"> OS</span></span>
+  <span class="logo-text">Nirmaan<span class="logo-os"> Setu</span></span>
 </a>
 ```
 
@@ -151,7 +151,7 @@ Implement these sections **in order**. Content below is final copy — do not re
 
 ### 3.1 Header
 
-- Logo: mark + `Project Reality` + `OS` (OS in orange) — see §2.9
+- Logo: mark + `Nirmaan` + `Setu` (Setu in orange) — see §2.9
 - Nav links: Architecture · How it works · Trust
 - Compact primary button: `Start free`
 
@@ -196,7 +196,7 @@ Construction / site reality photo with caption: `Site reality meets the digital 
 `VISUAL ARCHITECTURE`
 
 **H3**  
-`How Project Reality OS connects field to plan`
+`How Nirmaan Setu connects field to plan`
 
 **Body**  
 `A calm, human-in-the-loop pipeline. AI proposes. Planners decide. The schedule stays truthful.`
@@ -222,7 +222,7 @@ Construction / site reality photo with caption: `Site reality meets the digital 
 ### 3.5 How It Works
 
 **Label**  
-`HOW PROJECT REALITY OS WORKS`
+`HOW NIRMAAN SETU WORKS`
 
 **H3**  
 `Four calm steps. No drama.`
@@ -250,7 +250,7 @@ Construction / site reality photo with caption: `Site reality meets the digital 
 **Body**  
 `Write reports with zero connectivity. They save locally and sync the moment the device finds a signal. No data loss. No “try again later.”`
 
-`Remote sites, tunnels, and low-signal zones are not edge cases — they are the normal working environment. Project Reality OS is built for that reality.`
+`Remote sites, tunnels, and low-signal zones are not edge cases — they are the normal working environment. Nirmaan Setu is built for that reality.`
 
 **Callout bar** (pale yellow)  
 `Works in remote sites, tunnels, and low-signal zones.`
@@ -321,9 +321,9 @@ Dashboard / analytics screen with caption:
 
 ### 3.11 Footer
 
-- Logo: Project Reality OS  
+- Logo: Nirmaan Setu  
 - Line: `Intelligent data capture & schedule-linking for infrastructure teams.`  
-- Links: Privacy · Support · hello@projectrealityos.ai
+- Links: Privacy · Support · hello@nirmaansetu.ai
 
 ---
 
@@ -356,7 +356,7 @@ Reusable components that must share the same visual language:
 7. Architecture diagram must be pure HTML/CSS (no external diagram library).  
 8. Copy above is final — do not paraphrase unless the user requests changes.  
 9. Mobile: stack all grids to single column below 560px.  
-10. File name convention: `project-reality-os-landing.html`
+10. File name convention: `nirmaan-setu-landing.html`
 
 ---
 
@@ -380,7 +380,7 @@ Reusable components that must share the same visual language:
 
 ## 7. Quick Reference — Key Phrases
 
-- Product: **Project Reality OS**
+- Product: **Nirmaan Setu**
 - Hero promise: **real-time project truth**
 - Core loop: **Report → AI Match → Approve → Sync**
 - Trust principle: **AI proposes. Planners decide.**

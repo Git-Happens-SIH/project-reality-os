@@ -1,7 +1,7 @@
 /* Local demo domain model. No remote persistence or trained AI is implied. */
 (function (root) {
   'use strict';
-  const KEY = 'pros_demo_v1';
+  const KEY = 'ns_demo_v1';
   const tasks = [
     {id:'4.2.1', name:'Pier P7 pile cap', terms:['p7','pile cap','concrete','pour','formwork']},
     {id:'4.2.3', name:'Pier P8 rebar cage', terms:['p8','rebar','cage','reinforcement','steel']},
@@ -59,5 +59,5 @@
   }
   function counts(s) { return {confirmed:18+s.progress.length,review:5+s.queue.filter(q=>q.status==='review').length,risk:2+s.queue.filter(q=>q.conflict&&q.status!=='rejected').length,pending:s.reports.filter(r=>r.status==='pending').length}; }
   const api={KEY,tasks,match,fresh,load,save,submit,sync,confirm,decide,counts};
-  if(typeof module!=='undefined') module.exports=api; else root.PROSDemo=api;
+  if(typeof module!=='undefined') module.exports=api; else root.NSDemo=api;
 })(typeof window==='undefined'?globalThis:window);

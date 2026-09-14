@@ -1,10 +1,10 @@
 /**
- * Project Reality OS — consent-aware cookie + first-run helpers
+ * Nirmaan Setu — consent-aware cookie + first-run helpers
  * Cookies only written after explicit consent.
  * Onboarding only after opt-in; users can always escape.
  */
 (function (global) {
-  var PREFIX = 'pros_';
+  var PREFIX = 'ns_';
   var ONBOARDED = PREFIX + 'onboarded';
   var STEP = PREFIX + 'onboard_step';
   var DRAFT = PREFIX + 'onboard_draft';
@@ -190,8 +190,8 @@
 
   function homeForRole(role) {
     role = role || readPref(PREFIX + 'role') || 'engineer';
-    if (role === 'planner' || role === 'lead') return 'project-reality-os-dashboard.html';
-    return 'project-reality-os-site-report.html';
+    if (role === 'planner' || role === 'lead') return 'nirmaan-setu-dashboard.html';
+    return 'nirmaan-setu-site-report.html';
   }
 
   /**
@@ -205,7 +205,7 @@
     if (location.pathname.indexOf('onboarding') !== -1) return false;
     var step = getStep();
     if (step <= 0) return false;
-    var dest = opts.redirect || 'project-reality-os-onboarding.html';
+    var dest = opts.redirect || 'nirmaan-setu-onboarding.html';
     location.replace(dest);
     return true;
   }
@@ -230,7 +230,7 @@
     return true;
   }
 
-  global.PROS = {
+  global.NS = {
     ONBOARDED: ONBOARDED,
     STEP: STEP,
     DRAFT: DRAFT,

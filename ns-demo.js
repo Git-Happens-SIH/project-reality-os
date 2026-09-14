@@ -1,9 +1,9 @@
 /* Shared UI for the SIH local-only demo. User text is always escaped. */
 (()=>{
 'use strict';
-const D=window.PROSDemo, $=s=>document.querySelector(s), page=location.pathname.split('/').pop().replace('project-reality-os-','').replace('.html','');
+const D=window.NSDemo, $=s=>document.querySelector(s), page=location.pathname.split('/').pop().replace('nirmaan-setu-','').replace('.html','');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const url=p=>'project-reality-os-'+p+'.html';
+const url=p=>'nirmaan-setu-'+p+'.html';
 let s;
 const app=$('.app'); if(!app)return;
 const bar=document.createElement('div'); bar.className='demo-toolbar';
@@ -13,7 +13,7 @@ function message(text){$('#demo-message').textContent=text;}
 try{s=D.load(localStorage);}catch(e){message(e.message);return;}
 function mutate(fn){try{const next=D.load(localStorage);fn(next);D.save(localStorage,next);s=next;badge();return true;}catch(e){message('Not saved: '+e.message+' Your input has been kept.');return false;}}
 function badge(){const n=D.counts(s).pending;$('#demo-status').textContent=(navigator.onLine?'Online':'Offline')+' · '+n+' pending sync';}
-$('#reset-demo').onclick=()=>{if(mutate(next=>Object.assign(next,D.fresh()))){localStorage.removeItem('pros_draft_report');localStorage.removeItem('pros_last_report');location.href=url('site-report');}};
+$('#reset-demo').onclick=()=>{if(mutate(next=>Object.assign(next,D.fresh()))){localStorage.removeItem('ns_draft_report');localStorage.removeItem('ns_last_report');location.href=url('site-report');}};
 function reconnect(){if(navigator.onLine&&D.counts(s).pending){if(mutate(D.sync)){message('Pending reports processed by the local demo matcher.');render();}}badge();}
 window.addEventListener('online',reconnect);window.addEventListener('offline',badge);
 window.addEventListener('storage',e=>{if(e.key===D.KEY){try{s=D.load(localStorage);badge();if(page!=='site-report')render();}catch(err){message(err.message);}}});
@@ -75,5 +75,5 @@ if(page==='site-report'){
  const offline=()=>{$('#offline-banner').hidden=navigator.onLine;};window.addEventListener('online',offline);window.addEventListener('offline',offline);offline();
 }
 reconnect();render();
-if('serviceWorker' in navigator)navigator.serviceWorker.register('pros-sw.js').catch(()=>message('Offline page cache unavailable; keep this page open to save reports.'));
+if('serviceWorker' in navigator)navigator.serviceWorker.register('ns-sw.js').catch(()=>message('Offline page cache unavailable; keep this page open to save reports.'));
 })();

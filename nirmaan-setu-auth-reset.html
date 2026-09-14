@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reset password — Project Reality OS</title>
+  <title>Reset password — Nirmaan Setu</title>
   <link rel="preload" href="assets/circle-loader.svg" as="image" type="image/svg+xml" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="pros-loader.js" defer></script>
+  <script src="ns-loader.js" defer></script>
 </head>
 <body>
   <div class="flex min-h-screen items-center justify-center bg-neutral-100 p-6">
@@ -16,7 +16,7 @@
         for <span class="font-medium text-neutral-700">you@company.com</span>
       </p>
 
-      <form id="reset-form" class="mt-6 space-y-4" action="project-reality-os-auth-chooser.html" method="get">
+      <form id="reset-form" class="mt-6 space-y-4" action="nirmaan-setu-auth-chooser.html" method="get">
         <div>
           <label for="password" class="mb-1.5 block text-sm font-medium text-neutral-700">New password</label>
           <input
@@ -82,7 +82,7 @@
       </form>
 
       <p class="mt-6 text-center">
-        <a href="project-reality-os-auth-chooser.html" class="text-sm font-medium text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline">Back to sign in</a>
+        <a href="nirmaan-setu-auth-chooser.html" class="text-sm font-medium text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline">Back to sign in</a>
       </p>
     </div>
   </div>
@@ -161,7 +161,7 @@
       document.getElementById('reset-form').addEventListener('submit', function (e) {
         e.preventDefault();
         if (submitBtn.disabled) return;
-        window.location.href = 'project-reality-os-auth-chooser.html';
+        window.location.href = 'nirmaan-setu-auth-chooser.html';
       });
 
       update();
