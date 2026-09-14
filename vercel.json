@@ -6,13 +6,23 @@
   ],
   "redirects": [
     {
+      "source": "/index",
+      "destination": "/nirmaan-setu-landing",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/nirmaan-setu-landing",
+      "permanent": true
+    },
+    {
       "source": "/project-reality-os-landing",
       "destination": "/nirmaan-setu-landing",
       "permanent": true
     },
     {
       "source": "/project-reality-os-landing.html",
-      "destination": "/nirmaan-setu-landing.html",
+      "destination": "/nirmaan-setu-landing",
       "permanent": true
     }
   ]
