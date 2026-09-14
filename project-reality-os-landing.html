@@ -86,6 +86,17 @@
     h3 { font-size: clamp(18px, 2.2vw, 22px); line-height: 1.2; }
     p, li { font-size: 13px; color: var(--muted); }
     .caption { font-size: 10px; color: var(--muted); letter-spacing: 0.02em; }
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
 
     .page {
       max-width: var(--page-max);
@@ -341,12 +352,22 @@
       animation: hero-rise 0.85s ease 0.28s forwards;
     }
     .hero-brand .accent { color: var(--orange); }
+    .hero-tagline {
+      font-size: clamp(15px, 2.1vw, 21px);
+      color: var(--hero-ink);
+      margin: 0 0 10px;
+      max-width: 28ch;
+      line-height: 1.35;
+      font-weight: 500;
+      opacity: 0;
+      animation: hero-rise 0.8s ease 0.36s forwards;
+    }
     .hero-sub {
-      font-size: clamp(14px, 1.6vw, 17px);
+      font-size: clamp(13px, 1.6vw, 16px);
       color: var(--hero-muted);
-      margin: 0 0 28px;
-      max-width: 38ch;
-      line-height: 1.55;
+      margin: 0 0 24px;
+      max-width: 36ch;
+      line-height: 1.5;
       opacity: 0;
       animation: hero-rise 0.8s ease 0.42s forwards;
     }
@@ -394,6 +415,7 @@
       .hero-media video { animation: none; transform: scale(1.02); }
       .hero-eyebrow,
       .hero-brand,
+      .hero-tagline,
       .hero-sub,
       .cta-row,
       .hero-scroll-hint {
@@ -401,6 +423,263 @@
         opacity: 1;
         transform: none;
       }
+    }
+
+    /* —— Visit clarity: before/after + platform matrix —— */
+    .clarity {
+      margin-bottom: 48px;
+    }
+    .clarity-head {
+      margin-bottom: 18px;
+      max-width: 48ch;
+    }
+    .clarity-split {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .clarity-panel {
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 26px 22px 22px;
+      background: var(--white);
+    }
+    .clarity-panel--old {
+      border-style: dashed;
+      background: #f7f3e8;
+    }
+    .clarity-panel--new {
+      background: var(--charcoal);
+      color: #f4f1ea;
+      border-color: #111;
+    }
+    .clarity-panel--new p,
+    .clarity-panel--new li { color: rgba(244, 241, 234, 0.78); }
+    .clarity-kicker {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .clarity-panel--new .clarity-kicker {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: rgba(255, 138, 0, 0.22);
+      color: #ffd9a8;
+      letter-spacing: 0.06em;
+    }
+    .clarity-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .clarity-list li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 14.5px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+    .clarity-panel--new .clarity-list li {
+      color: rgba(244, 241, 234, 0.88);
+    }
+    .clarity-mark {
+      flex: 0 0 auto;
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      line-height: 1;
+      margin-top: 1px;
+      background: #ebe6da;
+      color: var(--muted);
+    }
+    .clarity-panel--new .clarity-mark {
+      background: var(--orange);
+      border-color: #111;
+      color: var(--black);
+      font-weight: 700;
+    }
+    .clarity-foot {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(244, 241, 234, 0.18);
+      font-size: 12px;
+      color: #ffd9a8;
+    }
+    .matrix-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 16px;
+      margin: 0 0 12px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .matrix-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .matrix-dot {
+      width: 14px;
+      height: 14px;
+      display: inline-grid;
+      place-items: center;
+      font-size: 11px;
+      line-height: 1;
+    }
+    .matrix-dot--yes { color: var(--green); font-weight: 700; }
+    .matrix-dot--partial { color: #c98900; font-weight: 700; }
+    .matrix-dot--no { color: #b0aaa0; }
+    .matrix-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      background: var(--white);
+      overscroll-behavior-x: contain;
+    }
+    .matrix-table {
+      width: 100%;
+      min-width: 560px;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .matrix-table th,
+    .matrix-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #e8e2d6;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .matrix-table th {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      background: #f7f3e8;
+      font-weight: 500;
+    }
+    .matrix-table th:first-child,
+    .matrix-table td:first-child {
+      text-align: left;
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      min-width: 140px;
+      font-weight: 500;
+      color: var(--black);
+      background: #f7f3e8;
+      box-shadow: 1px 0 0 #e8e2d6;
+    }
+    .matrix-table td:first-child { background: var(--white); }
+    .matrix-table tbody tr:nth-child(even) td { background: #fcfaf4; }
+    .matrix-table tbody tr:nth-child(even) td:first-child { background: #fcfaf4; }
+    .matrix-table tbody tr:last-child td { border-bottom: none; }
+    .matrix-yes { color: var(--green); font-weight: 700; }
+    .matrix-partial {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      color: #c98900;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .matrix-partial small {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .matrix-no { color: #b0aaa0; }
+    .matrix-note {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    @media (min-width: 721px) {
+      .clarity-split { grid-template-columns: 1fr 1fr; gap: 14px; }
+    }
+
+    /* Sticky bottom conversion bar (mobile-first) */
+    .mobile-dock {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 60;
+      display: none;
+      padding:
+        10px
+        max(14px, env(safe-area-inset-right, 0px))
+        max(10px, env(safe-area-inset-bottom, 0px))
+        max(14px, env(safe-area-inset-left, 0px));
+      background: rgba(252, 249, 240, 0.96);
+      border-top: 1.5px solid var(--border);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transform: translateY(110%);
+      transition: transform 0.28s ease;
+    }
+    .mobile-dock.is-visible { transform: translateY(0); }
+    .mobile-dock-inner {
+      max-width: var(--page-max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .mobile-dock-copy {
+      flex: 1;
+      min-width: 0;
+    }
+    .mobile-dock-copy strong {
+      display: block;
+      font-size: 12px;
+      color: var(--black);
+      font-weight: 600;
+      line-height: 1.25;
+    }
+    .mobile-dock-copy span {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .mobile-dock .btn {
+      flex: 0 0 auto;
+      min-height: 44px;
+      padding: 10px 14px;
+      font-size: 12px;
+    }
+    .mobile-dock-dismiss {
+      flex: 0 0 auto;
+      width: 40px;
+      height: 40px;
+      border: 1.5px solid var(--border);
+      border-radius: 5px;
+      background: var(--cream);
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .mobile-dock-dismiss:focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 2px;
     }
 
     /* Images */
@@ -610,12 +889,12 @@
     }
     .kit-card {
       flex: 0 0 auto;
-      width: min(260px, 78vw);
+      width: min(320px, 86vw);
       border: 1.5px solid var(--border);
-      border-radius: 14px;
+      border-radius: 16px;
       background: var(--white);
       box-shadow: 3px 4px 0 #111;
-      padding: 14px 14px 16px;
+      padding: 18px 18px 20px;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -665,8 +944,8 @@
     .kit-wish svg { width: 14px; height: 14px; }
     .kit-stage {
       position: relative;
-      height: 168px;
-      border-radius: 10px;
+      height: 210px;
+      border-radius: 12px;
       border: 1.5px solid var(--border);
       background:
         linear-gradient(165deg, #f7f1e4 0%, #ebe4d4 55%, #ddd4c0 100%);
@@ -686,8 +965,8 @@
       transform: translateZ(0);
     }
     .kit-glyph {
-      width: 112px;
-      height: 112px;
+      width: 132px;
+      height: 132px;
       color: var(--black);
       background: currentColor;
       -webkit-mask: var(--kit-icon) center / contain no-repeat;
@@ -837,12 +1116,12 @@
     .card {
       background: var(--cream);
       border: 1.5px solid var(--border);
-      border-radius: 7px;
-      padding: 20px 18px;
+      border-radius: 10px;
+      padding: 28px 24px;
     }
-    .card + .card { margin-top: 12px; }
-    .card h3 { margin-bottom: 8px; color: var(--black); }
-    .card p { font-size: 12.5px; line-height: 1.5; }
+    .card + .card { margin-top: 16px; }
+    .card h3 { margin-bottom: 10px; color: var(--black); font-size: clamp(18px, 2.4vw, 22px); }
+    .card p { font-size: 14px; line-height: 1.55; }
 
     /* Gap story — scroll spotlight (alternate L/R) */
     .gap-story {
@@ -1610,38 +1889,39 @@
 
     /* Steps story — scroll-scrubbed chapters */
     .steps-story {
+      --steps-pin: 72px;
+      --steps-peek: 18px;
       position: relative;
-      width: 100vw;
-      margin-left: calc(50% - 50vw);
-      margin-right: calc(50% - 50vw);
-      margin-bottom: 48px;
+      width: 100%;
+      max-width: 100%;
+      margin: 0 0 56px;
+      padding: 56px var(--page-pad) 72px;
       background:
-        radial-gradient(100% 70% at 80% 10%, rgba(255, 138, 0, 0.12), transparent 50%),
-        radial-gradient(80% 60% at 10% 90%, rgba(85, 184, 90, 0.08), transparent 45%),
+        radial-gradient(100% 70% at 80% 10%, rgba(255, 138, 0, 0.14), transparent 50%),
+        radial-gradient(80% 60% at 10% 90%, rgba(85, 184, 90, 0.1), transparent 45%),
         linear-gradient(180deg, #171717 0%, #1f1f1f 55%, #262626 100%);
       border-top: 1.5px solid var(--border);
       border-bottom: 1.5px solid var(--border);
       color: #F4F1EA;
     }
-    .steps-track {
-      position: relative;
-      height: 360vh;
+    .steps-story::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      left: 50%;
+      width: 100vw;
+      max-width: 100vw;
+      transform: translateX(-50%);
+      background: inherit;
+      border-top: inherit;
+      border-bottom: inherit;
+      z-index: -1;
+      pointer-events: none;
     }
-    .steps-pin {
-      position: sticky;
-      top: 0;
-      height: 100svh;
-      min-height: 560px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 88px var(--page-pad) 56px;
-      isolation: isolate;
-    }
-    .steps-inner {
-      position: relative;
-      z-index: 1;
+    .steps-intro {
       width: min(920px, 100%);
+      margin: 0 auto 28px;
+      max-width: 42ch;
     }
     .steps-eyebrow {
       font-family: 'Inter', Arial, sans-serif;
@@ -1655,215 +1935,214 @@
     .steps-heading {
       font-family: 'Times New Roman', Times, serif;
       font-weight: 500;
-      font-size: clamp(28px, 4.6vw, 48px);
-      line-height: 1.12;
-      letter-spacing: -0.02em;
-      color: #F4F1EA;
-      margin: 0 0 28px;
-      max-width: 16ch;
-    }
-    .steps-rail {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0;
-      position: relative;
-      margin-bottom: 36px;
-      padding-bottom: 4px;
-    }
-    .steps-rail::before {
-      content: '';
-      position: absolute;
-      left: 6%;
-      right: 6%;
-      top: 15px;
-      height: 2px;
-      background: rgba(244, 241, 234, 0.14);
-      z-index: 0;
-    }
-    .steps-rail-fill {
-      position: absolute;
-      left: 6%;
-      top: 15px;
-      height: 2px;
-      width: 0%;
-      max-width: 88%;
-      background: var(--orange);
-      z-index: 1;
-      will-change: width;
-    }
-    .steps-rail-item {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      background: transparent;
-      border: 0;
-      padding: 0;
-      cursor: default;
-      font-family: 'Inter', Arial, sans-serif;
-      color: rgba(244, 241, 234, 0.35);
-      transition: color 0.35s ease;
-    }
-    .steps-rail-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(244, 241, 234, 0.35);
-      background: #1f1f1f;
-      box-shadow: 0 0 0 4px #1f1f1f;
-      transition:
-        background 0.35s ease,
-        border-color 0.35s ease,
-        transform 0.35s ease;
-    }
-    .steps-rail-name {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      text-align: center;
-      line-height: 1.2;
-    }
-    .steps-rail-item.is-active,
-    .steps-rail-item.is-done {
-      color: #F4F1EA;
-    }
-    .steps-rail-item.is-active .steps-rail-dot {
-      background: var(--orange);
-      border-color: var(--orange);
-      transform: scale(1.25);
-    }
-    .steps-rail-item.is-done .steps-rail-dot {
-      background: #F4F1EA;
-      border-color: #F4F1EA;
-    }
-
-    .steps-stage {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 18px 22px;
-      align-items: start;
-      min-height: 168px;
-    }
-    .steps-stage-num {
-      font-family: var(--font-display), 'Bebas Neue', Impact, sans-serif;
-      font-size: clamp(64px, 12vw, 112px);
-      line-height: 0.85;
-      letter-spacing: 0.02em;
-      color: var(--orange);
-      transition: opacity 0.3s ease, transform 0.35s ease;
-    }
-    .steps-stage-body {
-      padding-top: 8px;
-    }
-    .steps-stage-label {
-      font-family: 'Times New Roman', Times, serif;
-      font-size: clamp(26px, 4vw, 40px);
-      font-weight: 500;
+      font-size: clamp(30px, 5vw, 52px);
+      line-height: 1.1;
       letter-spacing: -0.02em;
       color: #F4F1EA;
       margin: 0 0 10px;
-      line-height: 1.1;
+      max-width: 14ch;
     }
-    .steps-stage-copy {
+    .steps-sub {
       font-family: 'Inter', Arial, sans-serif;
-      font-size: clamp(14px, 1.7vw, 17px);
+      font-size: 15px;
       line-height: 1.5;
-      color: rgba(244, 241, 234, 0.72);
+      color: rgba(244, 241, 234, 0.68);
       margin: 0;
-      max-width: 38ch;
+      max-width: 36ch;
     }
-    .steps-stage.is-swap .steps-stage-num,
-    .steps-stage.is-swap .steps-stage-body {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    .steps-stage-num,
-    .steps-stage-body {
-      transition: opacity 0.28s ease, transform 0.28s ease;
-    }
-
-    .steps-progress {
-      margin-top: 32px;
+    .steps-stack {
+      position: relative;
+      width: min(920px, 100%);
+      margin: 0 auto;
+      padding-bottom: 18vh;
+      isolation: isolate;
       display: flex;
-      align-items: center;
-      gap: 10px;
+      flex-direction: column;
+      gap: 0;
     }
-    .steps-progress-track {
-      flex: 1;
-      height: 2px;
-      background: rgba(244, 241, 234, 0.14);
-      border-radius: 2px;
+    .step-parallax-card {
+      --i: 1;
+      position: sticky;
+      top: calc(var(--steps-pin) + (var(--i) - 1) * var(--steps-peek));
+      z-index: var(--i);
+      min-height: min(72vh, 520px);
+      margin-bottom: clamp(48px, 14vh, 120px);
+      border: 1.5px solid rgba(244, 241, 234, 0.22);
+      border-radius: 16px;
+      padding: clamp(28px, 4vw, 44px);
+      background: #222222;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.06) inset,
+        0 22px 48px rgba(0, 0, 0, 0.35);
+      display: grid;
+      grid-template-columns: minmax(88px, 0.3fr) minmax(0, 1fr);
+      gap: clamp(18px, 3vw, 32px);
+      align-items: stretch;
+      transform-origin: 50% 0%;
+      transform: translate3d(0, 0, 0) scale(1);
+      will-change: transform, filter, opacity;
+      backface-visibility: hidden;
+    }
+    .step-parallax-card:last-child { margin-bottom: 0; }
+    .step-parallax-card[data-index="1"] { --i: 1; background: linear-gradient(160deg, #2a2218 0%, #1e1e1e 55%); }
+    .step-parallax-card[data-index="2"] { --i: 2; background: linear-gradient(160deg, #1f2430 0%, #1e1e1e 55%); }
+    .step-parallax-card[data-index="3"] { --i: 3; background: linear-gradient(160deg, #24301f 0%, #1e1e1e 55%); }
+    .step-parallax-card[data-index="4"] { --i: 4; background: linear-gradient(160deg, #302418 0%, #1e1e1e 55%); }
+    .step-parallax-visual {
+      position: relative;
+      border: 1.5px solid rgba(244, 241, 234, 0.18);
+      border-radius: 12px;
       overflow: hidden;
+      background: #141414;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 18px 16px;
+      min-height: 240px;
+      isolation: isolate;
     }
-    .steps-progress-fill {
-      display: block;
+    .step-parallax-visual img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
       height: 100%;
-      width: 0%;
-      background: var(--orange);
-      will-change: width;
+      object-fit: cover;
+      z-index: 0;
     }
-    .steps-progress-label {
+    .step-parallax-visual::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(180deg, rgba(10, 12, 14, 0.25) 0%, rgba(10, 12, 14, 0.55) 45%, rgba(10, 12, 14, 0.82) 100%),
+        linear-gradient(135deg, rgba(255, 138, 0, 0.22), transparent 55%);
+      pointer-events: none;
+    }
+    .step-parallax-num {
+      position: relative;
+      z-index: 2;
+      font-family: var(--font-display), 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(64px, 11vw, 108px);
+      line-height: 0.85;
+      letter-spacing: 0.02em;
+      color: var(--orange);
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+    }
+    .step-parallax-glyph {
+      position: relative;
+      z-index: 2;
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(244, 241, 234, 0.28);
+      background: rgba(23, 23, 23, 0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: grid;
+      place-items: center;
+      color: #F4F1EA;
+      align-self: flex-end;
+    }
+    .step-parallax-glyph svg { width: 26px; height: 26px; }
+    .step-parallax-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 14px;
+      min-width: 0;
+    }
+    .step-parallax-tag {
+      display: inline-flex;
+      align-self: flex-start;
       font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #ffd9a8;
+      border: 1px solid rgba(255, 138, 0, 0.45);
+      border-radius: 4px;
+      padding: 5px 9px;
+      background: rgba(255, 138, 0, 0.12);
+    }
+    .step-parallax-body h3 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: clamp(28px, 4.2vw, 44px);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: #F4F1EA;
+      margin: 0;
+      line-height: 1.08;
+      max-width: 12ch;
+    }
+    .step-parallax-body p {
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: clamp(15px, 1.8vw, 18px);
+      line-height: 1.55;
+      color: rgba(244, 241, 234, 0.78);
+      margin: 0;
+      max-width: 34ch;
+    }
+    .step-parallax-meta {
+      margin-top: auto;
+      padding-top: 18px;
+      border-top: 1px solid rgba(244, 241, 234, 0.14);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 11px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: rgba(244, 241, 234, 0.55);
-      white-space: nowrap;
+      color: rgba(244, 241, 234, 0.5);
       font-family: 'Inter', Arial, sans-serif;
       font-weight: 600;
     }
-    .steps-hint {
-      margin-top: 12px;
-      font-size: 11px;
-      color: rgba(244, 241, 234, 0.45);
-      letter-spacing: 0.04em;
-      font-family: 'Inter', Arial, sans-serif;
+    .step-parallax-meta strong { color: var(--orange); font-weight: 700; }
+    @supports (animation-timeline: view()) {
+      .steps-stack:not([data-js-parallax="on"]) .step-parallax-card:not([data-index="4"]) {
+        animation: steps-recede linear both;
+        animation-timeline: view();
+        animation-range: exit-crossing 0% exit 80%;
+      }
+      @keyframes steps-recede {
+        to {
+          transform: translate3d(0, -22px, 0) scale(0.92);
+          filter: brightness(0.72);
+          opacity: 0.82;
+        }
+      }
     }
-    .steps-fallback { display: none; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .steps-track { height: auto; }
-      .steps-pin {
-        position: relative;
-        height: auto;
-        min-height: 0;
-        padding: 56px var(--page-pad);
-      }
-      .steps-progress,
-      .steps-hint,
-      .steps-rail,
-      .steps-stage { display: none; }
-      .steps-fallback {
-        display: grid;
+    @media (max-width: 720px) {
+      .steps-story { padding: 40px var(--page-pad) 56px; --steps-pin: 64px; --steps-peek: 12px; }
+      .step-parallax-card {
         grid-template-columns: 1fr;
-        gap: 12px;
-        margin-top: 8px;
+        min-height: min(68vh, 480px);
+        padding: 24px 20px 22px;
+        margin-bottom: clamp(36px, 10vh, 80px);
+        gap: 16px;
       }
-      .steps-fallback .step-card {
-        border: 1.5px solid rgba(244, 241, 234, 0.2);
-        border-radius: 8px;
-        padding: 16px;
-        background: rgba(255, 255, 255, 0.04);
+      .step-parallax-visual {
+        min-height: 140px;
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
       }
-      .steps-fallback .step-card strong {
-        display: block;
-        color: var(--orange);
-        font-size: 11px;
-        letter-spacing: 0.06em;
-        margin-bottom: 6px;
+      .step-parallax-num { font-size: clamp(56px, 18vw, 84px); }
+      .step-parallax-body h3 { font-size: clamp(26px, 8vw, 34px); max-width: none; }
+      .step-parallax-body p { font-size: 14.5px; max-width: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .step-parallax-card {
+        position: relative;
+        top: auto !important;
+        min-height: 0;
+        margin-bottom: 14px;
+        transform: none !important;
+        filter: none !important;
+        opacity: 1 !important;
+        animation: none !important;
       }
-      .steps-fallback .step-card h3 {
-        color: #F4F1EA;
-        font-size: 18px;
-        margin-bottom: 6px;
-      }
-      .steps-fallback .step-card p {
-        color: rgba(244, 241, 234, 0.7);
-        font-size: 13px;
-        margin: 0;
-      }
+      .steps-stack { padding-bottom: 0; }
     }
 
     /* Roles — tall image cards, auto-scroll */
@@ -1898,10 +2177,10 @@
     .role-card {
       position: relative;
       flex: 0 0 auto;
-      width: min(300px, 78vw);
-      height: 440px;
+      width: min(360px, 86vw);
+      height: 520px;
       border: 1.5px solid var(--border);
-      border-radius: 10px;
+      border-radius: 14px;
       overflow: hidden;
       box-shadow: 3px 4px 0 #111;
       color: #F4F1EA;
@@ -2112,10 +2391,10 @@
       position: sticky;
       top: calc(var(--trust-pin) + var(--trust-head, 108px) + (var(--i) - 1) * var(--trust-peek));
       border: 1.5px solid var(--border);
-      border-radius: 10px;
-      padding: 28px 22px 26px;
+      border-radius: 14px;
+      padding: 36px 28px 30px;
       background: var(--white);
-      min-height: min(58vh, 400px);
+      min-height: min(68vh, 480px);
       margin-bottom: clamp(72px, 22vh, 180px);
       display: flex;
       flex-direction: column;
@@ -2180,14 +2459,14 @@
       background: var(--cream);
     }
     .trust-card h3 {
-      font-size: 28px;
+      font-size: clamp(28px, 4vw, 36px);
       line-height: 1.12;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       color: var(--black);
       max-width: 14ch;
     }
     .trust-card p {
-      font-size: 14px;
+      font-size: 15.5px;
       line-height: 1.55;
       color: var(--muted);
       max-width: 42ch;
@@ -2346,6 +2625,8 @@
       justify-content: flex-end;
       padding: 16px 14px;
       position: relative;
+      overflow: hidden;
+      background: var(--cream);
     }
     .crew-card-face[data-tone="0"] { background: var(--pale-yellow); }
     .crew-card-face[data-tone="1"] { background: #FFF4E6; }
@@ -2353,6 +2634,24 @@
     .crew-card-face[data-tone="3"] { background: #F3FBF4; }
     .crew-card-face[data-tone="4"] { background: var(--cream); }
     .crew-card-face[data-tone="5"] { background: var(--white); }
+    .crew-card-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 18%;
+      z-index: 0;
+    }
+    .crew-card-face::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(23, 23, 23, 0) 42%, rgba(23, 23, 23, 0.72) 100%);
+      pointer-events: none;
+    }
+    .crew-card-face.has-photo .crew-initials { display: none; }
     .crew-initials {
       position: absolute;
       top: 50%;
@@ -2365,8 +2664,16 @@
       color: var(--black);
       line-height: 1;
       opacity: 0.92;
+      z-index: 1;
     }
-    .crew-card-meta { position: relative; z-index: 1; }
+    .crew-card-meta { position: relative; z-index: 2; }
+    .crew-card-face.has-photo .crew-card-meta strong,
+    .crew-card-face.has-photo .crew-card-meta span {
+      color: #F4F1EA;
+    }
+    .crew-card-face.has-photo .crew-card-meta span {
+      color: rgba(244, 241, 234, 0.78);
+    }
     .crew-card-meta strong {
       display: block;
       font-size: 13px;
@@ -2394,7 +2701,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 2;
+      z-index: 3;
     }
     .crew-card.is-selected .crew-check { display: flex; }
     .crew-check svg {
@@ -2682,20 +2989,42 @@
 
     /* —— Mobile —— */
     @media (max-width: 720px) {
-      .site-header-inner { padding: 12px 0; }
-      .logo { font-size: 14px; max-width: calc(100% - 168px); }
-      .ideas-track { height: 280vh; }
-      .ideas-pin { min-height: 100svh; padding-top: 96px; }
-      .ideas-line { font-size: clamp(26px, 8vw, 36px); }
-      .steps-track { height: 300vh; }
-      .steps-pin { min-height: 100svh; padding-top: 96px; }
-      .steps-rail-name { font-size: 9px; }
-      .steps-stage {
-        grid-template-columns: 1fr;
-        gap: 8px;
-        min-height: 190px;
+      :root { --page-pad: 14px; }
+      body { padding-bottom: 0; }
+      .page {
+        padding: 24px var(--page-pad) 110px;
+        overflow-x: clip;
       }
-      .steps-stage-num { font-size: clamp(56px, 18vw, 80px); }
+      .section { margin-bottom: 36px; }
+      .section-head { max-width: none; margin-bottom: 12px; }
+      .section-intro { max-width: none; font-size: 13px; }
+      h2 { font-size: clamp(20px, 6vw, 26px); }
+
+      .site-header-inner { padding: 10px 0; }
+      .logo { font-size: 13px; max-width: calc(100% - 156px); }
+      .logo-mark { width: 22px; height: 22px; }
+
+      /* Ideas: readable thesis, not long scrub on phone */
+      .ideas-track { height: auto; }
+      .ideas-pin {
+        position: relative;
+        min-height: 0;
+        height: auto;
+        padding: 28px 0 8px;
+      }
+      .ideas-layers,
+      .ideas-progress,
+      .ideas-hint { display: none; }
+      .ideas-line {
+        font-size: clamp(22px, 7vw, 30px);
+        line-height: 1.28;
+      }
+      .ideas-phrase,
+      .ideas-phrase.is-passed {
+        color: var(--ideas-ink, var(--black));
+      }
+      .ideas-phrase.is-lit[data-accent="1"],
+      .ideas-phrase[data-accent="1"] { color: var(--orange); }
 
       .nav-toggle { display: inline-flex; }
       .nav-cta-mobile { display: inline-flex; }
@@ -2730,17 +3059,51 @@
       }
       nav a:not(.btn):last-of-type { border-bottom: none; }
 
-      .cta-row { flex-direction: column; }
-      .cta-row .btn { width: 100%; min-height: 44px; }
-      .hero-content { padding: 100px var(--page-pad) 72px; }
+      .cta-row { flex-direction: column; gap: 8px; }
+      .cta-row .btn { width: 100%; min-height: 46px; }
+      .hero-stage {
+        min-height: 100dvh;
+        min-height: 100svh;
+      }
+      .hero-content {
+        padding:
+          max(88px, calc(64px + env(safe-area-inset-top, 0px)))
+          var(--page-pad)
+          max(56px, env(safe-area-inset-bottom, 0px));
+      }
+      .hero-brand {
+        font-size: clamp(36px, 11vw, 48px);
+        max-width: 12ch;
+        margin-bottom: 8px;
+      }
+      .hero-tagline { max-width: 22ch; margin-bottom: 8px; }
+      .hero-sub { margin-bottom: 18px; font-size: 13.5px; }
+      .hero-scroll-hint { bottom: max(12px, env(safe-area-inset-bottom, 0px)); }
+
+      .clarity { margin-bottom: 36px; }
+      .clarity-panel { padding: 16px 14px 14px; }
+      .matrix-table { min-width: 520px; font-size: 11.5px; }
+      .matrix-table th,
+      .matrix-table td { padding: 10px 10px; }
+      .mobile-dock { display: block; }
+
+      .role-card { width: min(86vw, 340px); height: 500px; }
+      .kit-card { width: min(86vw, 300px); }
+      .feature-row,
+      .split-feature,
+      .tier-row,
+      .outcome-grid,
+      .crew-roster { grid-template-columns: 1fr; }
+      .tier-row { gap: 8px; }
+
       #trust { --trust-pin: 64px; --trust-peek: 10px; }
       .trust-card {
-        min-height: min(54vh, 360px);
-        padding: 24px 18px 22px;
+        min-height: min(62vh, 420px);
+        padding: 28px 20px 24px;
         margin-bottom: clamp(36px, 10vh, 72px);
       }
-      .trust-card h3 { font-size: 24px; }
-      .trust-card-index { font-size: 34px; }
+      .trust-card h3 { font-size: 26px; }
+      .trust-card-index { font-size: 36px; }
       .arch-paths { grid-template-columns: 1fr; }
       .arch-diagram { padding: 16px 12px 14px; }
       .arch-flow {
@@ -2748,12 +3111,8 @@
         align-items: stretch;
         gap: 0;
       }
-      .arch-step {
-        gap: 6px;
-      }
-      .arch-kind {
-        align-self: flex-start;
-      }
+      .arch-step { gap: 6px; }
+      .arch-kind { align-self: flex-start; }
       .arch-node {
         padding: 14px 12px;
         text-align: left;
@@ -2771,16 +3130,14 @@
         font-size: 12px;
         margin-bottom: 2px;
       }
-      .arch-node .node-desc {
-        font-size: 10.5px;
-      }
+      .arch-node .node-desc { font-size: 10.5px; }
       .arch-node .node-desc br { display: none; }
-      .arch-arrow {
-        margin-top: 0;
-        width: auto;
-      }
+      .arch-arrow { margin-top: 0; width: auto; }
       .arch-arrow-desktop { display: none; }
       .arch-arrow-mobile { display: flex; }
+
+      .final-cta .card { padding: 22px 16px; }
+      .stack-strip { margin-bottom: 28px; }
     }
 
     /* —— Tablet —— */
@@ -2791,7 +3148,7 @@
       }
       .page { padding-bottom: 100px; }
       .hero-content { padding-bottom: 72px; }
-      .role-card { width: min(320px, 42vw); height: 460px; }
+      .role-card { width: min(360px, 46vw); height: 520px; }
       .feature-row { grid-template-columns: 1fr 1.15fr; }
       .feature-row .img-frame { height: 100%; min-height: 220px; }
       .tier-row { grid-template-columns: repeat(3, 1fr); }
@@ -2803,9 +3160,9 @@
       .stack-face svg { width: 36px; height: 36px; }
       .stack-icon:hover,
       .stack-icon:focus-visible { transform: scale(1.34) translateY(-12px); }
-      .kit-card { width: 280px; }
-      .kit-stage { height: 184px; }
-      .kit-glyph { width: 124px; height: 124px; }
+      .kit-card { width: 320px; }
+      .kit-stage { height: 210px; }
+      .kit-glyph { width: 140px; height: 140px; }
       nav { gap: 18px; }
       nav a { font-size: 12px; }
     }
@@ -2819,7 +3176,7 @@
       .section { margin-bottom: 56px; }
       .hero-content { padding-bottom: 88px; }
       .hero-sub { font-size: 17px; max-width: 42ch; }
-      .role-card { width: 340px; height: 480px; }
+      .role-card { width: 380px; height: 540px; }
       .role-track { gap: 20px; }
       .arch-paths { grid-template-columns: 1fr 1fr; gap: 14px; }
       .arch-path { padding: 16px; }
@@ -2831,14 +3188,14 @@
         align-items: stretch;
       }
       .trust-card {
-        max-width: 720px;
+        max-width: 840px;
         margin-left: auto;
         margin-right: auto;
-        min-height: min(58vh, 400px);
+        min-height: min(68vh, 500px);
       }
-      .trust-card h3 { font-size: 34px; max-width: 16ch; }
-      .trust-card p { font-size: 15px; max-width: 48ch; }
-      .final-cta .card { padding: 40px 48px; }
+      .trust-card h3 { font-size: 38px; max-width: 16ch; }
+      .trust-card p { font-size: 16px; max-width: 48ch; }
+      .final-cta .card { padding: 48px 56px; }
       .btn { font-size: 13px; padding: 11px 18px; }
       .image-marquee-track .img-frame { width: 300px; }
     }
@@ -3009,6 +3366,7 @@
         </button>
       </div>
       <nav id="site-nav">
+        <a href="#clarity">Idea matrix</a>
         <a href="#field-kit">Modules</a>
         <a href="#how-this-works">How this works</a>
         <a href="#ideas">Ideas</a>
@@ -3039,18 +3397,138 @@
     <div class="hero-content">
       <p class="hero-eyebrow">Mining · Oil · Infrastructure</p>
       <h1 class="hero-brand">Project Reality <span class="accent">OS</span></h1>
+      <p class="hero-tagline">Site ki reality, plan ka reality — ab dono ek hi din.</p>
       <p class="hero-sub">
-        Field reports sync to the live plan the same day, even when the radio drops out.
+        Field reports sync to the live plan the same day — signal or no signal.
       </p>
       <div class="cta-row" id="cta">
         <a href="project-reality-os-auth-role.html" class="btn btn-primary">Start free</a>
-        <a href="#how-this-works" class="btn btn-ghost">See the loop</a>
+        <a href="#clarity" class="btn btn-ghost">See the idea matrix</a>
       </div>
     </div>
     <p class="hero-scroll-hint" aria-hidden="true">Scroll</p>
   </section>
 
   <div class="page">
+
+    <!-- Visit clarity: before/after + platform matrix (vibeprompts.dev) -->
+    <section class="section clarity" id="clarity" aria-label="What Project Reality OS does">
+      <div class="clarity-head section-head">
+        <p class="section-label">The idea in one glance</p>
+        <h2>Field truth and plan truth, same day</h2>
+        <p class="section-intro">
+          Report from site. AI matches to the live plan. A planner keeps the pen. Offline days still sync.
+        </p>
+      </div>
+
+      <div class="clarity-split" aria-label="Before and after">
+        <article class="clarity-panel clarity-panel--old">
+          <p class="clarity-kicker">Without Project Reality OS</p>
+          <ul class="clarity-list">
+            <li><span class="clarity-mark" aria-hidden="true">×</span><span>Notes trapped in chat, PDFs, or paper</span></li>
+            <li><span class="clarity-mark" aria-hidden="true">×</span><span>Plan updates days after the work happened</span></li>
+            <li><span class="clarity-mark" aria-hidden="true">×</span><span>Offline days never leave the cabin</span></li>
+            <li><span class="clarity-mark" aria-hidden="true">×</span><span>Nobody knows which spreadsheet is current</span></li>
+            <li><span class="clarity-mark" aria-hidden="true">×</span><span>Delay cost compounds before the Gantt moves</span></li>
+          </ul>
+        </article>
+        <article class="clarity-panel clarity-panel--new">
+          <p class="clarity-kicker">With Project Reality OS</p>
+          <ul class="clarity-list">
+            <li><span class="clarity-mark" aria-hidden="true">✓</span><span>Plain-language reports + photos from the field</span></li>
+            <li><span class="clarity-mark" aria-hidden="true">✓</span><span>AI matches notes to plan tasks with confidence</span></li>
+            <li><span class="clarity-mark" aria-hidden="true">✓</span><span>Local save offline; sync when signal returns</span></li>
+            <li><span class="clarity-mark" aria-hidden="true">✓</span><span>Planner approve / reject — nothing auto-writes</span></li>
+            <li><span class="clarity-mark" aria-hidden="true">✓</span><span>Approved progress hits the live schedule same day</span></li>
+          </ul>
+          <p class="clarity-foot">Core loop: Report → AI Match → Approve → Sync</p>
+        </article>
+      </div>
+
+      <div class="section-head" style="margin-bottom: 10px;">
+        <p class="section-label">Platform matrix</p>
+        <h2 style="font-size: clamp(18px, 2.4vw, 24px);">Where each capability works</h2>
+        <p class="section-intro">One programme truth across field phone, offline cabin, and planner desk.</p>
+      </div>
+      <div class="matrix-legend" aria-label="Legend">
+        <span><span class="matrix-dot matrix-dot--yes" aria-hidden="true">✓</span> Available</span>
+        <span><span class="matrix-dot matrix-dot--partial" aria-hidden="true">◐</span> Partial</span>
+        <span><span class="matrix-dot matrix-dot--no" aria-hidden="true">—</span> Not on this surface</span>
+      </div>
+      <div class="matrix-scroll">
+        <table class="matrix-table">
+          <caption class="visually-hidden">Feature availability across Web, field phone, offline, and planner desk</caption>
+          <thead>
+            <tr>
+              <th scope="col">Capability</th>
+              <th scope="col">Web</th>
+              <th scope="col">Field phone</th>
+              <th scope="col">Offline</th>
+              <th scope="col">Planner desk</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Write site report</td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+              <td><span class="matrix-partial" aria-label="Partial"><span>◐</span><small>view</small></span></td>
+            </tr>
+            <tr>
+              <td>Local save / queue</td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+              <td><span class="matrix-no" aria-label="Not supported">—</span></td>
+            </tr>
+            <tr>
+              <td>Photos with report</td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+              <td><span class="matrix-partial" aria-label="Partial"><span>◐</span><small>queued</small></span></td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+            </tr>
+            <tr>
+              <td>AI match to plan</td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+              <td><span class="matrix-partial" aria-label="Partial"><span>◐</span><small>on sync</small></span></td>
+              <td><span class="matrix-no" aria-label="Not supported">—</span></td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+            </tr>
+            <tr>
+              <td>Approve / reject / flag</td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+              <td><span class="matrix-no" aria-label="Not supported">—</span></td>
+              <td><span class="matrix-no" aria-label="Not supported">—</span></td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+            </tr>
+            <tr>
+              <td>Live schedule sync</td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+              <td><span class="matrix-partial" aria-label="Partial"><span>◐</span><small>status</small></span></td>
+              <td><span class="matrix-no" aria-label="Not supported">—</span></td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+            </tr>
+            <tr>
+              <td>Confidence tiers</td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+              <td><span class="matrix-partial" aria-label="Partial"><span>◐</span><small>read</small></span></td>
+              <td><span class="matrix-no" aria-label="Not supported">—</span></td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+            </tr>
+            <tr>
+              <td>Audit trail</td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+              <td><span class="matrix-partial" aria-label="Partial"><span>◐</span><small>read</small></span></td>
+              <td><span class="matrix-no" aria-label="Not supported">—</span></td>
+              <td><span class="matrix-yes" aria-label="Available">✓</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="matrix-note">Works in modern mobile browsers. Offline uses on-device storage until signal returns.</p>
+    </section>
 
     <!-- Tech stack — horizontal app-icon marquee -->
     <section class="stack-strip" id="stack" aria-label="Technology used in this product">
@@ -3909,76 +4387,102 @@
       </div>
     </section>
 
-    <!-- Steps — scroll-scrubbed chapters -->
+    <!-- Steps — vertical parallax stack (vibeprompts sticky visual + scroll) -->
     <section class="steps-story" id="steps" aria-label="Four calm steps">
-      <div class="steps-track" id="steps-track">
-        <div class="steps-pin">
-          <div class="steps-inner">
-            <p class="steps-eyebrow">The loop</p>
-            <h2 class="steps-heading">Four steps. Report to sync.</h2>
-
-            <div class="steps-rail" role="list" aria-hidden="true">
-              <span class="steps-rail-fill" id="steps-rail-fill"></span>
-              <div class="steps-rail-item is-active" data-step="0" role="listitem">
-                <span class="steps-rail-dot"></span>
-                <span class="steps-rail-name">Report</span>
-              </div>
-              <div class="steps-rail-item" data-step="1" role="listitem">
-                <span class="steps-rail-dot"></span>
-                <span class="steps-rail-name">AI Match</span>
-              </div>
-              <div class="steps-rail-item" data-step="2" role="listitem">
-                <span class="steps-rail-dot"></span>
-                <span class="steps-rail-name">Approve</span>
-              </div>
-              <div class="steps-rail-item" data-step="3" role="listitem">
-                <span class="steps-rail-dot"></span>
-                <span class="steps-rail-name">Sync</span>
-              </div>
-            </div>
-
-            <div class="steps-stage" id="steps-stage">
-              <span class="steps-stage-num" id="steps-stage-num" aria-hidden="true">01</span>
-              <div class="steps-stage-body">
-                <h3 class="steps-stage-label" id="steps-stage-label">Report</h3>
-                <p class="steps-stage-copy" id="steps-stage-copy">
-                  Capture progress in plain language and photos from the site, online or offline.
-                </p>
-              </div>
-            </div>
-
-            <div class="steps-fallback" aria-hidden="true">
-              <article class="step-card">
-                <strong>01</strong>
-                <h3>Report</h3>
-                <p>Capture progress in plain language and photos from the site, online or offline.</p>
-              </article>
-              <article class="step-card">
-                <strong>02</strong>
-                <h3>AI Match</h3>
-                <p>System links notes to plan tasks and scores confidence so review stays focused.</p>
-              </article>
-              <article class="step-card">
-                <strong>03</strong>
-                <h3>Approve</h3>
-                <p>Planner accepts, rejects, or flags risk. Human authority stays on every change.</p>
-              </article>
-              <article class="step-card">
-                <strong>04</strong>
-                <h3>Sync</h3>
-                <p>Approved progress hits the live dashboard and schedule with a full audit trail.</p>
-              </article>
-            </div>
-
-            <div class="steps-progress" aria-hidden="true">
-              <div class="steps-progress-track">
-                <span class="steps-progress-fill" id="steps-progress-fill"></span>
-              </div>
-              <span class="steps-progress-label" id="steps-progress-label">01 / 04</span>
-            </div>
-            <p class="steps-hint">Scroll through each step</p>
+      <div class="steps-intro">
+        <p class="steps-eyebrow">The loop</p>
+        <h2 class="steps-heading">Four steps. Report to sync.</h2>
+        <p class="steps-sub">Sticky visual cards. Scroll to stack each chapter — AI proposes, planner keeps the pen.</p>
+      </div>
+      <div class="steps-stack" id="steps-stack">
+        <article class="step-parallax-card" data-index="1">
+          <div class="step-parallax-visual">
+            <img
+              src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=900&amp;q=80"
+              alt="Construction crew reporting progress on an active worksite"
+              loading="lazy"
+            />
+            <span class="step-parallax-num" aria-hidden="true">01</span>
+            <span class="step-parallax-glyph" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 4h7l3 3v13H8z"/><path d="M15 4v3h3"/><path d="M10 12h6M10 16h4"/></svg>
+            </span>
           </div>
-        </div>
+          <div class="step-parallax-body">
+            <span class="step-parallax-tag">Field</span>
+            <h3>Report</h3>
+            <p>Capture progress in plain language and photos from the site, online or offline.</p>
+            <div class="step-parallax-meta">
+              <span>Local save always</span>
+              <strong>01 / 04</strong>
+            </div>
+          </div>
+        </article>
+        <article class="step-parallax-card" data-index="2">
+          <div class="step-parallax-visual">
+            <img
+              src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=900&amp;q=80"
+              alt="Engineer matching site notes on a tablet"
+              loading="lazy"
+            />
+            <span class="step-parallax-num" aria-hidden="true">02</span>
+            <span class="step-parallax-glyph" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="6"/><path d="m20 20-3.5-3.5"/><path d="M9 11h4M11 9v4"/></svg>
+            </span>
+          </div>
+          <div class="step-parallax-body">
+            <span class="step-parallax-tag">AI</span>
+            <h3>AI Match</h3>
+            <p>System links notes to plan tasks and scores confidence so review stays focused.</p>
+            <div class="step-parallax-meta">
+              <span>Confidence scored</span>
+              <strong>02 / 04</strong>
+            </div>
+          </div>
+        </article>
+        <article class="step-parallax-card" data-index="3">
+          <div class="step-parallax-visual">
+            <img
+              src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=900&amp;q=80"
+              alt="Planner reviewing and approving programme updates at a desk"
+              loading="lazy"
+            />
+            <span class="step-parallax-num" aria-hidden="true">03</span>
+            <span class="step-parallax-glyph" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7z"/><path d="m9 12 2 2 4-4"/></svg>
+            </span>
+          </div>
+          <div class="step-parallax-body">
+            <span class="step-parallax-tag">Planner</span>
+            <h3>Approve</h3>
+            <p>Planner accepts, rejects, or flags risk. Human authority stays on every change.</p>
+            <div class="step-parallax-meta">
+              <span>Nothing auto-writes</span>
+              <strong>03 / 04</strong>
+            </div>
+          </div>
+        </article>
+        <article class="step-parallax-card" data-index="4">
+          <div class="step-parallax-visual">
+            <img
+              src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&amp;q=80"
+              alt="Live project dashboard syncing approved field progress"
+              loading="lazy"
+            />
+            <span class="step-parallax-num" aria-hidden="true">04</span>
+            <span class="step-parallax-glyph" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 12a8 8 0 0 1 14.5-4.5"/><path d="M20 4v4h-4"/><path d="M20 12a8 8 0 0 1-14.5 4.5"/><path d="M4 20v-4h4"/></svg>
+            </span>
+          </div>
+          <div class="step-parallax-body">
+            <span class="step-parallax-tag">Programme</span>
+            <h3>Sync</h3>
+            <p>Approved progress hits the live dashboard and schedule with a full audit trail.</p>
+            <div class="step-parallax-meta">
+              <span>Same-day truth</span>
+              <strong>04 / 04</strong>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -4071,42 +4575,6 @@
           </div>
           <div class="img-frame">
             <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800&q=80" alt="Engineer using tablet on construction site" />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Dashboard preview -->
-    <section class="section" id="visibility">
-      <div class="section-head">
-        <h2>One source of truth</h2>
-        <p class="section-intro">
-          Every approved report updates the live schedule. Delay alerts surface automatically.
-          Confidence tiers keep uncertain matches out of the confirmed column.
-        </p>
-      </div>
-      <div class="split-feature">
-        <div class="card" style="padding: 0; overflow: hidden;">
-          <div class="img-frame" style="border: none; border-radius: 0;">
-            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1100&q=80" alt="Project dashboard analytics on screen" />
-            <div class="img-caption">Live project dashboard: Confirmed / Review Needed / Possible Risk</div>
-          </div>
-          <div style="padding: 16px 18px;">
-            <p>No more spreadsheet archaeology. Planners and leads share the same confirmed progress view, with provenance attached to each task.</p>
-          </div>
-        </div>
-        <div class="tier-row" style="margin-top: 0; align-content: start;">
-          <div class="tier" data-tier="confirmed">
-            <strong>Confirmed</strong>
-            <span>High-confidence matches approved by a planner. Safe to treat as programme truth.</span>
-          </div>
-          <div class="tier" data-tier="review">
-            <strong>Review needed</strong>
-            <span>Ambiguous links or incomplete notes. Held until a human decides.</span>
-          </div>
-          <div class="tier" data-tier="risk">
-            <strong>Possible risk</strong>
-            <span>Conflicts, delays, or low confidence. Surfaced early, never silently written.</span>
           </div>
         </div>
       </div>
@@ -4441,6 +4909,17 @@
 
   </div>
 
+  <aside class="mobile-dock" id="mobile-dock" aria-label="Quick start" aria-hidden="true">
+    <div class="mobile-dock-inner">
+      <div class="mobile-dock-copy">
+        <strong>Start free on one project</strong>
+        <span>Report → Match → Approve → Sync</span>
+      </div>
+      <a href="project-reality-os-auth-role.html" class="btn btn-primary">Start free</a>
+      <button type="button" class="mobile-dock-dismiss" id="mobile-dock-dismiss" aria-label="Dismiss">×</button>
+    </div>
+  </aside>
+
   <script>
     (function () {
       var header = document.getElementById('site-header') || document.querySelector('header');
@@ -4468,6 +4947,46 @@
       window.addEventListener('resize', function () {
         if (window.matchMedia('(min-width: 721px)').matches) setOpen(false);
       });
+    })();
+
+    (function () {
+      var dock = document.getElementById('mobile-dock');
+      var dismiss = document.getElementById('mobile-dock-dismiss');
+      var hero = document.querySelector('.hero-stage');
+      if (!dock || !dismiss || !hero) return;
+      var closed = false;
+      try {
+        closed = sessionStorage.getItem('pros-dock-dismissed') === '1';
+      } catch (e) {}
+
+      function scrollY() {
+        if (window.__prosLenis && typeof window.__prosLenis.scroll === 'number') {
+          return window.__prosLenis.scroll;
+        }
+        return window.scrollY || window.pageYOffset || 0;
+      }
+
+      function updateDock() {
+        if (closed || !window.matchMedia('(max-width: 720px)').matches) {
+          dock.classList.remove('is-visible');
+          dock.setAttribute('aria-hidden', 'true');
+          return;
+        }
+        var show = scrollY() > Math.max(hero.offsetHeight * 0.55, 220);
+        dock.classList.toggle('is-visible', show);
+        dock.setAttribute('aria-hidden', show ? 'false' : 'true');
+      }
+
+      dismiss.addEventListener('click', function () {
+        closed = true;
+        try { sessionStorage.setItem('pros-dock-dismissed', '1'); } catch (e) {}
+        dock.classList.remove('is-visible');
+        dock.setAttribute('aria-hidden', 'true');
+      });
+
+      window.addEventListener('scroll', updateDock, { passive: true });
+      window.addEventListener('resize', updateDock);
+      updateDock();
     })();
 
     (function () {
@@ -4640,12 +5159,12 @@
       if (!stage || !dotsEl || !hintEl || !rosterEl) return;
 
       var CREW = [
-        { id: 0, name: 'Nikunj Rustagi', role: 'Builder', initials: 'NR' },
-        { id: 1, name: 'Sahil Singh', role: 'Builder', initials: 'SS' },
-        { id: 2, name: 'Payal Solanki', role: 'Builder', initials: 'PS' },
-        { id: 3, name: 'Riya Soorma', role: 'Builder', initials: 'RS' },
-        { id: 4, name: 'Dhairya Jindal', role: 'Builder', initials: 'DJ' },
-        { id: 5, name: 'Shailendar Pal', role: 'Builder', initials: 'SP' }
+        { id: 0, name: 'Nikunj Rustagi', role: 'Builder', initials: 'NR', photo: 'assets/crew/nikunj-rustagi.png' },
+        { id: 1, name: 'Sahil Singh', role: 'Builder', initials: 'SS', photo: 'assets/crew/sahil-singh.png' },
+        { id: 2, name: 'Payal Solanki', role: 'Builder', initials: 'PS', photo: 'assets/crew/payal-solanki.png' },
+        { id: 3, name: 'Riya Soorma', role: 'Builder', initials: 'RS', photo: 'assets/crew/riya-soorma.png' },
+        { id: 4, name: 'Dhairya Jindal', role: 'Builder', initials: 'DJ', photo: 'assets/crew/dhairya-jindal.png' },
+        { id: 5, name: 'Shailendar Pal', role: 'Builder', initials: 'SP', photo: 'assets/crew/shailendar-pal.png' }
       ];
 
       var SLOTS = [
@@ -4702,7 +5221,10 @@
           card.dataset.id = String(member.id);
           card.setAttribute('aria-label', member.name + ', ' + member.role);
           card.innerHTML =
-            '<div class="crew-card-face" data-tone="' + member.id + '">' +
+            '<div class="crew-card-face' + (member.photo ? ' has-photo' : '') + '" data-tone="' + member.id + '">' +
+              (member.photo
+                ? '<img class="crew-card-photo" src="' + member.photo + '" alt="' + member.name + '" loading="lazy" />'
+                : '') +
               '<span class="crew-initials" aria-hidden="true">' + member.initials + '</span>' +
               '<div class="crew-card-meta">' +
                 '<strong>' + member.name + '</strong>' +
@@ -5225,116 +5747,76 @@
         }
       }
 
-      /* Steps story: chapter scrub */
-      var stepsTrack = document.getElementById('steps-track');
-      var stepsRail = stepsTrack ? Array.prototype.slice.call(document.querySelectorAll('.steps-rail-item')) : [];
-      var stepsRailFill = document.getElementById('steps-rail-fill');
-      var stepsFill = document.getElementById('steps-progress-fill');
-      var stepsLabelEl = document.getElementById('steps-progress-label');
-      var stepsStage = document.getElementById('steps-stage');
-      var stepsNum = document.getElementById('steps-stage-num');
-      var stepsTitle = document.getElementById('steps-stage-label');
-      var stepsCopy = document.getElementById('steps-stage-copy');
-      var stepsData = [
-        {
-          num: '01',
-          label: 'Report',
-          copy: 'Capture progress in plain language and photos from the site, online or offline.'
-        },
-        {
-          num: '02',
-          label: 'AI Match',
-          copy: 'System links notes to plan tasks and scores confidence so review stays focused.'
-        },
-        {
-          num: '03',
-          label: 'Approve',
-          copy: 'Planner accepts, rejects, or flags risk. Human authority stays on every change.'
-        },
-        {
-          num: '04',
-          label: 'Sync',
-          copy: 'Approved progress hits the live dashboard and schedule with a full audit trail.'
-        }
-      ];
-      var stepsCount = stepsData.length;
-      var stepsLast = -1;
-      var stepsPending = -1;
-      var stepsSwapTimer = null;
+      /* Steps story: vertical sticky parallax cards */
+      var stepsStack = document.getElementById('steps-stack');
+      var stepsCards = stepsStack
+        ? Array.prototype.slice.call(stepsStack.querySelectorAll('.step-parallax-card'))
+        : [];
+      var stepsLastKeys = stepsCards.map(function () { return -1; });
+      var stepsMq = window.matchMedia('(max-width: 720px)');
 
-      function stepsProgress() {
-        if (!stepsTrack || reduceMotion) return 1;
-        var rect = stepsTrack.getBoundingClientRect();
-        var total = Math.max(rect.height - window.innerHeight, 1);
-        return clamp((-rect.top) / total, 0, 1);
+      if (stepsStack && stepsCards.length && !reduceMotion) {
+        stepsStack.setAttribute('data-js-parallax', 'on');
       }
 
-      function applyStep(active, animate) {
-        var data = stepsData[active];
-        if (!data) return;
+      function stepsSmooth(t) {
+        t = clamp(t, 0, 1);
+        return t * t * (3 - 2 * t);
+      }
 
-        stepsRail.forEach(function (el, i) {
-          el.classList.toggle('is-active', i === active);
-          el.classList.toggle('is-done', i < active);
-        });
-
-        if (stepsLabelEl) {
-          stepsLabelEl.textContent = data.num + ' / 0' + stepsCount;
-        }
-
-        if (!animate || !stepsStage || stepsLast < 0) {
-          if (stepsNum) stepsNum.textContent = data.num;
-          if (stepsTitle) stepsTitle.textContent = data.label;
-          if (stepsCopy) stepsCopy.textContent = data.copy;
-          stepsLast = active;
-          stepsPending = -1;
-          return;
-        }
-
-        if (stepsPending === active) return;
-        stepsPending = active;
-        stepsStage.classList.add('is-swap');
-        clearTimeout(stepsSwapTimer);
-        stepsSwapTimer = setTimeout(function () {
-          if (stepsNum) stepsNum.textContent = data.num;
-          if (stepsTitle) stepsTitle.textContent = data.label;
-          if (stepsCopy) stepsCopy.textContent = data.copy;
-          stepsStage.classList.remove('is-swap');
-          stepsLast = active;
-          stepsPending = -1;
-        }, 160);
+      function stepsCardProgress(i) {
+        if (i >= stepsCards.length - 1) return 0;
+        var card = stepsCards[i];
+        var next = stepsCards[i + 1];
+        if (!card || !next) return 0;
+        var pin = stepsMq.matches ? 64 : 72;
+        var peek = stepsMq.matches ? 12 : 18;
+        var nextPin = pin + i * peek;
+        var travel = Math.max(card.offsetHeight * 0.82, 180);
+        var nextTop = next.getBoundingClientRect().top;
+        return stepsSmooth((nextPin + travel - nextTop) / travel);
       }
 
       function paintSteps() {
-        if (!stepsTrack) return;
-        var p = stepsProgress();
-        if (stepsFill) stepsFill.style.width = (p * 100).toFixed(2) + '%';
-        if (stepsRailFill) stepsRailFill.style.width = (clamp(p, 0, 1) * 88).toFixed(2) + '%';
-
-        if (reduceMotion) {
-          var fb = document.querySelector('.steps-fallback');
-          if (fb) fb.removeAttribute('aria-hidden');
-          return;
-        }
-
-        var active = Math.min(stepsCount - 1, Math.floor(p * stepsCount + 0.001));
-        if (p >= 0.98) active = stepsCount - 1;
-        if (active !== stepsLast && active !== stepsPending) applyStep(active, true);
-        else if (stepsLast < 0) applyStep(active, false);
+        if (!stepsStack || !stepsCards.length || reduceMotion) return;
+        stepsCards.forEach(function (card, i) {
+          if (i === stepsCards.length - 1) return;
+          var p = stepsCardProgress(i);
+          var key = (p * 1000) | 0;
+          if (key === stepsLastKeys[i]) return;
+          stepsLastKeys[i] = key;
+          if (p <= 0.001) {
+            card.style.transform = 'translate3d(0,0,0) scale(1)';
+            card.style.opacity = '1';
+            card.style.filter = 'none';
+            return;
+          }
+          var scale = 1 - p * 0.085;
+          var lift = p * -22;
+          var fade = 1 - p * 0.18;
+          var bright = 1 - p * 0.28;
+          card.style.transform =
+            'translate3d(0,' + lift.toFixed(2) + 'px,0) scale(' + scale.toFixed(4) + ')';
+          card.style.opacity = fade.toFixed(3);
+          card.style.filter = 'brightness(' + bright.toFixed(3) + ')';
+        });
       }
 
       if (lenis) lenis.on('scroll', onScrollStories);
       window.addEventListener('scroll', onScrollStories, { passive: true });
-      window.addEventListener('resize', onScrollStories);
+      window.addEventListener('resize', function () {
+        stepsLastKeys = stepsCards.map(function () { return -1; });
+        onScrollStories();
+      });
       paintScrollStories();
 
       /* Soft enter for section heads + major blocks */
       if (!reduceMotion && 'IntersectionObserver' in window) {
         var revealNodes = document.querySelectorAll(
-          '.section-head, .role-card, .outcome, .tier, .arch-diagram, .split-feature, .final-cta .card'
+          '.section-head, .role-card, .outcome, .tier, .arch-diagram, .split-feature, .final-cta .card, .step-parallax-card, .clarity-panel'
         );
         revealNodes.forEach(function (el, i) {
-          if (el.closest('#ideas') || el.closest('#steps') || el.closest('#gap') || el.closest('#roles')) return;
+          if (el.closest('#ideas') || el.closest('#gap') || el.closest('#roles')) return;
           el.setAttribute('data-reveal', '');
           el.style.setProperty('--reveal-delay', ((i % 4) * 60) + 'ms');
         });
