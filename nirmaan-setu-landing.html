@@ -353,10 +353,13 @@
       font-family: var(--font-serif);
       font-weight: 500;
       font-size: clamp(32px, 4vw, 44px);
-      line-height: 1.12;
+      line-height: 1.22;
       letter-spacing: -0.02em;
     }
-    .insights-head h2 em { font-style: italic; }
+    .insights-head h2 em {
+      font-style: italic;
+      padding-right: 0.04em;
+    }
     .insights-head p { font-size: 14px; color: var(--mute); line-height: 1.65; max-width: 42ch; }
 
     .insights-head > *,
@@ -474,17 +477,31 @@
       font-size: clamp(36px, 6vw, 54px);
       font-weight: 500;
       letter-spacing: -0.03em;
-      line-height: 1.08;
+      line-height: 1.22;
       color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .dream-title .dream-line {
-      display: block;
-      margin-top: 0.08em;
+      display: inline-flex;
+      align-items: baseline;
+      justify-content: center;
+      flex-wrap: nowrap;
+      gap: 0.72em;
+      margin-top: 0.14em;
+      line-height: 1.22;
     }
     .dream-title .dream-em {
       font-style: italic;
       font-weight: 500;
       color: var(--dream);
+      margin: 0;
+      padding: 0;
+    }
+    .dream-title .dream-plan {
+      display: inline;
+      padding: 0;
     }
     .dream-photo {
       width: 100%;
@@ -1253,50 +1270,79 @@
 
       .shell { width: 100%; margin: 0; border-radius: 0; }
 
+      /*
+        Mobile hero = 2-row grid:
+        1) stage (media + grade + nav/copy share one cell — overlay without bleed)
+        2) widgets (own row — cannot overlap stage)
+      */
       .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: minmax(300px, 52svh) auto;
+        grid-template-areas:
+          "stage"
+          "cards";
         height: auto;
         min-height: 0;
+        overflow: visible;
+        background: var(--sheet);
+      }
+      .hero-media,
+      .hero-grade,
+      .hero-inner {
+        grid-area: stage;
+        position: relative !important;
+        inset: auto !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        margin: 0;
       }
       .hero-media {
-        position: relative;
-        inset: auto;
-        height: min(62svh, 480px);
-        min-height: 360px;
+        z-index: 0;
+        overflow: hidden;
+        border-radius: 0 0 20px 20px;
       }
       .hero-media video {
         position: absolute;
         inset: 0;
+        width: 100%;
+        height: 100%;
       }
-      /* Clip grade to media height only — not over widgets below */
       .hero-grade {
-        position: absolute;
-        inset: auto;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: min(62svh, 480px);
-        min-height: 360px;
+        z-index: 1;
+        pointer-events: none;
+        border-radius: 0 0 20px 20px;
       }
       .hero-inner {
-        position: absolute;
-        inset: 0 auto auto 0;
-        width: 100%;
-        height: min(62svh, 480px);
-        min-height: 360px;
-        padding: max(12px, env(safe-area-inset-top)) 14px 0;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         justify-content: flex-start;
+        padding:
+          max(12px, env(safe-area-inset-top))
+          14px
+          36px;
+        box-sizing: border-box;
+        color: #fff;
       }
       .hero-copy {
         margin-top: auto;
-        margin-bottom: 28px;
+        margin-bottom: 0;
         padding: 0 8px;
+        width: 100%;
       }
       .hero-copy h1 {
         font-size: clamp(28px, 8.2vw, 36px);
         line-height: 1.18;
       }
       .hero-cta {
-        margin-top: 14px;
+        margin-top: 16px;
         min-height: 44px;
         align-items: center;
         padding: 12px 22px;
@@ -1309,6 +1355,7 @@
         justify-content: space-between;
         padding: 6px 8px 6px 14px;
         position: relative;
+        flex-shrink: 0;
       }
       .nav-toggle {
         display: inline-flex;
@@ -1347,15 +1394,21 @@
       }
 
       .widgets {
-        position: relative;
-        inset: auto;
-        margin: 20px 14px 16px;
-        padding-bottom: 4px;
-        z-index: 4;
+        grid-area: cards;
+        position: relative !important;
+        inset: auto !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        margin: 22px 14px 12px;
+        padding: 0;
+        z-index: 1;
         flex-direction: column;
         flex-wrap: nowrap;
         gap: 14px;
         align-items: stretch;
+        pointer-events: auto;
       }
       .occ, .index { flex: none; width: 100%; }
       .occ { padding: 12px; }
@@ -1363,8 +1416,23 @@
       .donut b { font-size: 15px; }
       .index { padding: 12px; width: 100%; }
 
+      /* Keep sticky CTA off hero — appears after scroll past stage */
+      .sticky-cta {
+        opacity: 0;
+        pointer-events: none;
+        transform: translate3d(0, 20px, 0);
+        animation: none;
+        transition: opacity 0.35s ease, transform 0.35s ease;
+      }
+      .sticky-cta.is-shown {
+        opacity: 1;
+        pointer-events: none;
+        transform: translate3d(0, 0, 0);
+      }
+      .sticky-cta.is-shown .sticky-cta-bar { pointer-events: auto; }
+
       .insights {
-        padding: 28px max(16px, env(safe-area-inset-right)) 36px max(16px, env(safe-area-inset-left));
+        padding: 36px max(16px, env(safe-area-inset-right)) 36px max(16px, env(safe-area-inset-left));
       }
       .insights-head,
       .insights-grid,
@@ -1374,8 +1442,12 @@
         gap: 16px;
       }
       .insights-head { margin-bottom: 16px; }
-      .insights-head h2 { font-size: clamp(28px, 8vw, 34px); }
+      .insights-head h2 {
+        font-size: clamp(28px, 8vw, 34px);
+        line-height: 1.28;
+      }
       .insights-head p { font-size: 14px; max-width: none; }
+      .badges { margin-bottom: 14px; }
       .step { padding: 14px 0; }
       .step h3 { font-size: 15px; flex-wrap: wrap; }
       .step-hl {
@@ -1393,7 +1465,19 @@
       .band, .omni {
         padding: 32px max(16px, env(safe-area-inset-right)) 32px max(16px, env(safe-area-inset-left));
       }
-      .dream-title { font-size: clamp(28px, 8vw, 36px); margin-bottom: 14px; }
+      .dream-title {
+        font-size: clamp(28px, 7.5vw, 34px);
+        margin-bottom: 18px;
+        line-height: 1.28;
+        padding: 0 4px;
+      }
+      .dream-title .dream-line {
+        margin-top: 0.18em;
+        line-height: 1.28;
+        gap: 0.8em;
+      }
+      .dream-title .dream-em { margin: 0; }
+      .dream-title .dream-plan { padding: 0; }
       .dream-photo {
         width: 100%;
         margin: 0;
@@ -2589,7 +2673,7 @@
       <div class="dream-stage">
         <h2 class="dream-title">
           See Today in
-          <span class="dream-line"><em class="dream-em">a Live</em> Plan</span>
+          <span class="dream-line"><em class="dream-em">a Live</em><span class="dream-plan">Plan</span></span>
         </h2>
         <figure class="dream-photo">
           <video autoplay muted loop playsinline preload="metadata" aria-label="Site field footage">
@@ -2988,6 +3072,27 @@
           if (window.matchMedia('(min-width: 701px)').matches) setOpen(false);
         });
       }
+
+      /* Mobile: show sticky CTA only after hero leaves the viewport */
+      (function () {
+        var sticky = document.querySelector('.sticky-cta');
+        var hero = document.querySelector('.hero');
+        if (!sticky || !hero) return;
+        var mq = window.matchMedia('(max-width: 700px)');
+        function syncSticky() {
+          if (!mq.matches) {
+            sticky.classList.add('is-shown');
+            return;
+          }
+          var past = hero.getBoundingClientRect().bottom < 64;
+          sticky.classList.toggle('is-shown', past);
+        }
+        syncSticky();
+        window.addEventListener('scroll', syncSticky, { passive: true });
+        window.addEventListener('resize', syncSticky);
+        if (typeof mq.addEventListener === 'function') mq.addEventListener('change', syncSticky);
+        else if (typeof mq.addListener === 'function') mq.addListener(syncSticky);
+      })();
 
       var video = document.querySelector('.hero-media video');
       if (video && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
